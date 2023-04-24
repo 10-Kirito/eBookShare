@@ -6,4 +6,6 @@ eBookShare/db_peoject_bs/node_modules/
 # 忽略所有的.idea文件夹
 eBookShare/frontdesk/.idea/
 eBookShare/backstage/.idea/
+eBookShare/db_peoject_bs/.idea/
+eBookShare/eBookShare/.idea
 

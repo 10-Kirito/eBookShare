@@ -2,6 +2,7 @@ package com.example.ebookshare.controller;
 
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
@@ -43,7 +44,12 @@ public class AdminsController {
             String a = "";
             return Result.success(dto);
         }
-
+    @GetMapping("/username/{username}")
+    public Result findOne(@PathVariable String username){
+        QueryWrapper<Admins> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        return Result.success(adminsService.getOne(queryWrapper));
+    }
 
         //新增或更新
         @PostMapping

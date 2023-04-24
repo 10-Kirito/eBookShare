@@ -20,5 +20,8 @@ mybatis-plus:
     call-setters-on-nulls: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-
+files:
+  upload:
+    path: C:\Users\yijin\Desktop\eBookShare\files\
+#    path: /home/files/
 

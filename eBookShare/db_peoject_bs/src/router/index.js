@@ -42,14 +42,14 @@ const routes = [
   },
   {
     path: '/admins',
-    component: () => import("../views/Admins/AdminsHome.vue"),
+    component: () => import("../views/Admins/AdminsManage.vue"),
     redirect: "/admins/home",
     children:[
       // {path: 'selecourse', name: '选课' , component: () => import('../views/student/StudentSeleceCourse.vue')},
       {path: 'home', name: '用户管理' , component: () => import('../views/Admins/AdminsHome.vue')},
-      // {path:'personinfo', name: '个人信息', component:() => import('../views/student/StudentPerson.vue')},
+      {path:'ebookmanage', name: '电子书籍管理', component:() => import('../views/Admins/EBookManage.vue')},
       // {path:'file', name: '文件管理', component:() => import('../views/student/StudentFileManage.vue')},
-      // {path:'courseinquire', name: '课程查询', component:() => import('../views/student/StudentCourseInquire.vue')},
+      // {path:'courseinquire', name: '课程查询', component:() => import('../views/student/EBookManage.vue')},
       // {path:'cancelclass', name: '退课', component:() => import('../views/student/StudentCancelClass.vue')},
       // {path:'classtable', name: '课表查询', component:() => import('../views/student/StudentClassTable.vue')}
 

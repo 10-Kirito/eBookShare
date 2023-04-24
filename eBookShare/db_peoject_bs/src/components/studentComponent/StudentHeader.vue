@@ -13,7 +13,7 @@
       <div style="display: inline-block">
         <!--      头像功能，15节内容-->
         <img :src="user.avatarurl" alt="" style="width: 30px;border-radius: 50%;position: relative;top: 10px;right: 5px">
-        <span>{{ user.studentid }}</span><span>{{ user.name }}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
+        <span>{{ user.username }}</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
         <!--      这里的参数是后台.controller.dto中userdto的内容-->
 
         <!--    <i class="el-icon-setting" style="margin-right: 15px"></i>-->

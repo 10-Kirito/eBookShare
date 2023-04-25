@@ -3,6 +3,20 @@
     <el-card style="width: 500px;margin: 50px auto auto;" >
       <!--    根据实际表格情况，进行增删-->
       <el-form label-width="80px" size="small">
+<!--        <el-upload-->
+<!--            style="text-align: center"-->
+<!--            class="avatar-uploader"-->
+<!--            action="http://localhost:9090/admins/upload"-->
+<!--            :show-file-list="false"-->
+<!--            :on-success="handleAvatarSuccess"-->
+<!--        >-->
+<!--          &lt;!&ndash;        暂时没有头像，因为新增头像需要添加数据库里面&ndash;&gt;-->
+<!--          <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />-->
+<!--          <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--        </el-upload>-->
+
+
+
         <el-form-item label="书名">
           <el-input v-model="form.bookname" autocomplete="off" placeholder="请输入书籍名称"/>
         </el-form-item>
@@ -24,13 +38,15 @@
         <el-form-item>
 <!--注意！！这里的分类以后需要自己挑选-->
           <el-upload
-              style=""
+              type="file"
               ref="upload"
+              :data="carryData"
               class="upload-demo"
-              action="http://localhost:9090/admins/upload"
+              action="http://localhost:9090/books/upload"
               :limit="1"
-              :on-exceed="handleExceed"
               :auto-upload="false"
+              :on-change="loadJsonFromFile"
+              :on-success="updatebookinfo"
           >
             <template #trigger>
               <el-button type="primary" class="ml-5" style="margin: 20px 60px auto" >选择文件</el-button>
@@ -60,7 +76,8 @@ export default {
   data() {
     return {
       form: {},
-      file: null,
+      file:'',
+      uploadFiles: [],
       user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
     }
   },
@@ -75,43 +92,64 @@ export default {
     async getUser(){
       return  (await this.request.get("/student/studentid/" + this.user.studentid)).data
     },
-    save(){
-      //发送数据到后端
-      //this.$message.success("保存信息："+this.form.avatarUrl)
-      this.request.post("/student",this.form).then(res => {
-        if(res){
-          this.$message.success("保存成功")
-          //触发父级更新user的方法
-          this.$emit("refreshUser")
-          //保存之后，触发manage的父级，通过父级中的功能来实现更新以及右上角头像的更新
-
-
-          //更新浏览器存储信息
-          this.getUser().then(res =>{
-            res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
-            //localStorage.removeItem("loguserinfo")
-            localStorage.setItem("loguserinfo",JSON.stringify(user))
-          })
-        }else {
-          this.$message.error("保存失败")
+    // save(){
+    //   //发送数据到后端
+    //   //this.$message.success("保存信息："+this.form.avatarUrl)
+    //   this.request.post("/student",this.form).then(res => {
+    //     if(res){
+    //       this.$message.success("保存成功")
+    //       //触发父级更新user的方法
+    //       this.$emit("refreshUser")
+    //       //保存之后，触发manage的父级，通过父级中的功能来实现更新以及右上角头像的更新
+    //
+    //
+    //       //更新浏览器存储信息
+    //       this.getUser().then(res =>{
+    //         res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
+    //         //localStorage.removeItem("loguserinfo")
+    //         localStorage.setItem("loguserinfo",JSON.stringify(user))
+    //       })
+    //     }else {
+    //       this.$message.error("保存失败")
+    //     }
+    //   })
+    // },
+    loadJsonFromFile(file, fileList) {
+      this.uploadFiles = fileList
+    },
+    updatebookinfo(){
+      //随后上传文件信息
+      let file = this.uploadFiles[0]
+      // this.$message.error("获取文件名："+file.name)
+      this.$message.error("获取信息：" + file.name)
+      this.request.get("/books/addbookinfo", {
+        params: {
+          filename: file.name,
+          bookname: this.form.bookname,
+          author: this.form.author,
+          publisher: this.form.publisher,
+          isbn: this.form.isbn,
+          description: this.form.description,
+          category: this.form.category,
         }
       })
-    },
-    submitUpload(){
-      const formData = new FormData()
-      formData.append('file', this.file)
-      formData.append('bookname', this.form.bookname)
-      formData.append('author', this.form.author)
-      formData.append('publisher', this.form.publisher)
-      formData.append('isbn', this.form.isbn)
-      formData.append('description', this.form.description)
-      formData.append('category', this.form.category)
-
-      axios.post('http://localhost:9090/admins/upload', formData)
-          .then(response => {
-            // 处理响应
+          .then(res => {
+            if (res.code === '200') {
+              this.$message.success("上传成功")
+            } else {
+              this.$message.error("上传失败")
+            }
           })
     },
+    submitUpload() {
+      //先上传文件
+      // const file = this.$refs.upload.files;
+      // this.$message.error("获取文件名："+this.$refs.upload.files.name)
+      this.$refs.upload.submit()
+
+
+    },
+
     handleAvatarSuccess(res){
       this.form.avatarurl = res
       //this.$message.success("路径"+this.form.avatarUrl)

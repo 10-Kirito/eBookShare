@@ -24,8 +24,8 @@ public class Books implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "bookid", type = IdType.AUTO)
+    private Integer bookid;
 
     private String bookname;
 
@@ -49,5 +49,18 @@ public class Books implements Serializable {
 
     private LocalDateTime releasetime;
 
+    private String type;
+
+    private  long size;
+
+    private  boolean isdelete;
+
+    private  boolean enable;
+
+    private  String md5;
+
+    private String filename;
+
+    private String url;
 
 }

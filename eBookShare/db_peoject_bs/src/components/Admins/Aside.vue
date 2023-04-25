@@ -29,9 +29,9 @@
           <span slot="title">书籍管理</span>
       </el-menu-item>
 <!--    后面针对其他角色需要更改路由  -->
-      <el-menu-item index="/manage/file">
+      <el-menu-item index="/admins/ebookrecover">
         <i class="el-icon-document"></i>
-        <span slot="title">文件管理</span>
+        <span slot="title">书籍恢复</span>
       </el-menu-item>
     </el-submenu>
 <!--    <el-submenu index="3">-->

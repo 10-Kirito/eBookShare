@@ -5,39 +5,36 @@
       <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="bookname"></el-input>
       <el-input style="width: 200px" placeholder="请输入作者" class="ml-5" suffix-icon="el-icon-message" v-model="author"></el-input>
       <el-input style="width: 200px" placeholder="请输入出版社" class="ml-5" suffix-icon="el-icon-message" v-model="publisher"></el-input>
-<!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
 
     <div style="margin: 10px 0">
-<!--      <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>-->
-<!--      <el-popconfirm-->
-<!--          class="ml-5"-->
-<!--          confirm-button-text="确认"-->
-<!--          cancel-button-text="取消"-->
-<!--          :icon="InfoFilled"-->
-<!--          icon-color="#626AEF"-->
-<!--          title="是否批量删除?"-->
-<!--          @confirm="delBatch"-->
-<!--          @cancel="cancelEvent"-->
-<!--      >-->
-<!--        <el-button type="danger" slot="reference">批量删除<i class = "el-icon-remove-outline"></i></el-button>-->
-<!--      </el-popconfirm>-->
-<!--      <el-upload action="http://localhost:9090/books/upload" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml-5">导入<i class = "el-icon-bottom"></i></el-button>-->
-<!--      </el-upload>-->
-
-        <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>
-
+      <!--      <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>-->
+      <!--      <el-popconfirm-->
+      <!--          class="ml-5"-->
+      <!--          confirm-button-text="确认"-->
+      <!--          cancel-button-text="取消"-->
+      <!--          :icon="InfoFilled"-->
+      <!--          icon-color="#626AEF"-->
+      <!--          title="是否批量删除?"-->
+      <!--          @confirm="delBatch"-->
+      <!--          @cancel="cancelEvent"-->
+      <!--      >-->
+      <!--        <el-button type="danger" slot="reference">批量删除<i class = "el-icon-remove-outline"></i></el-button>-->
+      <!--      </el-popconfirm>-->
+      <!--      <el-upload action="http://localhost:9090/department/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
+      <!--        <el-button type="primary" class="ml-5">导入<i class = "el-icon-bottom"></i></el-button>-->
+      <!--      </el-upload>-->
       <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
     </div>
 
     <el-table :data="tableData" border stripe header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
       <!--          多选框-->
-<!--      <el-table-column type="selection" width="55" />-->
+      <!--      <el-table-column type="selection" width="55" />-->
       <el-table-column prop="isbn" label="ISBN" width="120">
       </el-table-column>
       <el-table-column prop="bookname" label="书籍名称" width="150">
@@ -52,22 +49,35 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-<!--          <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>-->
+          <!--          <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>-->
           <el-popconfirm
               class="ml-5"
               confirm-button-text="确认"
               cancel-button-text="取消"
               :icon="InfoFilled"
               icon-color="#626AEF"
-              title="是否删除?"
-              @confirm="del(scope.row.bookid)"
+              title="是否恢复?"
+              @confirm="recover(scope.row.bookid)"
               @cancel="cancelEvent"
           >
             <template #reference>
-              <el-button type="danger">删除<i class="el-icon-remove-outline"></i></el-button>
+              <el-button type="primary">恢复<i class="el-icon-remove-outline"></i></el-button>
             </template>
           </el-popconfirm>
-
+          <el-popconfirm
+              class="ml-5"
+              confirm-button-text="确认"
+              cancel-button-text="取消"
+              :icon="InfoFilled"
+              icon-color="#626AEF"
+              title="是否彻底删除?"
+              @confirm="TrueDelete(scope.row.bookid)"
+              @cancel="cancelEvent"
+          >
+            <template #reference>
+              <el-button type="warning">彻底删除<i class="el-icon-remove-outline"></i></el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
 
@@ -118,15 +128,8 @@
 </template>
 
 <script>
-import EBookUpload from "@/views/Admins/EBookUpload.vue";
-
 export default {
   name: "User",
-  computed: {
-    EBookUpload() {
-      return EBookUpload
-    }
-  },
   data(){
     return{
       tableData: [],
@@ -156,7 +159,7 @@ export default {
       //通过axios向后台请求参数
 
       //通过request.js中的baseurl已经将前面的http://localhost:9090部分省略了
-      this.request.get("/books/page",{
+      this.request.get("/books/deletedpage",{
         params:{
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -211,9 +214,6 @@ export default {
       console.log(val)
       this.multipleSelection = val
     },
-    EBookup(){
-      this.$router.push("/admins/ebookupload")
-    },
     // delBatch(){
     //   let ids = this.multipleSelection.map(v => v.lnumber)   //把一个对象的数组变成一个纯数组
     //   this.request.post("/department/del/batch",ids).then(res => {
@@ -243,10 +243,20 @@ export default {
     exp(){
       window.open("http://localhost:9090/books/export")
     },
-    del(bookid){
-      this.request.delete("/books/" + bookid).then(res => {
+    recover(bookid){
+      this.request.delete("/books/recover/" + bookid).then(res => {
         if(res.code === '200'){
-          this.$message.success("删除成功")
+          this.$message.success("恢复成功")
+          this.load()
+        }else {
+          this.$message.error("恢复失败")
+        }
+      })
+    },
+    TrueDelete(bookid){
+      this.request.delete("/books/truedelete/" + bookid).then(res => {
+        if(res.code === '200'){
+          this.$message.success("文件已彻底删除")
           this.load()
         }else {
           this.$message.error("删除失败")

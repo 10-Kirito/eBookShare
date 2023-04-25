@@ -48,8 +48,8 @@ const routes = [
       // {path: 'selecourse', name: '选课' , component: () => import('../views/student/StudentSeleceCourse.vue')},
       {path: 'home', name: '用户管理' , component: () => import('../views/Admins/AdminsHome.vue')},
       {path:'ebookmanage', name: '电子书籍管理', component:() => import('../views/Admins/EBookManage.vue')},
-      // {path:'file', name: '文件管理', component:() => import('../views/student/StudentFileManage.vue')},
-      // {path:'courseinquire', name: '课程查询', component:() => import('../views/student/EBookManage.vue')},
+      {path:'ebookrecover', name: '书籍恢复', component:() => import('../views/Admins/EBookRecover.vue')},
+      {path:'ebookupload', name: '书籍上传', component:() => import('../views/Admins/EBookUpload.vue')},
       // {path:'cancelclass', name: '退课', component:() => import('../views/student/StudentCancelClass.vue')},
       // {path:'classtable', name: '课表查询', component:() => import('../views/student/StudentClassTable.vue')}
 

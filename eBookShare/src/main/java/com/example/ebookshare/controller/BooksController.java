@@ -46,7 +46,7 @@ import java.util.List;
 public class BooksController {
     @Resource
     private IBooksService booksService;
-    @Value("${files.upload.path}")//引用application中的路径
+    @Value("${books.upload.path}")//引用application中的路径
     private String fileuploadPAth;
     @Resource
     private BooksMapper booksMapper;
@@ -60,6 +60,11 @@ public class BooksController {
     }
 
     //新增或更新
+    @PostMapping("/save")
+    public boolean save2(@RequestBody Books books){
+        //新增或者更新
+        return booksService.saveOrUpdate(books);
+    }
     @PostMapping
     public boolean save(@RequestBody Books books){
         //新增或者更新
@@ -160,10 +165,17 @@ public class BooksController {
     }
     @DeleteMapping("/truedelete/{bookid}")
     public Result  trueDeleteBooks(@PathVariable Integer bookid){
-        Books books = booksMapper.selectById(bookid);
-        books.setIsdelete(false);
-        books.setEnable(true);
-        booksMapper.updateById(books);
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(queryWrapper);
+
+
+
+        File uploadFile = new File(books.getUrl());
+        //先删除实体文件，再删除数据库记录
+        uploadFile.delete();
+        booksMapper.deleteById(books);
+
         return Result.success();
     }
 
@@ -293,7 +305,8 @@ public class BooksController {
         }else {
             //数据库不存在重复的文件
             //把获取到的文件存储到磁盘目录
-            url = "http://localhost:9090/file/"+fileUUid;
+//            url = "http://localhost:9090/file/"+fileUUid;
+            url = fileuploadPAth+fileUUid;
             Books saveFile = new Books();
             saveFile.setFilename(orginalFilename);
             saveFile.setType(type);

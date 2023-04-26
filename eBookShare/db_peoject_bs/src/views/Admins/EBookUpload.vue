@@ -49,10 +49,10 @@
               :on-success="updatebookinfo"
           >
             <template #trigger>
-              <el-button type="primary" class="ml-5" style="margin: 20px 60px auto" >选择文件</el-button>
+              <el-button type="primary" class="ml-5" style="margin: 20px 60px auto" >选择</el-button>
             </template>
             <el-button class="ml-5" type="success" style="margin-bottom: 20px" @click="submitUpload">
-              上传文件
+              确定
             </el-button>
             <template #tip>
               <!--            <div class="el-upload__tip text-red">-->

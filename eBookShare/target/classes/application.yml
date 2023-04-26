@@ -23,5 +23,9 @@ mybatis-plus:
 files:
   upload:
     path: C:\Users\yijin\Desktop\eBookShare\files\
+
+books:
+    upload:
+      path: C:\Users\yijin\Desktop\eBookShare\files\books\
 #    path: /home/files/
 

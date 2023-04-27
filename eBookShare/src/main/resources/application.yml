@@ -7,6 +7,12 @@ spring:
     url: jdbc:mysql://124.71.166.37:3306/ebooksys?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
     password: root
+  servlet:
+    multipart:
+      max-file-size: 1000MB        # 设置单个文件最大大小为100MB
+      max-request-size: 1000MB    # 设置多个文件大小为100MB
+
+
 
 mybatis-plus:
   mapper-locations: classpath*:mapper/*Mapper.xml
@@ -28,4 +34,6 @@ books:
     upload:
       path: C:\Users\yijin\Desktop\eBookShare\files\books\
 #    path: /home/files/
+
+
 

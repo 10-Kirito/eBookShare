@@ -47,6 +47,9 @@
               :auto-upload="false"
               :on-change="loadJsonFromFile"
               :on-success="updatebookinfo"
+              :on-error="uploadError"
+              :before-upload="beforeUpload"
+              :before-remove="beforeRemove"
           >
             <template #trigger>
               <el-button type="primary" class="ml-5" style="margin: 20px 60px auto" >选择</el-button>
@@ -92,31 +95,64 @@ export default {
     async getUser(){
       return  (await this.request.get("/student/studentid/" + this.user.studentid)).data
     },
-    // save(){
-    //   //发送数据到后端
-    //   //this.$message.success("保存信息："+this.form.avatarUrl)
-    //   this.request.post("/student",this.form).then(res => {
-    //     if(res){
-    //       this.$message.success("保存成功")
-    //       //触发父级更新user的方法
-    //       this.$emit("refreshUser")
-    //       //保存之后，触发manage的父级，通过父级中的功能来实现更新以及右上角头像的更新
-    //
-    //
-    //       //更新浏览器存储信息
-    //       this.getUser().then(res =>{
-    //         res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
-    //         //localStorage.removeItem("loguserinfo")
-    //         localStorage.setItem("loguserinfo",JSON.stringify(user))
-    //       })
-    //     }else {
-    //       this.$message.error("保存失败")
-    //     }
-    //   })
-    // },
+
     loadJsonFromFile(file, fileList) {
+      //判断文件大小
       this.uploadFiles = fileList
+      var FileExt = file.name.replace(/.+\./, "")
+      const isLt5M = file.size / 1024 / 1024 < 100
+      var extension = ['pdf', 'epub'].indexOf(FileExt.toLowerCase()) === -1
+      if (extension){
+        this.$message({
+          type: 'warning',
+          message: '只能上传 PDF  EPUB 文件'
+        })
+        return false
+      }
+      if (!isLt5M) {
+        this.$message({
+          type: 'warning',
+          message: '附件大小超限，文件不能超过 100M'
+        })
+        return false
+      }
+
     },
+    beforeUpload(file){
+      console.log('文件：', file)
+      var FileExt = file.name.replace(/.+\./, "")
+      const isLtM = file.size / 1024 / 1024 < 100
+      var extension = ['pdf', 'epub'].indexOf(FileExt.toLowerCase()) === -1
+      if (extension){
+        this.$message({
+          type: 'warning',
+          message: '只能上传 PDF  EPUB 文件'
+        })
+        return false
+      }
+      if (!isLtM) {
+        this.$message({
+          type: 'warning',
+          message: '附件大小超限，文件不能超过 100M'
+        })
+        return false
+      }
+
+    },
+    beforeRemove(file,fileList){
+      //设置不符合条件的时候，预览框自动删除
+        var FileExt = file.name.replace(/.+\./, "")
+        var isLtM = file.size / 1024 / 1024 < 100
+        var extension = ['pdf', 'epub'].indexOf(FileExt.toLowerCase()) === -1
+        if (!extension || !isLtM) {
+          var i = fileList.indexOf(file)
+          fileList.splice(i, 1) // 自动删除不符合要求的文件，不让它出现在预览列表中
+          return false // 只有return false 才会真的限制
+        } else {
+          return this.$confirm(`确定移除 ${file.name}？`)
+        }
+    },
+
     updatebookinfo(){
       //随后上传文件信息
       let file = this.uploadFiles[0]
@@ -136,10 +172,14 @@ export default {
           .then(res => {
             if (res.code === '200') {
               this.$message.success("上传成功")
+              this.$router.push("/admins/ebookmanage")
             } else {
               this.$message.error("上传失败")
             }
           })
+    },
+    uploadError(){
+      this.$message.error("文件上传失败")
     },
     submitUpload() {
       //先上传文件

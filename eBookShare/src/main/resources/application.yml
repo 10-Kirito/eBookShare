@@ -35,5 +35,10 @@ books:
       path: C:\Users\yijin\Desktop\eBookShare\files\books\
 #    path: /home/files/
 
+auditbooks:
+  upload:
+    path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\
+#    path: /home/files/
+
 
 

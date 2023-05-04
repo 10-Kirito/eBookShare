@@ -7,6 +7,8 @@
       <div id = "pie" style="width: 500px; height: 400px"></div>
     </el-col>
 
+
+    <el-button type="primary" class="ml-5" @click="EBookup">测试用户上传与审核<i class = "el-icon-bottom"></i></el-button>
   </div>
 </template>
 
@@ -16,8 +18,13 @@ export default {
   name: "Home",
   data(){
     return{
-
+      dialogFormVisible: false,
     }
+  },
+  methods:{
+    EBookup(){
+      this.$router.push("/admins/ebookupAndAudit")
+    },
   },
   mounted() {//页面元素渲染之后触发
     //折线图

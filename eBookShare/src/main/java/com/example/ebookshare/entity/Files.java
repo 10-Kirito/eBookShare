@@ -9,12 +9,12 @@ import lombok.Data;
 @TableName("books")
 public class Files {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Integer bookid;
     private String name;
     private String type;
     private Long size;
     private String url;
     private String md5;
-    private Boolean isDelete;
+    private Boolean isdelete;
     private Boolean enable;
 }

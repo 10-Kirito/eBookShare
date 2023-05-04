@@ -127,7 +127,7 @@ public class FileController {
     @DeleteMapping("/{bookid}")
     public Result  delete(@PathVariable Integer bookid){
         Files files = fileMapper.selectById(bookid);
-        files.setIsDelete(true);
+        files.setIsdelete(true);
         fileMapper.updateById(files);
         return Result.success();
     }
@@ -138,7 +138,7 @@ public class FileController {
         queryWrapper.in("id",ids);
         List<Files> files = fileMapper.selectList(queryWrapper);
         for(Files file : files){
-            file.setIsDelete(true);
+            file.setIsdelete(true);
             fileMapper.updateById(file);
         }
         return Result.success();

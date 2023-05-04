@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://124.71.166.37:3306/ebooksys?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
     username: root
-    password: root
+    password: yjr3062439765
   servlet:
     multipart:
       max-file-size: 1000MB        # 设置单个文件最大大小为100MB
@@ -34,11 +34,17 @@ books:
     upload:
       path: C:\Users\yijin\Desktop\eBookShare\files\books\
 #    path: /home/files/
+bookpic:
+  upload:
+    path: C:\Users\yijin\Desktop\eBookShare\files\books\bookcoverimage\
+
 
 auditbooks:
   upload:
     path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\
 #    path: /home/files/
 
-
+auditbookpic:
+  upload:
+    path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\bookcoverimage\
 

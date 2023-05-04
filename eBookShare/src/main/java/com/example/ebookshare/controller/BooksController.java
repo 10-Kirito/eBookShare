@@ -14,6 +14,7 @@ import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
 import com.example.ebookshare.entity.Admins;
+import com.example.ebookshare.entity.Auditbooks;
 import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Files;
 import com.example.ebookshare.mapper.BooksMapper;
@@ -48,6 +49,14 @@ public class BooksController {
     private IBooksService booksService;
     @Value("${books.upload.path}")//引用application中的路径
     private String fileuploadPAth;
+
+    @Value("${auditbooks.upload.path}")//需要审核的书籍目录
+    private String auditbooksPAth;
+    @Value("${auditbookpic.upload.path}")//需要审核的书籍目录
+    private String auditbookspicPath;
+
+    @Value("${bookpic.upload.path}")//书籍目录
+    private String bookpicPath;
     @Resource
     private BooksMapper booksMapper;
 
@@ -271,6 +280,44 @@ public class BooksController {
         out.close();
         writer.close();
     }
+
+    @PostMapping("/uploadpic")
+    public String  uploadpic(@RequestParam MultipartFile file) throws IOException {
+        //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
+        //向目录添加文件
+        String orginalFilename = file.getOriginalFilename();
+        String type = FileUtil.extName(orginalFilename);
+        long size = file.getSize();
+        //定义一个文件唯一的标识码
+        String uuid = IdUtil.fastSimpleUUID();
+        String fileUUid = uuid + StrUtil.DOT +type;
+        File uploadFile = new File(bookpicPath + fileUUid);
+        File parentFile = uploadFile.getParentFile();
+        if(!parentFile.exists()){
+            parentFile.mkdirs();
+        }
+        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+        String url;
+        String md5;
+        //上传文件到磁盘
+        file.transferTo(uploadFile);
+        //获取文件的md5
+        md5 = SecureUtil.md5(uploadFile);
+        url = bookpicPath+fileUUid;
+
+        //向数据库添加数据
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("releasetime");
+        queryWrapper.isNull("coverimage");
+        Books books = booksMapper.selectOne(queryWrapper);
+        books.setCoverimage(url);
+        booksService.saveOrUpdate(books);
+
+
+        return url; //文件下载链接
+        //上传成功后返回url
+    }
+
     @PostMapping("/upload")
     public String  upload(@RequestParam MultipartFile file) throws IOException {
         String orginalFilename = file.getOriginalFilename();

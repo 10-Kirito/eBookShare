@@ -35,6 +35,28 @@
         <el-form-item label="分类">
           <el-input v-model="form.category" autocomplete="off" placeholder="请输入分类"/>
         </el-form-item>
+
+        <el-upload
+            style="text-align: center"
+            ref="uploadpic"
+            class="avatar-uploader"
+            action="http://localhost:9090/auditbooks/uploadpic"
+            :show-file-list="false"
+            :auto-upload="false"
+            :on-success="updatebookpic"
+            :on-change="handlePictureCardPreview"
+        ><!--            :on-change="picChange"-->
+          <!--        暂时没有头像，因为新增头像需要添加数据库里面-->
+          <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />
+
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <el-dialog :visible.sync="dialogVisible" append-to-body>
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+        </el-upload>
+
+
+
         <el-form-item>
           <el-upload
               type="file"
@@ -80,6 +102,8 @@ export default {
       form: {},
       file:'',
       uploadFiles: [],
+      dialogVisible: false,
+      dialogImageUrl: "",
       user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
     }
   },
@@ -94,7 +118,14 @@ export default {
     async getUser(){
       return  (await this.request.get("/student/studentid/" + this.user.studentid)).data
     },
-
+    handlePictureCardPreview(file) {
+      this.dialogVisible = true
+      if (!file.url) {
+        file.url = URL.createObjectURL(file.raw);
+      }
+      this.dialogImageUrl = file.url
+      this.form.avatarurl = file.url
+    },
     loadJsonFromFile(file, fileList) {
       //判断文件大小
       this.uploadFiles = fileList
@@ -151,9 +182,16 @@ export default {
         return this.$confirm(`确定移除 ${file.name}？`)
       }
     },
-
+    // updatebookpic(){
+    //   this.$refs.uploadpic.submit()
+    // },
     updatebookinfo(){
       //随后上传文件信息
+      //上传封面图片
+      this.$refs.uploadpic.submit()
+
+
+
       let file = this.uploadFiles[0]
       // this.$message.error("获取文件名："+file.name)
       this.$message.error("获取信息：" + file.name)
@@ -186,14 +224,23 @@ export default {
       // this.$message.error("获取文件名："+this.$refs.upload.files.name)
       this.$refs.upload.submit()
 
-
     },
 
     handleAvatarSuccess(res){
       this.form.avatarurl = res
       //this.$message.success("路径"+this.form.avatarUrl)
       //this.$message.success("路径"+res)
-    }
+    },
+    picChange(file){
+      if (!file.url) {
+        file.url = URL.createObjectURL(file.raw);
+      }
+      // this.form.avatarurl = URL.createObjectURL(file.raw);
+
+      this.$message.error("图片预览url"+file.url);
+      console.log(file)
+      this.form.avatarurl = file.uid
+    },
   }
 }
 </script>

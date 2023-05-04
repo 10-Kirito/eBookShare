@@ -33,6 +33,14 @@
         <i class="el-icon-document"></i>
         <span slot="title">书籍恢复</span>
       </el-menu-item>
+      <el-menu-item index="/admins/usermanage">
+        <i class="el-icon-user"></i>
+        <span slot="title">用户管理</span>
+      </el-menu-item>
+      <el-menu-item index="/admins/ebookAudit">
+        <i class="el-icon-user"></i>
+        <span slot="title">书籍审核</span>
+      </el-menu-item>
     </el-submenu>
 <!--    <el-submenu index="3">-->
 <!--      <template slot="title"><i class="el-icon-setting"></i>-->

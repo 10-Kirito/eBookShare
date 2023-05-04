@@ -34,22 +34,27 @@ public class FileController {
     @Resource
     private FileMapper fileMapper;
 
-    //文件上传接口
-    //前端传过来的文件
-    //对于重复
+    /**
+     * 文件上传接口：
+     *  参数file为前端传过来的文件;
+     *  对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件;
+     * @param file
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/upload")
     public String  upload(@RequestParam MultipartFile file) throws IOException {
+        // 解析前端传过来文件的名称、扩展名、大小
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
         long size = file.getSize();
-
-        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
 
         //定义一个文件唯一的标识码
         String uuid = IdUtil.fastSimpleUUID();
         String fileUUid = uuid + StrUtil.DOT +type;
         File uploadFile = new File(fileuploadPAth + fileUUid);
 
+        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
         File parentFile = uploadFile.getParentFile();
         if(!parentFile.exists()){
             parentFile.mkdirs();
@@ -79,7 +84,7 @@ public class FileController {
         //文件路径
         //存储数据库
         Files saveFile = new Files();
-        saveFile.setName(orginalFilename);
+        saveFile.setBookname(orginalFilename);
         saveFile.setType(type);
         saveFile.setSize(size/1024); //最后存储单位是kb
         saveFile.setUrl(url);
@@ -89,8 +94,13 @@ public class FileController {
         //上传成功后返回url
     }
 
-    //文件下载接口：http://124.71.166.37:9090/file/{fileUUid}
-    //下载接口
+    /**
+     * 文件下载接口：http://124.71.166.37:9090/file/{fileUUid}
+     * 这里的fileUUid是我们上传文件的时候自动生成的唯一标识符
+     * @param fileUUid
+     * @param response
+     * @throws IOException
+     */
     @GetMapping("/{fileUUid}")
     public void download(@PathVariable String fileUUid , HttpServletResponse response) throws IOException {
 
@@ -101,7 +111,6 @@ public class FileController {
         ServletOutputStream os =response.getOutputStream();
         response.addHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode(fileUUid,"UTF-8"));
         response.setContentType("application/octet-stream");
-
 
         //读取文件的字节流
         os.write(FileUtil.readBytes(uploadFile));
@@ -127,7 +136,7 @@ public class FileController {
     @DeleteMapping("/{bookid}")
     public Result  delete(@PathVariable Integer bookid){
         Files files = fileMapper.selectById(bookid);
-        files.setIsDelete(true);
+        files.setIsdelete(true);
         fileMapper.updateById(files);
         return Result.success();
     }
@@ -138,7 +147,7 @@ public class FileController {
         queryWrapper.in("id",ids);
         List<Files> files = fileMapper.selectList(queryWrapper);
         for(Files file : files){
-            file.setIsDelete(true);
+            file.setIsdelete(true);
             fileMapper.updateById(file);
         }
         return Result.success();

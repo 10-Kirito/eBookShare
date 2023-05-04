@@ -46,7 +46,7 @@ import java.util.List;
 public class BooksController {
     @Resource
     private IBooksService booksService;
-    @Value("${files.upload.path}")//引用application中的路径
+    @Value("${books.upload.path}")//引用application中的路径
     private String fileuploadPAth;
     @Resource
     private BooksMapper booksMapper;
@@ -60,6 +60,11 @@ public class BooksController {
     }
 
     //新增或更新
+    @PostMapping("/save")
+    public boolean save2(@RequestBody Books books){
+        //新增或者更新
+        return booksService.saveOrUpdate(books);
+    }
     @PostMapping
     public boolean save(@RequestBody Books books){
         //新增或者更新
@@ -158,17 +163,83 @@ public class BooksController {
         booksMapper.updateById(books);
         return Result.success();
     }
-//    @DeleteMapping("/truedelete/{bookid}")
-//    public Result  trueDeleteBooks(@PathVariable Integer bookid){
-//        Books books = booksMapper.selectById(bookid);
-////        books.setIsdelete(false);
-////        books.setEnable(true);
-//        File uploadFile = new File(fileuploadPAth + fileUUid);
-//
-//
-//        booksMapper.deleteById(books);
-//        return Result.success();
-//    }
+    @DeleteMapping("/truedelete/{bookid}")
+    public Result  trueDeleteBooks(@PathVariable Integer bookid){
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(queryWrapper);
+
+
+
+        File uploadFile = new File(books.getUrl());
+        //先删除实体文件，再删除数据库记录
+        uploadFile.delete();
+        booksMapper.deleteById(books);
+
+        return Result.success();
+    }
+
+
+    @GetMapping("/addbookinfo")  //接口路径,多条件查询
+    public Result findDeletedPage(@RequestParam(defaultValue = "") String filename,
+                                        @RequestParam(defaultValue = "") String bookname,
+                                        @RequestParam(defaultValue = "") String author,
+                                        @RequestParam(defaultValue = "") String publisher,
+                                        @RequestParam(defaultValue = "") String isbn,
+                                        @RequestParam(defaultValue = "") String description,
+                                        @RequestParam(defaultValue = "") String category){
+//        IPage<Books> page = new Page<>(pageNum,pageSize);
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        if(!"".equals(bookname)){
+            queryWrapper.like("filename",filename);
+        }
+        //为了避免检索的时候可能出现问题，逆向进行查找
+        queryWrapper.orderByDesc("bookid");
+        Books books = booksService.getOne(queryWrapper);
+        if(books != null)
+        {
+            books.setBookname(bookname);
+            books.setAuthor(author);
+            books.setPublisher(publisher);
+            books.setIsbn(isbn);
+            books.setDescription(description);
+            books.setCategory(category);
+            booksService.updateById(books);
+        }
+        //对找到的数据进行设置
+        return Result.success();
+    }
+    @GetMapping("/deletedexport")
+    public void deletedexport(HttpServletResponse response) throws Exception{
+        //需要筛选出没有被删除的书籍
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("enable",0);
+        List<Books> list = booksService.list(queryWrapper);
+        //从数据库中查询出所有数据
+        ExcelWriter writer = ExcelUtil.getWriter(true);
+        //在内存操作，写出到浏览器
+
+        //自定义标签别名
+//        writer.addHeaderAlias("deptid","学院号");
+//        writer.addHeaderAlias("deptname","学院名称");
+//        writer.addHeaderAlias("address","学院地址");
+//        writer.addHeaderAlias("phonecode","学院号");
+
+        //一次性写出list内的对象到excel，使用默认样式，强制输出标题
+        writer.write(list,true);
+
+        //设置浏览器响应的格式
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8");
+        String fileName= URLEncoder.encode("书籍信息","UTF-8");
+        //输出文件名称
+        response.setHeader("Content-Disposition","attachment;filename="+fileName+".xlsx");
+
+        ServletOutputStream out = response.getOutputStream();
+        writer.flush(out,true);
+        out.close();
+        writer.close();
+    }
+
     //导出书籍
     @GetMapping("/export")
     public void export(HttpServletResponse response) throws Exception{
@@ -234,7 +305,8 @@ public class BooksController {
         }else {
             //数据库不存在重复的文件
             //把获取到的文件存储到磁盘目录
-            url = "http://localhost:9090/file/"+fileUUid;
+//            url = "http://localhost:9090/file/"+fileUUid;
+            url = fileuploadPAth+fileUUid;
             Books saveFile = new Books();
             saveFile.setFilename(orginalFilename);
             saveFile.setType(type);

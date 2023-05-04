@@ -63,4 +63,28 @@ public class Books implements Serializable {
 
     private String url;
 
+    public Books(Auditbooks auditbooks){
+        this.bookid = auditbooks.getBookid();
+        this.bookname = auditbooks.getBookname();
+        this.author = auditbooks.getAuthor();
+        this.publisher = auditbooks.getPublisher();
+        this.isbn = auditbooks.getIsbn();
+        this.description = auditbooks.getDescription();
+        this.coverimage = auditbooks.getCoverimage();
+        this.downloadlink = auditbooks.getDownloadlink();
+        this.category = auditbooks.getCategory();
+        this.likes = 0;
+        this.favorites = 0;
+        this.releasetime = auditbooks.getReleasetime();
+        this.type = auditbooks.getType();
+        this.size = auditbooks.getSize();
+        this.isdelete = false;
+        this.enable = true;
+        this.md5 = auditbooks.getMd5();
+        this.filename = auditbooks.getFilename();
+        this.url = auditbooks.getUrl();
+    }
+    public Books(){
+
+    }
 }

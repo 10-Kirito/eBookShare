@@ -52,7 +52,7 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
-<!--          <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>-->
+          <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text="确认"
@@ -89,20 +89,23 @@
       />
 
     </div>
-    <!--        “新建”弹窗-->
-    <el-dialog title="学院信息" :visible.sync="dialogFormVisible" width="30%" >
+<!--    编辑  弹出的界面-->
+    <el-dialog title="书籍信息" :visible.sync="dialogFormVisible" width="30%" >
       <el-form label-width="80px" size="small">
-        <el-form-item label="课程号">
-          <el-input v-model="form.lnumber" autocomplete="off" />
+        <el-form-item label="ISBN">
+          <el-input v-model="form.isbn" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="课程名称">
-          <el-input v-model="form.lname" autocomplete="off" />
+        <el-form-item label="书籍名称">
+          <el-input v-model="form.bookname" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="学分">
-          <el-input v-model="form.lcredit" autocomplete="off" />
+        <el-form-item label="作者">
+          <el-input v-model="form.author" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="开设学院">
-          <el-input v-model="form.lcollege" autocomplete="off" />
+        <el-form-item label="出版社">
+          <el-input v-model="form.publisher" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="类别">
+          <el-input v-model="form.category" autocomplete="off" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -174,9 +177,10 @@ export default {
           })
 
     },
+
     save(){
       //发送数据到后端
-      this.request.post("/sclass",this.form)
+      this.request.post("/books/save",this.form)
           .then(res => {
             if(res){
               this.$message.success("保存成功")
@@ -186,6 +190,11 @@ export default {
               this.$message.error("保存失败")
             }
           })
+    },
+    handleEdit(row){
+      this.form = row //将数据赋予弹窗
+      this.dialogFormVisible = true //显示弹窗
+
     },
     handleAdd(){
       this.dialogFormVisible = true

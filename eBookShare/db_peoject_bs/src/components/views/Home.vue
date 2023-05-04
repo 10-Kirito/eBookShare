@@ -21,6 +21,11 @@ a{text-decoration:none; color: #656565;}
   <Headbar style="position:fixed;left:0;top:0;" v-show="isShow"></Headbar>
   <Container></Container>
   <Footer></Footer>
+
+   <el-button @click="dialogFormVisible = false">取消</el-button>
+   <el-button type="primary" @click="save">
+     确认
+   </el-button>
  </div>
 </template>
 

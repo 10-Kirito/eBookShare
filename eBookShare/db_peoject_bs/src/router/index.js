@@ -12,34 +12,7 @@ const routes = [
     path: '/',
     redirect: "/Login",
   },
-  {
-    path: '/manage',
-    component: () => import("../views/Manage.vue"),
-    redirect: "/manage/home",
-    children:[
-      {path: 'user', name: '首页' , component: () => import('../views/User.vue')},
-      {path: 'home', name: '用户管理' , component: () => import('../views/Home.vue')},
-      {path:'person', name: '个人信息', component:() => import('../views/Person.vue')},
-      {path:'file', name: '文件管理', component:() => import('../views/File.vue')}
 
-    ],
-  },
-  {
-    path: '/studentmanage',
-    component: () => import("../views/student/StudentManage.vue"),
-    redirect: "/studentmanage/home",
-    children:[
-      {path: 'selecourse', name: '选课' , component: () => import('../views/student/StudentSeleceCourse.vue')},
-      {path: 'home', name: '用户管理' , component: () => import('../views/student/StudentHome.vue')},
-      {path:'personinfo', name: '个人信息', component:() => import('../views/student/StudentPerson.vue')},
-      {path:'file', name: '文件管理', component:() => import('../views/student/StudentFileManage.vue')},
-      {path:'courseinquire', name: '课程查询', component:() => import('../views/student/StudentCourseInquire.vue')},
-      {path:'cancelclass', name: '退课', component:() => import('../views/student/StudentCancelClass.vue')},
-      {path:'classtable', name: '课表查询', component:() => import('../views/student/StudentClassTable.vue')}
-
-    ],
-
-  },
   {
     path: '/admins',
     component: () => import("../views/Admins/AdminsManage.vue"),
@@ -50,32 +23,21 @@ const routes = [
       {path:'ebookmanage', name: '电子书籍管理', component:() => import('../views/Admins/EBookManage.vue')},
       {path:'ebookrecover', name: '书籍恢复', component:() => import('../views/Admins/EBookRecover.vue')},
       {path:'ebookupload', name: '书籍上传', component:() => import('../views/Admins/EBookUpload.vue')},
-      // {path:'cancelclass', name: '退课', component:() => import('../views/student/StudentCancelClass.vue')},
+      {path:'usermanage', name: '用户管理', component:() => import('../views/Admins/UserManage.vue')},
+      {path:'ebookupAndAudit', name: '用户上传与审核', component:() => import('../views/Admins/EbookUploadAndAudit.vue')},
+      {path:'ebookAudit', name: '书籍审核', component:() => import('../views/Admins/EBookAudit.vue')},
       // {path:'classtable', name: '课表查询', component:() => import('../views/student/StudentClassTable.vue')}
+
 
     ],
 
-  },
-  {
-    path: '/about',
-    name: 'about',
-    component: () => import('../views/AboutView.vue')
   }
   , {
     path:'/login',
     name: 'Login',
     component:() => import('../views/Login.vue')
   },
-  {
-    path:'/register',
-    name: 'Register',
-    component:() => import('../views/Register.vue')
-  },
-  {
-    path:'/Home',
-    name: 'HomeIndex',
-    component:() => import('../views/Home/HomeIndex.vue')
-  }
+
 ]
 
 const router = new VueRouter({

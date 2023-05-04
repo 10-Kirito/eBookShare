@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'homed',
     component: HomeView
   },
   {
@@ -27,10 +27,16 @@ const routes = [
     path: '/bookdetails',
     name: 'details',
     component: () => import('@/views/Books/BookDetails.vue')
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/pdf/BookDetails.vue')
   }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 

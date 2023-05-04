@@ -8,13 +8,13 @@ import lombok.Data;
 @Data
 @TableName("books")
 public class Files {
-    @TableId(type = IdType.AUTO)
-    private Integer id;
-    private String name;
+    @TableId(value = "bookid", type = IdType.AUTO)
+    private Integer bookId;
+    private String bookname;
     private String type;
     private Long size;
     private String url;
     private String md5;
-    private Boolean isDelete;
+    private Boolean isdelete;
     private Boolean enable;
 }

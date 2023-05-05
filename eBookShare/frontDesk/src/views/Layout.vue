@@ -5,9 +5,9 @@
       <el-header>
         <el-col :span="12" :offset="1" align="left"><div class="grid-content bg-purple">{{ pageTitle }}</div></el-col>
         <el-row type="flex" justify="end">
-          <el-col :span="8"><router-link to="/">首页</router-link></el-col>
-          <el-col :span="8"><router-link to="/">个人书架</router-link></el-col>
-          <el-col :span="8"><router-link to="/">登录</router-link></el-col>
+          <el-col :span="8"><router-link to="/" style="text-decoration: none">首页</router-link></el-col>
+          <el-col :span="8"><router-link to="/"  style="text-decoration: none">个人书架</router-link></el-col>
+          <el-col :span="8"><router-link to="/"  style="text-decoration: none">登录</router-link></el-col>
         </el-row>
       </el-header>
 
@@ -46,48 +46,46 @@
               <div class="grid-content bg-purple-light">
                 <h1>今日推荐阅读图书：</h1>
 
-                <el-card class="box-card">
+                <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index">
                   <el-row :gutter="20">
                     <el-col :span="6" class="book-cover" >
-                        <el-image :src="bookDetails[0].img" fit="contain" lazy style="height: 150px;"/>
+                        <el-image :src="book.img" fit="contain" lazy style="height: 150px;"/>
                     </el-col>
-                    <el-col :span="10" >
-                      <el-row class="attriclass" ><h3 @click="pushDetail" style="cursor: pointer">{{ bookDetails[0].title }}</h3></el-row>
-                      <el-row class="attriclass"><div class="grid-content ">{{bookDetails[0].publisher}}</div></el-row>
+                    <el-col :span="15" >
+                      <el-row class="attriclass" >
+                        <el-col :span="23">
+                          <h3 @click="pushDetail(index)" style="cursor: pointer;text-decoration: underline">{{ book.title }}</h3>
+                        </el-col>
+                        <el-col :span="1">
+                          <el-tooltip class="item" effect="dark" :content="book.isCollected ? '取消收藏' : '收藏' ">
+                            <i :class="[book.isCollected ? 'el-icon-star-on' : 'el-icon-star-off']" @click="collectBtn(index)" style="cursor: pointer;font-size: 25px;margin-left: 18px;margin-top: 20px"></i>
+                          </el-tooltip>
+                        </el-col>
+                      </el-row>
+                      <el-row class="attriclass"><div class="grid-content book-publisher" title="出版社">{{book.publisher}}</div></el-row>
+                      <el-row class="attriclass"><a href="/author/J. D. Salinger" title="找到该作者的所有书籍" class="book-author">{{book.author}}</a></el-row>
+                      <el-row :gutter="24" style="margin-top: 40px;margin-right: -70px">
+                        <el-col :span="2" ><div style="color: #8C8C8C;">年:</div></el-col>
+                        <el-col :span="6" ><div style="margin-top: 2px">{{book.publishedDate}}</div></el-col>
+                        <el-col :span="4" ><div style="color: #8C8C8C;">语言：</div></el-col>
+                        <el-col :span="4" ><div style="margin-top: 2px">{{book.Language}}</div></el-col>
+                        <el-col :span="4" ><div style="color: #8C8C8C;">文件：</div></el-col>
+                        <el-col :span="4" ><div style="margin-top: 2px">{{book.file}}</div></el-col>
+                      </el-row>
                     </el-col>
                   </el-row>
                 </el-card>
 
-                <el-card class="box-card" style="margin-top: 10px">
-                  <div v-for="o in 4" :key="o" style="font-size: 14px; padding: 18px 0; width: 480px;">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
-
-                <el-card class="box-card" style="margin-top: 10px">
-                  <div v-for="o in 4" :key="o" style="font-size: 14px; padding: 18px 0; width: 480px;">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
-
-                <el-card class="box-card" style="margin-top: 10px">
-                  <div v-for="o in 4" :key="o" style="font-size: 14px; padding: 18px 0; width: 480px;">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
-
-                <el-card class="box-card" style="margin-top: 10px">
-                  <div v-for="o in 4" :key="o" style="font-size: 14px; padding: 18px 0; width: 480px;">
-                    {{'列表内容 ' + o }}
-                  </div>
-                </el-card>
 
                 <!--分页选项-->
                 <el-pagination
-                    background
-                    layout="prev, pager, next"
-                    :total="1000"
-                    style="margin-top: 30px">
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageNum"
+                    :page-sizes="[2,5,10,20]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
                 </el-pagination>
               </div>
             </el-col>
@@ -133,6 +131,7 @@ export default {
   data() {
     return {
       pageTitle: '上海大学电子图书分享平台',
+      //书籍信息保存在这个数组中
       bookDetails: [{
         img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
         title: "Book Title",
@@ -144,31 +143,96 @@ export default {
         Format: "Hardcover",
         Pages: "400",
         Language: "English",
-        category:"category"
+        category:"category",
+        file:'PDF',
+        isCollected:false,
+      },
+      {
+        img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
+        title: "Book Title 2",
+        author: "Author Name 2",
+        publisher: "Publisher Name 2",
+        publishedDate: "2022-01-01",
+        description:
+            "Description of Book 2",
+        ISBN: "ISBN 2",
+        Format: "Hardcover",
+        Pages: "300",
+        Language: "English",
+        category: "category 2",
+        file: "PDF",
+        isCollected:false,
       }],
-      searchQuery:''
+      searchQuery:'',
+      total:0,
+      pageNum:1,
+      pageSize:10,
     };
+  },
+  created() {
+    //this.load()        //加载初始数据
   },
   methods: {
     searchBooks() {
       // 这里可以向服务器发起搜索请求，获取匹配的图书列表
     },
-    pushDetail(){
+    load(){//分页查询今日推荐的图书
+      this.request.get("/",{           //更改后台接口
+        params:{
+          pageNum:this.pageNum,
+          pageSize:this.pageSize,
+        }
+      }).then(res=>{
+        this.bookDetails=res.records           //根据后台数据更改
+        this.total=res.total
+        this.bookDetails.forEach(book => {          //遍历数组，为每个对象添加 isCollected 属性
+          book.isCollected = false; // 默认值为 false
+        })
+      })
+    },
+    handleSizeChange(pageSize){
+      this.pageSize=pageSize
+      this.load()
+    },
+    handleCurrentChange(pageNum){
+      this.pageNum=pageNum
+      this.load()
+    },
+    pushDetail(index){           //跳转路由函数
       // console.log(JSON.stringify(this.bookDetails[0]))
       router.push({
         path:'/bookdetails',
-        query:{params:JSON.stringify(this.bookDetails[0])}
+        //路由传递参数，将书的信息传递到书籍详情页
+        query:{params:JSON.stringify(this.bookDetails[index])}
       })
+    },
+    collectBtn(index){//收藏
+      this.bookDetails[index].isCollected = !this.bookDetails[index].isCollected;
     }
   },
 }
 </script>
 
 <style scoped>
+.book-publisher{
+  color: #8C8C8C;
+  font-size: 10pt;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+.book-author {
+  font-size: 17px;
+  color: #49afd0;
+  font-style: italic;
+  font-family: Helvetica;
+  cursor: pointer;
+  text-decoration: none;
+}
 
 .attriclass{
   padding: 0;
-  margin: 0;
+  margin: -10px -10px -10px -40px;
 }
 
 .align-left {

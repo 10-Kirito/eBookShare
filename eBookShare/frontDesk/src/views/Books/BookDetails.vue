@@ -64,21 +64,21 @@
             </el-row>
 
 
-            <el-row :gutter="20"  class="row-bg" >
-              <el-col :span="2" ><div class="grid-content ">种类:</div></el-col>
-              <el-col :span="6" ><div class="grid-content ">{{bookDetails.category}}</div></el-col>
-              <el-col :span="2" ><div class="grid-content ">年：</div></el-col>
-              <el-col :span="6" ><div class="grid-content ">{{bookDetails.publishedDate}}</div></el-col>
+            <el-row :gutter="20"  class="row-bg">
+              <el-col :span="2" ><div class="grid-content col-content" >种类:</div></el-col>
+              <el-col :span="6" ><div class="grid-content col-content" >{{bookDetails.category}}</div></el-col>
+              <el-col :span="2" ><div class="grid-content col-content">年：</div></el-col>
+              <el-col :span="6" ><div class="grid-content col-content">{{bookDetails.publishedDate}}</div></el-col>
             </el-row>
             <el-row :gutter="20"  class="row-bg" >
-              <el-col :span="2"><div class="grid-content ">出版社:</div></el-col>
-              <el-col :span="6"><div class="grid-content ">{{bookDetails.publisher}}</div></el-col>
-              <el-col :span="2"><div class="grid-content ">语言：</div></el-col>
-              <el-col :span="6"><div class="grid-content ">{{bookDetails.Language}}</div></el-col>
+              <el-col :span="2"><div class="grid-content col-content">出版社:</div></el-col>
+              <el-col :span="6"><div class="grid-content col-content">{{bookDetails.publisher}}</div></el-col>
+              <el-col :span="2"><div class="grid-content col-content">语言：</div></el-col>
+              <el-col :span="6"><div class="grid-content col-content">{{bookDetails.Language}}</div></el-col>
             </el-row>
-            <el-row :gutter="20"  class="row-bg" >
-              <el-col :span="2"><div class="grid-content ">ISBN:</div></el-col>
-              <el-col :xs="8" :sm="6" :md="40" :lg="50" :xl="10"><div class="grid-content ">{{bookDetails.ISBN}}</div></el-col>
+            <el-row :gutter="20"  class="row-bg " >
+              <el-col :span="2"><div class="grid-content col-content">ISBN:</div></el-col>
+              <el-col :xs="8" :sm="6" :md="40" :lg="50" :xl="10"><div class="grid-content col-content">{{bookDetails.ISBN}}</div></el-col>
             </el-row>
           </el-col>
         </el-row>
@@ -185,6 +185,14 @@ export default {
   border-radius: 4px;
   min-height: 36px;
 }
+
+.col-content{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
 .row-bg {
   padding: 0px 0px;
   background-color: #f9fafc;

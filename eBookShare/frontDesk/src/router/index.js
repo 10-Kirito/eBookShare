@@ -16,7 +16,12 @@ const routes = [
       {
         path: '',
         name:'defaultPage',
-        component: () => import('@/components/HomePage.vue')
+        component: () => import('@/views/HomePage.vue')
+      },
+      {
+        path: 'bookshelf',
+        name:'bookshelf',
+        component: () => import('@/views/BookShelf.vue')
       }
     ]
   },
@@ -34,6 +39,11 @@ const routes = [
     path: '/test',
     name: 'test',
     component: () => import('@/pdf/BookDetails.vue')
+  },
+  {
+    path: '/test1',
+    name: 'test1',
+    component: () => import('@/views/BookShelf.vue')
   }
 ]
 

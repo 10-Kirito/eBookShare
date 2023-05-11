@@ -64,7 +64,7 @@ public class Books implements Serializable {
     private String url;
 
 
-    private String fileUuid;
+    private String fileuuid;
 
     public Books(Auditbooks auditbooks){
         this.bookid = auditbooks.getBookid();

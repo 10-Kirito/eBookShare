@@ -107,12 +107,12 @@ public class BooksController {
 
     //分页查询
     @GetMapping("/page")  //接口路径,多条件查询
-    public IPage<Books> findPage(@RequestParam Integer pageNum,
-                                         @RequestParam Integer pageSize,
-                                         @RequestParam(defaultValue = "") String bookname,
-                                         @RequestParam(defaultValue = "") String author,
-                                         @RequestParam(defaultValue = "") String publisher,
-                                         @RequestParam(defaultValue = "") String isbn){
+    public IPage<Books> findPage(@RequestParam(defaultValue = "1") Integer pageNum,
+                                 @RequestParam(defaultValue = "10") Integer pageSize,
+                                 @RequestParam(defaultValue = "") String bookname,
+                                 @RequestParam(defaultValue = "") String author,
+                                 @RequestParam(defaultValue = "") String publisher,
+                                 @RequestParam(defaultValue = "") String isbn){
         IPage<Books> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
         if(!"".equals(bookname)){

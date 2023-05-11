@@ -31,7 +31,7 @@
           <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index">
             <el-row :gutter="20">
               <el-col :span="6" class="book-cover" >
-                <el-image :src="book.img" fit="contain" lazy style="height: 150px;"/>
+                <el-image :src="book.img" @click="pushDetail(index)" fit="contain" lazy style="cursor: pointer;height: 150px;"/>
               </el-col>
               <el-col :span="15" >
                 <el-row class="attriclass" >

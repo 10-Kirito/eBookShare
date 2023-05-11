@@ -26,6 +26,11 @@ const routes = [
     component: () => import('@/views/Books/BookDetails.vue')
   },
   {
+    path: '/searchResult',
+    name: 'details',
+    component: () => import('@/views/Books/SearchResult.vue')
+  },
+  {
     path: '/test',
     name: 'test',
     component: () => import('@/pdf/BookDetails.vue')

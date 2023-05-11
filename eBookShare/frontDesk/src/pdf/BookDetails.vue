@@ -18,7 +18,7 @@
     </el-upload>
 
     <br>
-    <el-button type="primary" style="margin-top: 10px; margin-bottom: 10px" @click="downLoad">预览</el-button>
+    <el-button type="primary" style="margin-top: 10px; margin-bottom: 10px" @click="previewBook">预览</el-button>
 
   </div>
 </template>
@@ -48,7 +48,7 @@ export default {
     beforeRemove(file, fileList) {
       return this.$confirm(`Cancel the transfert of ${ file.name } ?`);
     },
-    downLoad(){
+    previewBook(){
       let url = 'http://localhost:9090/file/1de53068902f460b9c7b3bbe99719460.pdf';
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
     }

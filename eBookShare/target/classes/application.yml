@@ -28,12 +28,13 @@ mybatis-plus:
 
 files:
   upload:
-    path: C:\Users\yijin\Desktop\eBookShare\files\
-
+    path: D:\Desktop\uploadBooks\
+    #path: C:\Users\yijin\Desktop\eBookShare\files\
 books:
-    upload:
-      path: C:\Users\yijin\Desktop\eBookShare\files\books\
-#    path: /home/files/
+  upload:
+    path: D:\Desktop\uploadBooks\
+  # path: /home/files/
+  # path: C:\Users\yijin\Desktop\eBookShare\files\books\
 bookpic:
   upload:
     path: C:\Users\yijin\Desktop\eBookShare\files\books\bookcoverimage\

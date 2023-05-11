@@ -11,7 +11,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author sel
@@ -62,6 +62,9 @@ public class Books implements Serializable {
     private String filename;
 
     private String url;
+
+
+    private String fileUuid;
 
     public Books(Auditbooks auditbooks){
         this.bookid = auditbooks.getBookid();

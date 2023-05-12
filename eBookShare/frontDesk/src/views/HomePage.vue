@@ -16,9 +16,23 @@
           <el-card class="box-card" style="margin-right: 10px; height: 1410px">
             <h1>图书总榜单</h1>
 
-            <p>
-              这里显示所有的图书的下载量!!!
-            </p>
+            <div class="book-list">
+              <el-row>
+                <el-col v-for="(book, index) in booksDownloadList" :key="book.id" :span="12">
+                  <el-card class="book-card">
+                    <img :src="book.img" alt="" class="book-cover">
+                    <div class="book-info">
+                      <h3 class="book-title">{{ book.title }}</h3>
+                      <p class="book-author">作者：{{ book.author }}</p>
+                      <p class="book-category">类别：{{ book.category }}</p>
+                      <p class="book-download">下载量：{{ book.downloadCount }}</p>
+                    </div>
+                  </el-card>
+                </el-col>
+              </el-row>
+
+            </div>
+
           </el-card>
         </div>
       </el-col>
@@ -100,7 +114,7 @@ export default {
     return {
       pageTitle: '上海大学电子图书分享平台',
       //searchHTML: 'static/search/index.html',
-      //书籍信息保存在这个数组中
+      //书籍信息保存在这个数组中，//今日推荐阅读图书信息
       bookDetails: [{
         img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
         title: "Book Title",
@@ -132,6 +146,42 @@ export default {
           file: "PDF",
           isCollected:false,
         }],
+      //图书总榜单信息，按图书下载量排行
+      booksDownloadList:[
+        {
+          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
+          title: "Book Title",
+          author: "Author Name",
+          publisher: "Publisher Name",
+          publishedDate: "2022-01-01",
+          description: "《麦田里的守望者》的主人公,16岁的中学生霍尔顿·考尔菲德是当代美国文学中最早出现的反英雄形象之一。霍尔顿出身在纽约一个富裕的中产阶级的家庭。学校里的老师和自己的家长强迫他好好读书,为的是“出人头地,而他看不惯周围的一切,根本没心思用功读书,因而老是挨罚。他的内心又十分苦闷、彷徨,这种精神上无法调和的极度矛盾最终令他彻底崩溃,躺倒在精神病院里。",
+          ISBN: "978-3-16-148410-0",
+          Format: "Hardcover",
+          Pages: "400",
+          Language: "English",
+          category:"category",
+          file:'PDF',
+          isCollected:false,
+          downloads:"48"
+        },
+        {
+          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
+          title: "Book Title 2",
+          author: "Author Name 2",
+          publisher: "Publisher Name 2",
+          publishedDate: "2022-01-01",
+          description:
+              "Description of Book 2",
+          ISBN: "ISBN 2",
+          Format: "Hardcover",
+          Pages: "300",
+          Language: "English",
+          category: "category 2",
+          file: "PDF",
+          isCollected:false,
+          downloads:"44"
+        }
+      ],
       searchQuery:'',
       total:0,
       pageNum:1,
@@ -143,6 +193,12 @@ export default {
   methods: {
     searchBooks() {
       // 这里可以向服务器发起搜索请求，获取匹配的图书列表
+
+      router.push({
+        path:'/searchResult',
+        //路由传递参数，将书的信息传递到书籍详情页
+        query:{params:JSON.stringify(this.searchQuery)}
+      })
     },
     load(){//分页查询今日推荐的图书
       this.request.get("/",{           //更改后台接口

@@ -16,22 +16,21 @@
           <el-card class="box-card" style="margin-right: 10px; height: 1410px">
             <h1>图书总榜单</h1>
 
-            <div class="book-list">
-              <el-row>
-                <el-col v-for="(book, index) in booksDownloadList" :key="book.id" :span="12">
-                  <el-card class="book-card">
-                    <img :src="book.img" alt="" class="book-cover">
-                    <div class="book-info">
-                      <h3 class="book-title">{{ book.title }}</h3>
-                      <p class="book-author">作者：{{ book.author }}</p>
-                      <p class="book-category">类别：{{ book.category }}</p>
-                      <p class="book-download">下载量：{{ book.downloadCount }}</p>
-                    </div>
-                  </el-card>
+            <el-card v-for="(book, index) in booksDownloadList" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'" @mouseenter="showInfo(index)" @mouseleave="hideInfo(index)">
+              <el-row >
+                <el-col :span="8">
+                  <img :src="book.img" class="book-cover" />
+                </el-col>
+                <el-col :span="16" class="book-info">
+                  <div class="book-title">{{ book.title }}</div>
+                  <div class="book-download">{{ book.downloadCount }}次下载</div>
+                  <div class="book-details" v-show="showDetails === index">
+                    <div class="book-author">{{ book.author }}</div>
+                    <div class="book-category">{{ book.category }}</div>
+                  </div>
                 </el-col>
               </el-row>
-
-            </div>
+            </el-card>
 
           </el-card>
         </div>
@@ -44,7 +43,7 @@
 
           <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index">
             <el-row :gutter="20">
-              <el-col :span="6" class="book-cover" >
+              <el-col :span="6"  >
                 <el-image :src="book.img" @click="pushDetail(index)" fit="contain" lazy style="cursor: pointer;height: 150px;"/>
               </el-col>
               <el-col :span="15" >
@@ -115,7 +114,8 @@ export default {
       pageTitle: '上海大学电子图书分享平台',
       //searchHTML: 'static/search/index.html',
       //书籍信息保存在这个数组中，//今日推荐阅读图书信息
-      bookDetails: [{
+      bookDetails: [
+        {
         img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
         title: "Book Title",
         author: "Author Name",
@@ -130,22 +130,23 @@ export default {
         file:'PDF',
         isCollected:false,
       },
-        {
-          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-          title: "Book Title 2",
-          author: "Author Name 2",
-          publisher: "Publisher Name 2",
-          publishedDate: "2022-01-01",
-          description:
-              "Description of Book 2",
-          ISBN: "ISBN 2",
-          Format: "Hardcover",
-          Pages: "300",
-          Language: "English",
-          category: "category 2",
-          file: "PDF",
-          isCollected:false,
-        }],
+      {
+        img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
+        title: "Book Title 2",
+        author: "Author Name 2",
+        publisher: "Publisher Name 2",
+        publishedDate: "2022-01-01",
+        description:
+            "Description of Book 2",
+        ISBN: "ISBN 2",
+        Format: "Hardcover",
+        Pages: "300",
+        Language: "English",
+        category: "category 2",
+        file: "PDF",
+        isCollected:false,
+      }
+      ],
       //图书总榜单信息，按图书下载量排行
       booksDownloadList:[
         {
@@ -162,7 +163,7 @@ export default {
           category:"category",
           file:'PDF',
           isCollected:false,
-          downloads:"48"
+          downloadCount:"48"
         },
         {
           img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
@@ -179,13 +180,14 @@ export default {
           category: "category 2",
           file: "PDF",
           isCollected:false,
-          downloads:"44"
+          downloadCount:"44"
         }
       ],
       searchQuery:'',
       total:0,
       pageNum:1,
       pageSize:10,
+      showDetails: -1 // 当前显示详情的图书索引
     };
   },
   created() {
@@ -193,7 +195,6 @@ export default {
   methods: {
     searchBooks() {
       // 这里可以向服务器发起搜索请求，获取匹配的图书列表
-
       router.push({
         path:'/searchResult',
         //路由传递参数，将书的信息传递到书籍详情页
@@ -232,6 +233,12 @@ export default {
     },
     collectBtn(index){//收藏
       this.bookDetails[index].isCollected = !this.bookDetails[index].isCollected;
+    },
+    showInfo(index) {
+      this.showDetails = index
+    },
+    hideInfo(index) {
+      this.showDetails = -1
     }
   },
 }
@@ -239,103 +246,100 @@ export default {
 
 <style scoped>
 
-  .search{
-    height: 55px;
-    width: 600px;
-    font-size: 20px;
-  }
-  .searchButton{
-    height: 55px;
-    width: 100px;
-    font-size: 20px;
-    margin-left: 10px;
-  }
+.search{
+  height: 55px;
+  width: 600px;
+  font-size: 20px;
+}
+.searchButton{
+  height: 55px;
+  width: 100px;
+  font-size: 20px;
+  margin-left: 10px;
+}
 
 
-  /*以下李洪辰代码不能动!*/
-  .book-publisher{
-    color: #8C8C8C;
-    font-size: 10pt;
-    margin-bottom: 5px;
-    cursor: pointer;
-  }
-  .book-author {
-    font-size: 17px;
-    color: #49afd0;
-    font-style: italic;
-    font-family: Helvetica;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  .attriclass{
-    padding: 0;
-    margin: -10px -10px -10px -40px;
-  }
-  .align-left {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  .grid-content {
-    text-align: left;
-    margin-left: 0px;
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .el-header{
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-  .el-footer{
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    /*line-height: 700px;*/
-  }
-  body > .el-container {
-    margin-bottom: 40px;
-  }
-  h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-  li {
-    margin-bottom: 16px;
-  }
-  h2 {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  p {
-    font-size: 16px;
-    margin: 0;
-  }
-  .el-carousel__item h3 {
-    color: #475669;
-    font-size: 14px;
-    opacity: 0.75;
-    line-height: 200px;
-    margin: 0;
-  }
-  .el-carousel__item:nth-child(2n) {
-    background-color: #99a9bf;
-  }
-  .el-carousel__item:nth-child(2n+1) {
-    background-color: #d3dce6;
-  }
+/*以下李洪辰代码不能动!*/
+
+.book-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.book-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+
+.book-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.book-download {
+  font-size: 14px;
+  color: #999;
+  margin-bottom: 5px;
+}
+
+.book-details {
+  font-size: 14px;
+  color: #999;
+  margin-top: 5px;
+  display: none;
+}
+
+.book-category {
+  margin-bottom: 5px;
+}
+
+.even {
+  background-color: #f7f7f7;
+}
+
+.odd {
+  background-color: #fff;
+}
+
+
+
+.book-publisher{
+  color: #8C8C8C;
+  font-size: 10pt;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+.book-author {
+  font-size: 17px;
+  color: #49afd0;
+  font-style: italic;
+  font-family: Helvetica;
+  cursor: pointer;
+  text-decoration: none;
+  margin-bottom: 5px;
+}
+.attriclass{
+  padding: 0;
+  margin: -10px -10px -10px -40px;
+}
+
+.grid-content {
+  text-align: left;
+  margin-left: 0px;
+  border-radius: 4px;
+  min-height: 36px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+
+
 </style>

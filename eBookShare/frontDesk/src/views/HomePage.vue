@@ -305,8 +305,6 @@ export default {
   background-color: #fff;
 }
 
-
-
 .book-publisher{
   color: #8C8C8C;
   font-size: 10pt;
@@ -339,7 +337,4 @@ h1 {
   font-weight: bold;
   margin-bottom: 16px;
 }
-
-
-
 </style>

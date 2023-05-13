@@ -1,13 +1,9 @@
-@@ -0,0 +1,235 @@
 <template>
+
   <div>
-    <el-main class="el-main">
-      <div style="margin-bottom: 10px; margin-top: 20px">
-        <el-row style="margin-bottom:30px">
-          <input type="text" v-model="searchQuery" placeholder="输入关键字搜索图书">
-          <button @click="searchBooks" style="height: 64px;width: 100px; font-size: 20px">查询</button>
-        </el-row>
-      </div>
+
+    <el-main>
+    <h1>{{author}}的书籍:</h1>
 
       <div style="margin: 0 100px">
         <div>
@@ -32,8 +28,8 @@
                       </el-col>
                     </el-row>
                     <el-row class="attriclass"><div class="grid-content book-publisher" title="出版社">{{book.publisher}}</div></el-row>
-                    <el-row class="attriclass"><span @click="redirectToAuthorBooks(book.author)" title="找到该作者的所有书籍" class="book-author">{{book.author}}</span></el-row>
-                    <el-row :gutter="24" style="margin-top: 40px;margin-right: -70px">
+<!--                    <el-row class="attriclass"><a href="/author/J. D. Salinger" title="找到该作者的所有书籍" class="book-author">{{book.author}}</a></el-row>-->
+                    <el-row :gutter="24" style="margin-top: 60px;margin-right: -70px">
                       <el-col :span="2" ><div style="color: #8C8C8C;">年:</div></el-col>
                       <el-col :span="6" ><div style="margin-top: 2px">{{book.publishedDate}}</div></el-col>
                       <el-col :span="4" ><div style="color: #8C8C8C;">语言：</div></el-col>
@@ -61,21 +57,20 @@
           </div>
         </div>
       </div>
-
-
     </el-main>
   </div>
+
+
 </template>
 
 <script>
 import router from "@/router";
 
 export default {
-  name: "SearchResult",
-  data() {
-    return {
-      pageTitle: '上海大学电子图书分享平台',
-      //书籍信息保存在这个数组中
+  name: "AuthorBooks",
+  data(){
+    return{
+      author:JSON.parse(this.$route.query.params),//搜索关键字
       bookDetails: [
           {
         img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
@@ -95,129 +90,83 @@ export default {
       },
         {
           img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-          title: "Book Title 2",
-          author: "Author Name 2",
-          publisher: "Publisher Name 2",
+          title: "Book Title 3",
+          author: "Author Name ",
+          publisher: "Publisher Name 3",
           publishedDate: "2022-01-01",
           description:
-              "Description of Book 2",
-          ISBN: "ISBN 2",
+              "Description of Book 23",
+          ISBN: "ISBN 3",
           Format: "Hardcover",
           Pages: "300",
           Language: "English",
-          category: "category 2",
+          category: "category 3",
           file: "PDF",
           isCollected: false,
           collectBtnClass:"el-icon-star-off"
         }],
-      searchQuery: '',
       total: 0,
       pageNum: 1,
       pageSize: 10,
-    };
+    }
   },
   created() {
-    const params = this.$route.query.params;   //获取搜索关键字
-    if (params) {
-      try {
-        this.searchQuery = JSON.parse(params);
-        console.log('数据是：', this.searchQuery);
-      } catch (e) {
-        console.error('解析参数出错：', e);
-      }
-    } else {
-      console.warn('未找到参数');
-    }
-
-    //this.load()        //加载初始数据
+    //load()
   },
   methods: {
-    searchBooks() {
-      // 这里可以向服务器发起搜索请求，获取匹配的图书列表
-      this.load();
-    },
-    redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面
-      this.$router.push({
-        path:'/authorBooks',
-        query:{params:JSON.stringify(author)}
-      })
-    },
-    load(){//分页模糊查询图书
-      this.request.get("/",{           //更改后台接口
-        params:{
-          pageNum:this.pageNum,
-          pageSize:this.pageSize,
-          bookname:this.searchQuery
+    load() {             //根据作者名字查询书籍
+      this.request.get("/", {           //更改后台接口
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          auther: this.author
         }
-      }).then(res=>{
-        this.bookDetails=res.records           //根据后台数据更改
-        this.total=res.total
+      }).then(res => {
+        this.bookDetails = res.records           //根据后台数据更改
+        this.total = res.total
         this.bookDetails.forEach(book => {          //遍历数组，为每个对象添加 isCollected 属性
           book.isCollected = false; // 默认值为 false
-          book.collectBtnClass="el-icon-star-off"     //默认值关闭
+          book.collectBtnClass = "el-icon-star-off"     //默认值关闭
         })
       })
     },
-    handleSizeChange(pageSize){
-      this.pageSize=pageSize
+    handleSizeChange(pageSize) {
+      this.pageSize = pageSize
       this.load()
     },
-    handleCurrentChange(pageNum){
-      this.pageNum=pageNum
+    handleCurrentChange(pageNum) {
+      this.pageNum = pageNum
       this.load()
     },
-    collectBtn(index){//收藏
-      this.bookDetails[index].isCollected=!this.bookDetails[index].isCollected
-      if(this.bookDetails[index].isCollected){
+    pushDetail(index) {           //跳转路由函数
+      // console.log(JSON.stringify(this.bookDetails[0]))
+      router.push({
+        path: '/bookdetails',
+        //路由传递参数，将书的信息传递到书籍详情页
+        query: {params: JSON.stringify(this.bookDetails[index])}
+      })
+    },
+    collectBtn(index) {//收藏
+      this.bookDetails[index].isCollected = !this.bookDetails[index].isCollected
+      if (this.bookDetails[index].isCollected) {
         this.$message({
           message: '收藏成功',
           type: 'success'
         });
-        this.bookDetails[index].collectBtnClass="el-icon-star-on"
-      }else{  //取消收藏
+        this.bookDetails[index].collectBtnClass = "el-icon-star-on"
+      } else {  //取消收藏
         this.$message({
           message: '取消成功',
           type: 'success'
         });
-        this.bookDetails[index].collectBtnClass="el-icon-star-off"
+        this.bookDetails[index].collectBtnClass = "el-icon-star-off"
       }
-    },
-    pushDetail(index){           //跳转路由函数
-      // console.log(JSON.stringify(this.bookDetails[0]))
-      router.push({
-        path:'/bookdetails',
-        //路由传递参数，将书的信息传递到书籍详情页
-        query:{params:JSON.stringify(this.bookDetails[index])}
-      })
     }
   }
 }
 </script>
 
 <style scoped>
-button {
-  font-size: 16px;
-  padding: 8px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  height: 50px;
-  width: 100px;
-}
-
-
-input[type="text"] {
-  font-size: 16px;
-  padding: 8px;
-  margin-right: 8px;
-  width: 700px;
-  height: 50px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 .bg-purple-light {
   background: #e5e9f2;
 }
@@ -252,8 +201,4 @@ input[type="text"] {
   color: #333;
   text-align: center;
 }
-
-
-
-
 </style>

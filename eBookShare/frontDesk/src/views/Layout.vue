@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div style="margin: -8px">
     <el-container>
       <!-- 首页头部-->
-      <el-header>
+      <el-header >
         <Header></Header>
       </el-header>
 

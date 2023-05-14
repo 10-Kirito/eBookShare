@@ -321,7 +321,7 @@ export default {
       console.log("this has been out")
       this.showRightDetails = -1
     }
-  },
+  }
 }
 </script>
 

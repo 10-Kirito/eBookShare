@@ -48,6 +48,7 @@ public class AdminsController {
     public Result findOne(@PathVariable String username){
         QueryWrapper<Admins> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("username",username);
+        System.out.println("Hello, world!");
         return Result.success(adminsService.getOne(queryWrapper));
     }
 

@@ -4,7 +4,7 @@
     <br>
     <el-upload
         class="upload-demo"
-        action="http://localhost:9090/file/upload"
+        action="http://124.71.166.37:9091/files/upload"
         :on-preview="handlePreview"
         :on-remove="handleRemove"
         :before-remove="beforeRemove"

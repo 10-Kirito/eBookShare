@@ -28,28 +28,28 @@ mybatis-plus:
 
 files:
   upload:
-    path: /root/ebookshare/files
+    path: /root/ebookshare/files/
     # path: D:\Desktop\uploadBooks\
     #path: C:\Users\yijin\Desktop\eBookShare\files\
 books:
   upload:
-    path: /root/ebookshare/books
+    path: /root/ebookshare/books/
   # path: /home/files/
   # path: C:\Users\yijin\Desktop\eBookShare\files\books\
 bookpic:
   upload:
-    path: /root/ebookshare/books/bookcoverimage
+    path: /root/ebookshare/books/bookcoverimage/
     # path: C:\Users\yijin\Desktop\eBookShare\files\books\bookcoverimage\
 
 
 auditbooks:
   upload:
-    path: /root/ebookshare/auditbooks
+    path: /root/ebookshare/auditbooks/
     # path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\
 #    path: /home/files/
 
 auditbookpic:
   upload:
-    path: /root/ebookshare/auditbooks/bookcoverimage
+    path: /root/ebookshare/auditbooks/bookcoverimage/
     # path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\bookcoverimage\
 

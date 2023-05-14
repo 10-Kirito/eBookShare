@@ -240,7 +240,7 @@ export default {
     hideInfo(index) {
       this.showDetails = -1
     }
-  },
+  }
 }
 </script>
 

@@ -109,8 +109,12 @@ public class AuditbooksController {
         //	#调用File类的核心方法renameTo
             if (startFile.renameTo(endFile)) {
                 System.out.println("文件移动成功！目标路径：{"+endFile.getAbsolutePath()+"}");
+                System.out.println(startFile.getAbsolutePath());
+                System.out.println(endFile.getAbsolutePath());
             } else {
                 System.out.println("文件移动失败！起始路径：{"+startFile.getAbsolutePath()+"}");
+                System.out.println(startFile.getAbsolutePath());
+                System.out.println(endFile.getAbsolutePath());
             }
         }catch(Exception e) {
             System.out.println("文件移动出现异常！起始路径：{"+startFile.getAbsolutePath()+"}");
@@ -355,6 +359,8 @@ public class AuditbooksController {
         //为了避免检索的时候可能出现问题，逆向进行查找
         queryWrapper.orderByDesc("bookid");
         Auditbooks books = auditbooksService.getOne(queryWrapper);
+        auditbooksService.remove(queryWrapper);
+        System.out.println(books);
         if(books != null)
         {
             books.setBookname(bookname);
@@ -363,7 +369,8 @@ public class AuditbooksController {
             books.setIsbn(isbn);
             books.setDescription(description);
             books.setCategory(category);
-            auditbooksService.updateById(books);
+            System.out.println(books);
+            auditbooksService.save(books);
         }
         //对找到的数据进行设置
         return Result.success();

@@ -81,8 +81,49 @@ public class AuditbooksController {
 //        return booksService.removeById(id);
 //    }
 
-
-
+//    @DeleteMapping("/audit/{bookid}")
+//    public Result  recoverBooks(@PathVariable String bookid){
+//        Auditbooks books = auditbooksMapper.selectById(bookid);
+//        //查找数据库
+//        QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("bookid",bookid);
+//        Auditbooks auditbooks;
+//        auditbooks = auditbooksService.getOne(queryWrapper);
+//        //1  转移文件目录
+//
+//
+//        //       #源文件路径
+//        File startFile=new File(auditbooks.getUrl());
+//        //#目的目录路径
+//        File endDirection=new File(booksPath);
+//        //#如果目的目录路径不存在，则进行创建
+//        if(!endDirection.exists()) {
+//            endDirection.mkdirs();
+//        }
+//        //#目的文件路径=目的目录路径+源文件名称
+//        File endFile=new File(endDirection+ File.separator+ startFile.getName());
+//        try {
+//        //	#调用File类的核心方法renameTo
+//            if (startFile.renameTo(endFile)) {
+//                System.out.println("文件移动成功！目标路径：{"+endFile.getAbsolutePath()+"}");
+//                System.out.println(startFile.getAbsolutePath());
+//                System.out.println(endFile.getAbsolutePath());
+//            } else {
+//                System.out.println("文件移动失败！起始路径：{"+startFile.getAbsolutePath()+"}");
+//                System.out.println(startFile.getAbsolutePath());
+//                System.out.println(endFile.getAbsolutePath());
+//            }
+//        }catch(Exception e) {
+//            System.out.println("文件移动出现异常！起始路径：{"+startFile.getAbsolutePath()+"}");
+//        }
+//
+//
+//        //2  转移数据库信息
+//        auditbooksMapper.deleteById(auditbooks);
+//        Books books1 = new Books(auditbooks);
+//        booksMapper.insert(books1);
+//        return Result.success();
+//    }
 
     @DeleteMapping("/audit/{bookid}")
     public Result  recoverBooks(@PathVariable String bookid){
@@ -97,16 +138,22 @@ public class AuditbooksController {
 
         //       #源文件路径
         File startFile=new File(auditbooks.getUrl());
+        File startFineCoverImage = new File(auditbooks.getCoverimage());
         //#目的目录路径
         File endDirection=new File(booksPath);
+        File endImageDirection = new File(bookpicPath);
         //#如果目的目录路径不存在，则进行创建
         if(!endDirection.exists()) {
             endDirection.mkdirs();
         }
+        if(!endImageDirection.exists()) {
+            endImageDirection.mkdirs();
+        }
         //#目的文件路径=目的目录路径+源文件名称
         File endFile=new File(endDirection+ File.separator+ startFile.getName());
+        File endFilePic=new File(endImageDirection+ File.separator+ startFineCoverImage.getName());
         try {
-        //	#调用File类的核心方法renameTo
+            //	#调用File类的核心方法renameTo
             if (startFile.renameTo(endFile)) {
                 System.out.println("文件移动成功！目标路径：{"+endFile.getAbsolutePath()+"}");
             } else {
@@ -116,6 +163,16 @@ public class AuditbooksController {
             System.out.println("文件移动出现异常！起始路径：{"+startFile.getAbsolutePath()+"}");
         }
 
+        try {
+            //	#调用File类的核心方法renameTo
+            if (startFineCoverImage.renameTo(endFilePic)) {
+                System.out.println("封面文件移动成功！目标路径：{"+endFilePic.getAbsolutePath()+"}");
+            } else {
+                System.out.println("封面文件移动失败！起始路径：{"+startFineCoverImage.getAbsolutePath()+"}");
+            }
+        }catch(Exception e) {
+            System.out.println("封面文件移动出现异常！起始路径：{"+startFineCoverImage.getAbsolutePath()+"}");
+        }
 
         //2  转移数据库信息
         auditbooksMapper.deleteById(auditbooks);
@@ -123,6 +180,8 @@ public class AuditbooksController {
         booksMapper.insert(books1);
         return Result.success();
     }
+
+
     @DeleteMapping("/cancel")
     public Result  cancel(@RequestParam String bookid,@RequestParam String suggestions){
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
@@ -355,6 +414,8 @@ public class AuditbooksController {
         //为了避免检索的时候可能出现问题，逆向进行查找
         queryWrapper.orderByDesc("bookid");
         Auditbooks books = auditbooksService.getOne(queryWrapper);
+        auditbooksService.remove(queryWrapper);
+        System.out.println(books);
         if(books != null)
         {
             books.setBookname(bookname);
@@ -363,7 +424,8 @@ public class AuditbooksController {
             books.setIsbn(isbn);
             books.setDescription(description);
             books.setCategory(category);
-            auditbooksService.updateById(books);
+            System.out.println(books);
+            auditbooksService.save(books);
         }
         //对找到的数据进行设置
         return Result.success();

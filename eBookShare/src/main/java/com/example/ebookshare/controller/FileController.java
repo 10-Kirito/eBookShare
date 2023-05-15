@@ -42,19 +42,73 @@ public class FileController {
      * @return
      * @throws IOException
      */
+//    @PostMapping("/upload")
+//    public String  upload(@RequestParam MultipartFile file) throws IOException {
+//        // 解析前端传过来文件的名称、扩展名、大小
+//        String orginalFilename = file.getOriginalFilename();
+//        String type = FileUtil.extName(orginalFilename);
+//        long size = file.getSize();
+//
+//        //定义一个文件唯一的标识码
+//        String uuid = IdUtil.fastSimpleUUID();
+//        String fileUUid = uuid + StrUtil.DOT +type;
+//        File uploadFile = new File(fileuploadPAth + fileUUid);
+//
+//        System.out.println(uploadFile);
+//        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
+//        File parentFile = uploadFile.getParentFile();
+//        if(!parentFile.exists()){
+//            parentFile.mkdirs();
+//        }
+//
+//        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+//        String url;
+//        String md5;
+//        //上传文件到磁盘
+//        file.transferTo(uploadFile);
+//        System.out.println(file);
+//        //获取文件的md5
+//        md5 = SecureUtil.md5(uploadFile);
+//        //数据库查询是否存在相同的记录
+//        Files dbFiles = getFileByMd5(md5);
+//        if (dbFiles != null){
+//            url = dbFiles.getUrl();
+//            //删除之前已存在的重复文件，以便于上传最新版文件
+//            uploadFile.delete();
+//        }else {
+//            //数据库不存在重复的文件
+//            //把获取到的文件存储到磁盘目录
+//            url = "http://124.71.166.37:9091/root/ebookshare/files/"+fileUUid;
+//        }
+//        //获取文件url
+//        //把获取到的文件存储到磁盘目录中
+//
+//        //文件路径
+//        //存储数据库
+//        Files saveFile = new Files();
+//        saveFile.setBookname(orginalFilename);
+//        saveFile.setType(type);
+//        saveFile.setSize(size/1024); //最后存储单位是kb
+//        saveFile.setUrl(url);
+//        saveFile.setMd5(md5);
+//        fileMapper.insert(saveFile);
+//        return url; //文件下载链接
+//        //上传成功后返回url
+//    }
     @PostMapping("/upload")
     public String  upload(@RequestParam MultipartFile file) throws IOException {
-        // 解析前端传过来文件的名称、扩展名、大小
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
         long size = file.getSize();
+
+        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
 
         //定义一个文件唯一的标识码
         String uuid = IdUtil.fastSimpleUUID();
         String fileUUid = uuid + StrUtil.DOT +type;
         File uploadFile = new File(fileuploadPAth + fileUUid);
 
-        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
+        System.out.println(uploadFile);
         File parentFile = uploadFile.getParentFile();
         if(!parentFile.exists()){
             parentFile.mkdirs();
@@ -64,7 +118,14 @@ public class FileController {
         String url;
         String md5;
         //上传文件到磁盘
-        file.transferTo(uploadFile);
+        try {
+            file.transferTo(uploadFile);
+            System.out.println("File uploaded successfully.");
+        } catch (Exception e) {
+            System.out.println("Failed to upload the file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         //获取文件的md5
         md5 = SecureUtil.md5(uploadFile);
         //数据库查询是否存在相同的记录
@@ -76,7 +137,7 @@ public class FileController {
         }else {
             //数据库不存在重复的文件
             //把获取到的文件存储到磁盘目录
-            url = "http://124.71.166.37:9091/file/"+fileUUid;
+            url = "http://124.71.166.37:9090/file/"+fileUUid;
         }
         //获取文件url
         //把获取到的文件存储到磁盘目录中
@@ -93,6 +154,9 @@ public class FileController {
         return url; //文件下载链接
         //上传成功后返回url
     }
+
+
+
 
     /**
      * 文件下载接口：http://124.71.166.37:9090/file/{fileUUid}

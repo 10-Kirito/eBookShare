@@ -40,10 +40,10 @@
             style="text-align: center"
             ref="uploadpic"
             class="avatar-uploader"
-            action="http://localhost:9090/auditbooks/uploadpic"
+            action="http://124.71.166.37:9091/auditbooks/uploadpic"
             :show-file-list="false"
             :auto-upload="false"
-            :on-success="updatebookpic"
+            :on-success="updatebookpicinfo"
             :on-change="handlePictureCardPreview"
         ><!--            :on-change="picChange"-->
           <!--        暂时没有头像，因为新增头像需要添加数据库里面-->
@@ -63,7 +63,7 @@
               ref="upload"
               :data="carryData"
               class="upload-demo"
-              action="http://localhost:9090/auditbooks/upload"
+              action="http://124.71.166.37:9091/auditbooks/upload"
               :limit="1"
               :auto-upload="false"
               :on-change="loadJsonFromFile"
@@ -148,6 +148,30 @@ export default {
       }
 
     },
+    updatebookpicinfo(){
+      let file = this.uploadFiles[0]
+      // this.$message.error("获取文件名："+file.name)
+      this.$message.error("获取信息：" + file.name)
+      this.request.get("/auditbooks/addbookinfo", {
+        params: {
+          filename: file.name,
+          bookname: this.form.bookname,
+          author: this.form.author,
+          publisher: this.form.publisher,
+          isbn: this.form.isbn,
+          description: this.form.description,
+          category: this.form.category,
+        }
+      })
+          .then(res => {
+            if (res.code === '200') {
+              this.$message.success("上传成功")
+              this.$router.push("/admins/ebookmanage")
+            } else {
+              this.$message.error("上传失败")
+            }
+          })
+    },
     beforeUpload(file){
       console.log('文件：', file)
       var FileExt = file.name.replace(/.+\./, "")
@@ -192,28 +216,28 @@ export default {
 
 
 
-      let file = this.uploadFiles[0]
-      // this.$message.error("获取文件名："+file.name)
-      this.$message.error("获取信息：" + file.name)
-      this.request.get("/auditbooks/addbookinfo", {
-        params: {
-          filename: file.name,
-          bookname: this.form.bookname,
-          author: this.form.author,
-          publisher: this.form.publisher,
-          isbn: this.form.isbn,
-          description: this.form.description,
-          category: this.form.category,
-        }
-      })
-          .then(res => {
-            if (res.code === '200') {
-              this.$message.success("上传成功")
-              this.$router.push("/admins/ebookmanage")
-            } else {
-              this.$message.error("上传失败")
-            }
-          })
+      // let file = this.uploadFiles[0]
+      // // this.$message.error("获取文件名："+file.name)
+      // this.$message.error("获取信息：" + file.name)
+      // this.request.get("/auditbooks/addbookinfo", {
+      //   params: {
+      //     filename: file.name,
+      //     bookname: this.form.bookname,
+      //     author: this.form.author,
+      //     publisher: this.form.publisher,
+      //     isbn: this.form.isbn,
+      //     description: this.form.description,
+      //     category: this.form.category,
+      //   }
+      // })
+      //     .then(res => {
+      //       if (res.code === '200') {
+      //         this.$message.success("上传成功")
+      //         this.$router.push("/admins/ebookmanage")
+      //       } else {
+      //         this.$message.error("上传失败")
+      //       }
+      //     })
     },
     uploadError(){
       this.$message.error("文件上传失败")

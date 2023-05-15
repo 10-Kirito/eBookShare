@@ -29,17 +29,25 @@
             </el-row>
             <el-row class="align-left">
               <i class="book-author">
-                <a href="/author/J. D. Salinger" title="找到该作者的所有书籍" class="color1">{{ bookDetails.author }}</a>
+                <span @click="redirectToAuthorBooks(bookDetails.author)" title="找到该作者的所有书籍" class="color1" style="cursor: pointer">{{ bookDetails.author }}</span>
               </i>
             </el-row>
             <el-row class="align-left">
                 <div style="font-size: 20px;display: inline-block">
-                  <el-tooltip class="item" effect="dark" content="收藏" placement="bottom">
-                    <i :class="collectBtnClass" @click="collectBtn" style="cursor: pointer;font-size: 25px;margin-right: 5px"></i>
-                  </el-tooltip>
-                  <el-tooltip class="item" effect="dark" content="图书评级/文件质量" placement="bottom">
+<!--                    <i :class="collectBtnClass" @click="collectBtn" style="cursor: pointer;font-size: 25px;margin-right: 5px"></i>-->
+                    <el-popover
+                        placement="bottom"
+                        width="230"
+                        trigger="click">
+                      <div style="font-size: 12px;text-align: center">-----------你有多喜欢这本书？-----------</div>
+                      <div class="block" style="text-align: center">
+                        <el-rate v-model="bookValue" allow-half="true"></el-rate>
+                      </div>
+                      <i class="el-icon-medal" slot="reference" style="cursor: pointer"></i>
+                    </el-popover>
+                  <el-tooltip effect="dark" content="图书评级/文件质量" placement="bottom">
                     <i>
-                      <span class="book-rating-interest-score">5.0</span> /
+                      <span class="book-rating-interest-score">{{ bookValue }}</span> /
                       <span class="book-rating-quality-score">4.0</span>
                     </i>
                   </el-tooltip>
@@ -51,8 +59,8 @@
                 </i>
               </div>
 
-              <el-tooltip content="加入书单">
-                <el-button class="book-add-to-list" icon="el-icon-folder-add" circle />
+              <el-tooltip :content="bookDetails.isCollected ? '取消收藏' : '收藏' ">
+                <el-button class="book-add-to-list" :class="bookDetails.collectBtnClass" circle @click="collectBtn" />
               </el-tooltip>
               <el-tooltip content="感谢贡献者">
                 <el-button class="book-thank-contributors" icon="el-icon-thumb" circle />
@@ -111,18 +119,32 @@ export default {
     return {
       bookDetails: {},
       collectBtnClass:"el-icon-star-off",
-      isCollect:false
+      bookValue:null
     }
   },
   methods:{
     collectBtn(){//收藏
-      this.isCollect=!this.isCollect
-      if(this.isCollect){
-        this.collectBtnClass="el-icon-star-off"
+      this.bookDetails.isCollected=!this.bookDetails.isCollected
+      if(this.bookDetails.isCollected){
+        this.$message({
+          message: '收藏成功',
+          type: 'success'
+        });
+        this.bookDetails.collectBtnClass="el-icon-star-on"
       }else{  //取消收藏
-        this.collectBtnClass="el-icon-star-on"
+        this.$message({
+          message: '取消成功',
+          type: 'success'
+        });
+        this.bookDetails.collectBtnClass="el-icon-star-off"
       }
-    }
+    },
+    redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面
+      this.$router.push({
+        path:'/authorBooks',
+        query:{params:JSON.stringify(author)}
+      })
+    },
   }
 }
 </script>

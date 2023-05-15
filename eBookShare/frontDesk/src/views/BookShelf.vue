@@ -1,16 +1,16 @@
 <template>
-  <div style="width: 60%; margin-left: 450px" >
+  <div style="width: 60%; margin-left: 420px" >
     <!-- 图书信息展示-->
-    <el-row v-for="(row ,index1) in rowCount" :key="row" style="margin-bottom: 20px">
+    <el-row v-for="(row ,index1) in rowCount" :key="row" style="margin-bottom: 30px">
         <el-col :span="6" v-for="(col, index2) in colCount" :key="col" >
-          <book-from-shelf style="width: 300px; height: 450px"></book-from-shelf>
+          <book-from-shelf v-if="dataload" :book-info="booksData[(row - 1) * colCount + col - 1]" style="width: 270px; height: 420px"></book-from-shelf>
         </el-col>
     </el-row>
 
 
     <!-- 分页查询选项-->
-    <el-row>
-      <div class="block">
+    <el-row style="margin-top: 60px">
+      <div >
         <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
@@ -42,8 +42,17 @@ export default {
       // 分页查询，每一页的个数 = rowCount * colCount
       currentPage: 1,
       pageSize: this.rowCount * this.colCount,
-      total: 100
+      total: 100,
+
+
+      // 该用户个人书架中的图书信息
+      booksData: [],
+
+      dataload: false
     }
+  },
+  beforeMount() {
+    this.getAllBooksData();
   },
   methods:{
     handleSizeChange(val) {
@@ -53,6 +62,13 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
+    },
+    getAllBooksData(){
+      this.request.get("/books").then(res => {
+        this.booksData = res;
+        console.log(this.booksData);
+        this.dataload = true;
+      })
     }
   }
 }

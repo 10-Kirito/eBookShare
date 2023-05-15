@@ -3,21 +3,23 @@
     <!--  下面的代码目的是为了展示位于书架上的一本图书！-->
 
 
-    <el-tooltip placement="top" effect="light">
+    <el-tooltip placement="top" effect="light" style="height: 430px">
       <!--  鼠标移动提示部分-->
       <div slot="content">
-        <span>{{ bookDetails.bookName }}</span>
+        <span>{{ bookInfo.bookname }}</span>
         <div class="bottom clearfix">
-          <time class="time">{{ new Date() }}</time>
+          <span>{{ bookInfo.description}}</span>
           <el-button type="success" class="button">下载</el-button>
         </div>
       </div>
 
       <!--  图片显示部分-->
       <el-card style="height: 455px">
-        <img :src="bookDetails.bookView" class="image">
+        <div style="position: relative; width: 100%; height: 100%;">
+          <img :src="bookDetails.testView" class="image" style="height: 370px; width: 250px">
+        </div>
         <div style="margin-top: 2px; margin-bottom: 2px">
-          {{ bookDetails.bookName }}
+          {{ bookInfo.bookname }}
         </div>
       </el-card>
     </el-tooltip>
@@ -29,7 +31,7 @@
 export default {
   name: "bookFromShelf",
   props :{
-    bookInfo:{}
+    bookInfo:null
   },
   data(){
     // 图片显示问题：
@@ -42,11 +44,16 @@ export default {
       bookDetails: {
         bookName: "代码简洁之道",
         // 绝对路径访问图片信息:
-        bookView: "/images/books.png"
+        bookView: "/images/books.png",
+
+        testView: "http://124.71.166.37:9091/file/bookpic/35219a1a0e374446b3f4295b2d1607d4.png"
         // 相对路径访问图片信息:
         //bookView: require("../assets/images/books.png")
       }
     }
+  },
+  created() {
+
   },
   methods: {
     // 如果点击图书封面的话，会去在线预览电子图书

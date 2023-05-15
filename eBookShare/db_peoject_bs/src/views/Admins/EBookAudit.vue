@@ -5,31 +5,14 @@
       <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="bookname"></el-input>
       <el-input style="width: 200px" placeholder="请输入作者" class="ml-5" suffix-icon="el-icon-message" v-model="author"></el-input>
       <el-input style="width: 200px" placeholder="请输入出版社" class="ml-5" suffix-icon="el-icon-message" v-model="publisher"></el-input>
-<!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
+      <!--<el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
+      <!--<el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
+      <!--<el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
 
     <div style="margin: 10px 0">
-<!--      <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>-->
-<!--      <el-popconfirm-->
-<!--          class="ml-5"-->
-<!--          confirm-button-text="确认"-->
-<!--          cancel-button-text="取消"-->
-<!--          :icon="InfoFilled"-->
-<!--          icon-color="#626AEF"-->
-<!--          title="是否批量删除?"-->
-<!--          @confirm="delBatch"-->
-<!--          @cancel="cancelEvent"-->
-<!--      >-->
-<!--        <el-button type="danger" slot="reference">批量删除<i class = "el-icon-remove-outline"></i></el-button>-->
-<!--      </el-popconfirm>-->
-<!--      <el-upload action="http://localhost:9090/books/upload" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml-5">导入<i class = "el-icon-bottom"></i></el-button>-->
-<!--      </el-upload>-->
-
         <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>
 
       <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
@@ -60,11 +43,10 @@
               class="ml-7"
               confirm-button-text="确认"
               cancel-button-text="取消"
-              :icon="InfoFilled"
-              icon-color="#626AEF"
+              icon="el-icon-info"
+              icon-color="red"
               title="是否撤回?"
               @confirm="cancelbooks(scope.row.bookid)"
-              @cancel="cancelEvent"
           >
             <template #reference>
               <el-button type="danger">撤回<i class="el-icon-remove-outline"></i></el-button>
@@ -141,6 +123,7 @@
 import EBookUpload from "@/views/Admins/EBookUpload.vue";
 
 export default {
+  inject:['reload'],
   name: "User",
   computed: {
     EBookUpload() {
@@ -214,15 +197,15 @@ export default {
     handleEdit(row){
       this.form = row //将数据赋予弹窗
       this.dialogFormVisible = true //显示弹窗
-
     },
     Pass(bookid){
-      this.request.delete("/auditbooks/audit/" + bookid).then(res => {
-        if(res.code === '200'){
-          this.$message.success("审核通过")
-          this.load()
+      this.request.post("/auditbooks/move/" + bookid).then(res => {
+        console.log(res);
+        if (res.code == 'SUCCESS'){
+          this.$message.success(res.msg);
+          this.reload();
         }else {
-          this.$message.error("操作失败")
+          this.$message.error(res.msg);
         }
       })
     },
@@ -238,17 +221,6 @@ export default {
     EBookup(){
       this.$router.push("/admins/ebookupload")
     },
-    // delBatch(){
-    //   let ids = this.multipleSelection.map(v => v.lnumber)   //把一个对象的数组变成一个纯数组
-    //   this.request.post("/department/del/batch",ids).then(res => {
-    //     if(res){
-    //       this.$message.success("批量删除成功")
-    //       this.load()
-    //     }else {
-    //       this.$message.error("批量删除失败")
-    //     }
-    //   })
-    // },
     reset(){
       this.lnumber = ""
       this.lname = ""
@@ -265,7 +237,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://localhost:9090/auditbooks/export")
+      window.open("http://124.71.166.37:9091/auditbooks/export")
     },
     cancelbooks(bookid){
       this.cancel = true

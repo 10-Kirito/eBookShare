@@ -9,7 +9,7 @@ spring:
     password: yjr3062439765
   servlet:
     multipart:
-      max-file-size: 1000MB        # 设置单个文件最大大小为100MB
+      max-file-size: 1000MB       # 设置单个文件最大大小为100MB
       max-request-size: 1000MB    # 设置多个文件大小为100MB
 
 
@@ -28,28 +28,30 @@ mybatis-plus:
 
 files:
   upload:
+    # path: D:\Desktop\files\
     path: /root/ebookshare/files/
-    # path: D:\Desktop\uploadBooks\
     #path: C:\Users\yijin\Desktop\eBookShare\files\
 books:
   upload:
     path: /root/ebookshare/books/
-  # path: /home/files/
-  # path: C:\Users\yijin\Desktop\eBookShare\files\books\
+    # path: D:\Desktop\books\
+    #path: C:\Users\yijin\Desktop\eBookShare\files\books\
 bookpic:
   upload:
     path: /root/ebookshare/books/bookcoverimage/
-    # path: C:\Users\yijin\Desktop\eBookShare\files\books\bookcoverimage\
+    # path: D:\Desktop\books\bookcoverimage\
+    #path: C:\Users\yijin\Desktop\eBookShare\files\books\bookcoverimage\
 
 
 auditbooks:
   upload:
     path: /root/ebookshare/auditbooks/
-    # path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\
-#    path: /home/files/
+    # path: D:\Desktop\auditbooks\
+    #path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\
 
 auditbookpic:
   upload:
     path: /root/ebookshare/auditbooks/bookcoverimage/
-    # path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\bookcoverimage\
+    # path: D:\Desktop\auditbooks\bookcoverimage\
+    #path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\bookcoverimage\
 

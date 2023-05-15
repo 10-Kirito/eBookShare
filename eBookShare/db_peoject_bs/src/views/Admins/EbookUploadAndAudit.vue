@@ -3,20 +3,6 @@
     <el-card style="width: 500px;margin: 50px auto auto;" >
       <!--    根据实际表格情况，进行增删-->
       <el-form label-width="80px" size="small">
-        <!--        <el-upload-->
-        <!--            style="text-align: center"-->
-        <!--            class="avatar-uploader"-->
-        <!--            action="http://localhost:9090/admins/upload"-->
-        <!--            :show-file-list="false"-->
-        <!--            :on-success="handleAvatarSuccess"-->
-        <!--        >-->
-        <!--          &lt;!&ndash;        暂时没有头像，因为新增头像需要添加数据库里面&ndash;&gt;-->
-        <!--          <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />-->
-        <!--          <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-        <!--        </el-upload>-->
-
-
-
         <el-form-item label="书名">
           <el-input v-model="form.bookname" autocomplete="off" placeholder="请输入书籍名称"/>
         </el-form-item>
@@ -36,6 +22,8 @@
           <el-input v-model="form.category" autocomplete="off" placeholder="请输入分类"/>
         </el-form-item>
 
+
+        <!--上传书籍封面图片-->
         <el-upload
             style="text-align: center"
             ref="uploadpic"
@@ -43,10 +31,9 @@
             action="http://124.71.166.37:9091/auditbooks/uploadpic"
             :show-file-list="false"
             :auto-upload="false"
-            :on-success="updatebookpicinfo"
+            :on-success="addBookInfo"
             :on-change="handlePictureCardPreview"
-        ><!--            :on-change="picChange"-->
-          <!--        暂时没有头像，因为新增头像需要添加数据库里面-->
+        >
           <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />
 
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -56,18 +43,18 @@
         </el-upload>
 
 
-
         <el-form-item>
           <el-upload
               type="file"
               ref="upload"
-              :data="carryData"
+              :data="uploadData"
+              name="file"
               class="upload-demo"
               action="http://124.71.166.37:9091/auditbooks/upload"
               :limit="1"
               :auto-upload="false"
               :on-change="loadJsonFromFile"
-              :on-success="updatebookinfo"
+              :on-success="uploadPicFile"
               :on-error="uploadError"
               :before-upload="beforeUpload"
               :before-remove="beforeRemove"
@@ -75,13 +62,10 @@
             <template #trigger>
               <el-button type="primary" class="ml-5" style="margin: 20px 60px auto" >选择</el-button>
             </template>
-            <el-button class="ml-5" type="success" style="margin-bottom: 20px" @click="submitUpload">
+            <el-button class="ml-5" type="success" style="margin-bottom: 20px" @click="uploadBookFile">
               确定
             </el-button>
             <template #tip>
-              <!--            <div class="el-upload__tip text-red">-->
-              <!--              limit 1 file, new file will cover the old file-->
-              <!--            </div>-->
             </template>
           </el-upload>
         </el-form-item>
@@ -102,22 +86,13 @@ export default {
       form: {},
       file:'',
       uploadFiles: [],
+      uploadData: {},
       dialogVisible: false,
       dialogImageUrl: "",
       user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
     }
   },
-
-  // 这里暂时写的是学生，后面需要更换成别的端口
-  created() {
-    this.getUser().then(res =>{
-      this.form = res
-    })
-  },
   methods:{
-    async getUser(){
-      return  (await this.request.get("/student/studentid/" + this.user.studentid)).data
-    },
     handlePictureCardPreview(file) {
       this.dialogVisible = true
       if (!file.url) {
@@ -148,30 +123,7 @@ export default {
       }
 
     },
-    updatebookpicinfo(){
-      let file = this.uploadFiles[0]
-      // this.$message.error("获取文件名："+file.name)
-      this.$message.error("获取信息：" + file.name)
-      this.request.get("/auditbooks/addbookinfo", {
-        params: {
-          filename: file.name,
-          bookname: this.form.bookname,
-          author: this.form.author,
-          publisher: this.form.publisher,
-          isbn: this.form.isbn,
-          description: this.form.description,
-          category: this.form.category,
-        }
-      })
-          .then(res => {
-            if (res.code === '200') {
-              this.$message.success("上传成功")
-              this.$router.push("/admins/ebookmanage")
-            } else {
-              this.$message.error("上传失败")
-            }
-          })
-    },
+
     beforeUpload(file){
       console.log('文件：', file)
       var FileExt = file.name.replace(/.+\./, "")
@@ -206,54 +158,53 @@ export default {
         return this.$confirm(`确定移除 ${file.name}？`)
       }
     },
-    // updatebookpic(){
-    //   this.$refs.uploadpic.submit()
-    // },
-    updatebookinfo(){
-      //随后上传文件信息
-      //上传封面图片
-      this.$refs.uploadpic.submit()
-
-
-
-      // let file = this.uploadFiles[0]
-      // // this.$message.error("获取文件名："+file.name)
-      // this.$message.error("获取信息：" + file.name)
-      // this.request.get("/auditbooks/addbookinfo", {
-      //   params: {
-      //     filename: file.name,
-      //     bookname: this.form.bookname,
-      //     author: this.form.author,
-      //     publisher: this.form.publisher,
-      //     isbn: this.form.isbn,
-      //     description: this.form.description,
-      //     category: this.form.category,
-      //   }
-      // })
-      //     .then(res => {
-      //       if (res.code === '200') {
-      //         this.$message.success("上传成功")
-      //         this.$router.push("/admins/ebookmanage")
-      //       } else {
-      //         this.$message.error("上传失败")
-      //       }
-      //     })
+    updatebookpic(respon){
+      console.log(respon);
+      this.$message.success(respon.msg);
     },
+
     uploadError(){
       this.$message.error("文件上传失败")
     },
-    submitUpload() {
-      //先上传文件
-      // const file = this.$refs.upload.files;
-      // this.$message.error("获取文件名："+this.$refs.upload.files.name)
+    //先上传书籍文件，手动上传
+    uploadBookFile() {
       this.$refs.upload.submit()
-
     },
-
+    //手动上传书籍文件之后，将书籍的封面上传至服务器
+    uploadPicFile(respon){
+      console.log(respon);
+      this.$refs.uploadpic.submit()
+    },
+    //将书籍封面上传至服务器之后，在数据库中添加相关的数据
+    addBookInfo(respon){
+      let file = this.uploadFiles[0]
+      // this.$message.error("获取文件名："+file.name)
+      this.$message.error("获取信息：" + file.name)
+      console.log(file.name);
+      console.log(this.form);
+      var encodedFilename = encodeURIComponent(file.name);
+      this.request.get("/auditbooks/addbookinfo", {
+        params: {
+          filename: encodedFilename,
+          bookname: this.form.bookname,
+          author: this.form.author,
+          publisher: this.form.publisher,
+          isbn: this.form.isbn,
+          description: this.form.description,
+          category: this.form.category,
+        }
+      })
+          .then(res => {
+            if (res.code === '200') {
+              this.$message.success("上传成功")
+              //this.$router.push("/admins/ebookmanage")
+            } else {
+              this.$message.error("上传失败")
+            }
+          })
+    },
     handleAvatarSuccess(res){
       this.form.avatarurl = res
-      //this.$message.success("路径"+this.form.avatarUrl)
-      //this.$message.success("路径"+res)
     },
     picChange(file){
       if (!file.url) {

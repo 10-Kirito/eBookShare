@@ -10,6 +10,8 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.ebookshare.common.APIResponse;
+import com.example.ebookshare.common.APIStatusCode;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.entity.Auditbooks;
 import com.example.ebookshare.entity.Books;
@@ -17,6 +19,7 @@ import com.example.ebookshare.mapper.AuditbooksMapper;
 import com.example.ebookshare.mapper.BooksMapper;
 import com.example.ebookshare.service.IAuditbooksService;
 import com.example.ebookshare.service.IBooksService;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -75,11 +82,83 @@ public class AuditbooksController {
         return auditbooksService.saveOrUpdate(books);
     }
 
-    //删除
-//    @DeleteMapping("/{id}")
-//    public boolean  delete(@PathVariable Integer id){
-//        return booksService.removeById(id);
-//    }
+
+    @PostMapping("/move/{bookid}")
+    public APIResponse<?> moveBook(@PathVariable String bookid){
+        Auditbooks originBook = auditbooksService.getById(bookid);
+        // 获取书籍和书籍封面的uuid
+        String uuid = originBook.getUrl().replaceFirst("http://124.71.166.37:9091/file/", "");
+        String picuuid = originBook.getCoverimage().replaceFirst("http://124.71.166.37:9091/file/bookpic", "");
+
+        Path sourcePath = Paths.get(auditbooksPAth + uuid);
+        Path destinationPath = Paths.get(booksPath+uuid);
+
+        Path picsourcePath = Paths.get(auditbookspicPath+picuuid);
+        Path picdestinationPath = Paths.get(bookpicPath+picuuid);
+
+        try {
+            // 移动书籍
+            Files.move(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+            // 移动图片
+            Files.move(picsourcePath, picdestinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+            Books destinationbook = new Books(originBook);
+            // 从审核表中删除书籍信息
+            auditbooksService.removeById(bookid);
+            // 保存书籍信息在书籍表
+            booksService.save(destinationbook);
+
+            return new APIResponse<>(destinationbook, APIStatusCode.SUCCESS, "图书已经入库!");
+        } catch (IOException e) {
+            return new APIResponse<>(uuid, APIStatusCode.BAD_REQUEST, "文件移动失败!");
+        }
+    }
+
+
+    @DeleteMapping("/audit/{bookid}")
+    public Result  recoverBooks(@PathVariable String bookid){
+        Auditbooks books = auditbooksMapper.selectById(bookid);
+        //查找数据库
+        QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Auditbooks auditbooks;
+        auditbooks = auditbooksService.getOne(queryWrapper);
+        //转移文件目录
+
+
+        //源文件路径
+        File startFile=new File(auditbooks.getUrl());
+        //目的目录路径
+        File endDirection=new File(booksPath);
+        //如果目的目录路径不存在，则进行创建
+        if(!endDirection.exists()) {
+            endDirection.mkdirs();
+        }
+
+        //目的文件路径=目的目录路径+源文件名称
+        File endFile=new File(endDirection+ File.separator+ startFile.getName());
+        try {
+        //	#调用File类的核心方法renameTo
+            if (startFile.renameTo(endFile)) {
+                System.out.println("文件移动成功！目标路径：{"+endFile.getAbsolutePath()+"}");
+                System.out.println(startFile.getAbsolutePath());
+                System.out.println(endFile.getAbsolutePath());
+            } else {
+                System.out.println("文件移动失败！起始路径：{"+startFile.getAbsolutePath()+"}");
+                System.out.println(startFile.getAbsolutePath());
+                System.out.println(endFile.getAbsolutePath());
+            }
+        }catch(Exception e) {
+            System.out.println("文件移动出现异常！起始路径：{"+startFile.getAbsolutePath()+"}");
+        }
+
+
+        //2  转移数据库信息
+        auditbooksMapper.deleteById(auditbooks);
+        Books books1 = new Books(auditbooks);
+        booksMapper.insert(books1);
+        return Result.success();
+    }
 
 //    @DeleteMapping("/audit/{bookid}")
 //    public Result  recoverBooks(@PathVariable String bookid){
@@ -94,94 +173,52 @@ public class AuditbooksController {
 //
 //        //       #源文件路径
 //        File startFile=new File(auditbooks.getUrl());
+//        File startFineCoverImage = new File(auditbooks.getCoverimage());
 //        //#目的目录路径
 //        File endDirection=new File(booksPath);
+//        File endImageDirection = new File(bookpicPath);
 //        //#如果目的目录路径不存在，则进行创建
 //        if(!endDirection.exists()) {
 //            endDirection.mkdirs();
 //        }
+//        if(!endImageDirection.exists()) {
+//            endImageDirection.mkdirs();
+//        }
 //        //#目的文件路径=目的目录路径+源文件名称
 //        File endFile=new File(endDirection+ File.separator+ startFile.getName());
+//        File endFilePic=new File(endImageDirection+ File.separator+ startFineCoverImage.getName());
 //        try {
-//        //	#调用File类的核心方法renameTo
+//            //	#调用File类的核心方法renameTo
 //            if (startFile.renameTo(endFile)) {
 //                System.out.println("文件移动成功！目标路径：{"+endFile.getAbsolutePath()+"}");
-//                System.out.println(startFile.getAbsolutePath());
-//                System.out.println(endFile.getAbsolutePath());
 //            } else {
 //                System.out.println("文件移动失败！起始路径：{"+startFile.getAbsolutePath()+"}");
-//                System.out.println(startFile.getAbsolutePath());
-//                System.out.println(endFile.getAbsolutePath());
+//                System.out.println("文件移动失败！目标路径：{"+endFile.getAbsolutePath()+"}");
 //            }
 //        }catch(Exception e) {
 //            System.out.println("文件移动出现异常！起始路径：{"+startFile.getAbsolutePath()+"}");
 //        }
 //
+////        try {
+////            //	#调用File类的核心方法renameTo
+////            if (startFineCoverImage.renameTo(endFilePic)) {
+////                System.out.println("封面文件移动成功！目标路径：{"+endFilePic.getAbsolutePath()+"}");
+////            } else {
+////                System.out.println("封面文件移动失败！起始路径：{"+startFineCoverImage.getAbsolutePath()+"}");
+////                System.out.println("封面文件移动失败！目标路径：{"+endFilePic.getAbsolutePath()+"}");
+////            }
+////        }catch(Exception e) {
+////            System.out.println("封面文件移动出现异常！起始路径：{"+startFineCoverImage.getAbsolutePath()+"}");
+////        }
 //
 //        //2  转移数据库信息
 //        auditbooksMapper.deleteById(auditbooks);
 //        Books books1 = new Books(auditbooks);
+//        books1.setCoverimage(auditbooks.getCoverimage().replace("auditbooks","books"));
+//        books1.setUrl(auditbooks.getUrl().replace("auditbooks","books"));
 //        booksMapper.insert(books1);
 //        return Result.success();
 //    }
-
-    @DeleteMapping("/audit/{bookid}")
-    public Result  recoverBooks(@PathVariable String bookid){
-        Auditbooks books = auditbooksMapper.selectById(bookid);
-        //查找数据库
-        QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("bookid",bookid);
-        Auditbooks auditbooks;
-        auditbooks = auditbooksService.getOne(queryWrapper);
-        //1  转移文件目录
-
-
-        //       #源文件路径
-        File startFile=new File(auditbooks.getUrl());
-        File startFineCoverImage = new File(auditbooks.getCoverimage());
-        //#目的目录路径
-        File endDirection=new File(booksPath);
-        File endImageDirection = new File(bookpicPath);
-        //#如果目的目录路径不存在，则进行创建
-        if(!endDirection.exists()) {
-            endDirection.mkdirs();
-        }
-        if(!endImageDirection.exists()) {
-            endImageDirection.mkdirs();
-        }
-        //#目的文件路径=目的目录路径+源文件名称
-        File endFile=new File(endDirection+ File.separator+ startFile.getName());
-        File endFilePic=new File(endImageDirection+ File.separator+ startFineCoverImage.getName());
-        try {
-            //	#调用File类的核心方法renameTo
-            if (startFile.renameTo(endFile)) {
-                System.out.println("文件移动成功！目标路径：{"+endFile.getAbsolutePath()+"}");
-            } else {
-                System.out.println("文件移动失败！起始路径：{"+startFile.getAbsolutePath()+"}");
-            }
-        }catch(Exception e) {
-            System.out.println("文件移动出现异常！起始路径：{"+startFile.getAbsolutePath()+"}");
-        }
-
-        try {
-            //	#调用File类的核心方法renameTo
-            if (startFineCoverImage.renameTo(endFilePic)) {
-                System.out.println("封面文件移动成功！目标路径：{"+endFilePic.getAbsolutePath()+"}");
-            } else {
-                System.out.println("封面文件移动失败！起始路径：{"+startFineCoverImage.getAbsolutePath()+"}");
-            }
-        }catch(Exception e) {
-            System.out.println("封面文件移动出现异常！起始路径：{"+startFineCoverImage.getAbsolutePath()+"}");
-        }
-
-        //2  转移数据库信息
-        auditbooksMapper.deleteById(auditbooks);
-        Books books1 = new Books(auditbooks);
-        booksMapper.insert(books1);
-        return Result.success();
-    }
-
-
     @DeleteMapping("/cancel")
     public Result  cancel(@RequestParam String bookid,@RequestParam String suggestions){
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
@@ -275,6 +312,7 @@ public class AuditbooksController {
 
         return Result.success();
     }
+
     @DeleteMapping("/recover/{bookid}")
     public Result  recoverBooks(@PathVariable Integer bookid){
         Auditbooks books = auditbooksMapper.selectById(bookid);
@@ -283,6 +321,7 @@ public class AuditbooksController {
         auditbooksMapper.updateById(books);
         return Result.success();
     }
+
     @DeleteMapping("/truedelete/{bookid}")
     public Result  trueDeleteBooks(@PathVariable Integer bookid){
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
@@ -298,8 +337,10 @@ public class AuditbooksController {
 
         return Result.success();
     }
+
+    // 上传图书文件接口
     @PostMapping("/upload")
-    public String  upload(@RequestParam MultipartFile file) throws IOException {
+    public APIResponse<String>  upload(@RequestParam MultipartFile file) throws IOException {
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
         long size = file.getSize();
@@ -324,6 +365,7 @@ public class AuditbooksController {
         //获取文件的md5
         md5 = SecureUtil.md5(uploadFile);
         //数据库查询是否存在相同的记录
+        System.out.println("----------------------------");
         Auditbooks dbFiles = getFileByMd5(md5);
         if (dbFiles != null){
             url = dbFiles.getUrl();
@@ -331,9 +373,9 @@ public class AuditbooksController {
             uploadFile.delete();
         }else {
             //数据库不存在重复的文件
-            //把获取到的文件存储到磁盘目录
-//            url = "http://localhost:9090/file/"+fileUUid;
-            url = auditbooksPAth+fileUUid;
+            //url = "http://localhost:9090/file/"+fileUUid;
+            //url = auditbooksPAth+fileUUid;
+            url = "http://124.71.166.37:9091/file/"+fileUUid;
             Auditbooks saveFile = new Auditbooks();
             saveFile.setFilename(orginalFilename);
             saveFile.setType(type);
@@ -342,21 +384,17 @@ public class AuditbooksController {
             saveFile.setMd5(md5);
             saveFile.setEnable(true);
             saveFile.setIsdelete(false);
+            System.out.println(saveFile);
             auditbooksMapper.insert(saveFile);
         }
-        //获取文件url
-        //把获取到的文件存储到磁盘目录中
 
-        //文件路径
-        //存储数据库
-
-        return url; //文件下载链接
+        return new APIResponse<>(url, APIStatusCode.SUCCESS, "书籍上传成功"); //文件下载链接
         //上传成功后返回url
     }
 
     @PostMapping("/uploadpic")
-    public String  uploadpic(@RequestParam MultipartFile file) throws IOException {
-    //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
+    public APIResponse<String> uploadpic(@RequestParam MultipartFile file) throws IOException {
+        //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
         //向目录添加文件
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
@@ -365,30 +403,31 @@ public class AuditbooksController {
         String uuid = IdUtil.fastSimpleUUID();
         String fileUUid = uuid + StrUtil.DOT +type;
         File uploadFile = new File(auditbookspicPath + fileUUid);
-        File parentFile = uploadFile.getParentFile();
-        if(!parentFile.exists()){
-            parentFile.mkdirs();
-        }
+        //暂时不需要进行判断
+        //File parentFile = uploadFile.getParentFile();
+        //if(!parentFile.exists()){
+        //    parentFile.mkdirs();
+        //}
         //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
         String url;
-        String md5;
-        //上传文件到磁盘
+        //String md5;
+        //将书籍封面保存至服务器中
         file.transferTo(uploadFile);
-        //获取文件的md5
-        md5 = SecureUtil.md5(uploadFile);
-        url = auditbookspicPath+fileUUid;
-
+        //获取书籍封面的md5
+        //md5 = SecureUtil.md5(uploadFile);
+        //url = auditbookspicPath+fileUUid;
+        url = "http://124.71.166.37:9091/file/bookpic/"+fileUUid;
         //向数据库添加数据
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("releasetime");
-        queryWrapper.isNull("coverimage");
+        queryWrapper.orderByDesc("bookid").last("LIMIT 1");
+        //queryWrapper.isNull("coverimage");
         Auditbooks auditbooks = auditbooksMapper.selectOne(queryWrapper);
+
+        // 存储图片的下载地址
         auditbooks.setCoverimage(url);
         auditbooksService.saveOrUpdate(auditbooks);
 
-
-        return url; //文件下载链接
-        //上传成功后返回url
+        return new APIResponse<>(url, APIStatusCode.SUCCESS, "图片上传成功"); //文件下载链接
     }
 
     private Auditbooks getFileByMd5(String md5){
@@ -398,6 +437,7 @@ public class AuditbooksController {
         //获取第一个，因为有可能重名，多条记录
         return filesList.size() == 0 ? null: filesList.get(0);
     }
+
     @GetMapping("/addbookinfo")  //接口路径,多条件查询
     public Result findDeletedPage(@RequestParam(defaultValue = "") String filename,
                                   @RequestParam(defaultValue = "") String bookname,
@@ -406,16 +446,13 @@ public class AuditbooksController {
                                   @RequestParam(defaultValue = "") String isbn,
                                   @RequestParam(defaultValue = "") String description,
                                   @RequestParam(defaultValue = "") String category){
-//        IPage<Books> page = new Page<>(pageNum,pageSize);
+        System.out.println(filename);
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
-        if(!"".equals(bookname)){
-            queryWrapper.like("filename",filename);
-        }
+
         //为了避免检索的时候可能出现问题，逆向进行查找
-        queryWrapper.orderByDesc("bookid");
+        queryWrapper.orderByDesc("bookid").last("LIMIT 1");
         Auditbooks books = auditbooksService.getOne(queryWrapper);
         auditbooksService.remove(queryWrapper);
-        System.out.println(books);
         if(books != null)
         {
             books.setBookname(bookname);
@@ -430,6 +467,7 @@ public class AuditbooksController {
         //对找到的数据进行设置
         return Result.success();
     }
+
     @GetMapping("/deletedexport")
     public void deletedexport(HttpServletResponse response) throws Exception{
         //需要筛选出没有被删除的书籍

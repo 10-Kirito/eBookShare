@@ -2,11 +2,13 @@ package com.example.ebookshare.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
+@CrossOrigin(origins = "http://localhost:8080")
 public class CorsConfig {
 
     // 当前跨域请求最大有效时长。这里默认1天

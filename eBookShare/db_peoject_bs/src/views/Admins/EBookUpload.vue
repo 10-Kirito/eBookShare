@@ -49,7 +49,7 @@
             :on-success="updatebookpic"
             :on-change="handlePictureCardPreview"
         ><!--            :on-change="picChange"-->
-          <!--        暂时没有头像，因为新增头像需要添加数据库里面-->
+          <!--暂时没有头像，因为新增头像需要添加数据库里面-->
           <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />
 
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -60,14 +60,12 @@
 
 
 
-
-
         <el-form-item>
-<!--注意！！这里的分类以后需要自己挑选-->
+          <!--注意！！这里的分类以后需要自己挑选-->
+          <!--下面的before-upload函数是上传文件之前进行检查，检查文件的类型和大小是否满足我们的需求-->
           <el-upload
               type="file"
               ref="upload"
-              :data="carryData"
               class="upload-demo"
               action="http://localhost:9090/books/upload"
               :limit="1"
@@ -85,15 +83,8 @@
               确定
             </el-button>
             <template #tip>
-              <!--            <div class="el-upload__tip text-red">-->
-              <!--              limit 1 file, new file will cover the old file-->
-              <!--            </div>-->
             </template>
           </el-upload>
-
-
-
-
         </el-form-item>
 
 
@@ -118,7 +109,7 @@ export default {
       uploadFiles: [],
       dialogVisible: false,
       dialogImageUrl: "",
-      user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
+      user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {},
     }
   },
 
@@ -198,9 +189,19 @@ export default {
         }
     },
 
+
+    uploadError(){
+      this.$message.error("文件上传失败")
+    },
+    // 将书籍文件上传至服务器，上传完之后会去调用updatebookinfo函数
+    submitUpload() {
+      //先上传文件
+      this.$refs.upload.submit()
+    },
+    // 上传书籍的具体信息，上传成功后会去调用updatebookpic函数
     updatebookinfo(){
       //随后上传文件信息
-
+      //上传图片信息
       this.$refs.uploadpic.submit()
 
       let file = this.uploadFiles[0]
@@ -226,17 +227,12 @@ export default {
             }
           })
     },
-    uploadError(){
-      this.$message.error("文件上传失败")
-    },
-    submitUpload() {
-      //先上传文件
-      // const file = this.$refs.upload.files;
-      // this.$message.error("获取文件名："+this.$refs.upload.files.name)
-      this.$refs.upload.submit()
 
-
+    updatebookpic(respon){
+      console.log(respon);
+      this.$message.success(respon.msg);
     },
+
 
     handleAvatarSuccess(res){
       this.form.avatarurl = res

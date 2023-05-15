@@ -11,7 +11,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author sel
@@ -39,8 +39,6 @@ public class Auditbooks implements Serializable {
 
     private String coverimage;
 
-    private String downloadlink;
-
     private String category;
 
     private Integer likes;
@@ -64,5 +62,4 @@ public class Auditbooks implements Serializable {
     private String url;
 
     private String suggestions;
-
 }

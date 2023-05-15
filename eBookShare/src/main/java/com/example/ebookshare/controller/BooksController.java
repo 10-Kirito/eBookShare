@@ -10,6 +10,8 @@ import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.ebookshare.common.APIResponse;
+import com.example.ebookshare.common.APIStatusCode;
 import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
@@ -79,13 +81,6 @@ public class BooksController {
         //新增或者更新
         return booksService.saveOrUpdate(books);
     }
-
-    //删除
-//    @DeleteMapping("/{id}")
-//    public boolean  delete(@PathVariable Integer id){
-//        return booksService.removeById(id);
-//    }
-
 
     @PostMapping("/del/batch")
     public boolean  deleteBatch(@RequestBody List<Integer> ids){
@@ -282,7 +277,7 @@ public class BooksController {
     }
 
     @PostMapping("/uploadpic")
-    public String  uploadpic(@RequestParam MultipartFile file) throws IOException {
+    public APIResponse<String> uploadpic(@RequestParam MultipartFile file) throws IOException {
         //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
         //向目录添加文件
         String orginalFilename = file.getOriginalFilename();
@@ -314,8 +309,7 @@ public class BooksController {
         booksService.saveOrUpdate(books);
 
 
-        return url; //文件下载链接
-        //上传成功后返回url
+        return new APIResponse<>(url, APIStatusCode.SUCCESS, "文件上传成功"); //文件下载链接
     }
 
     @PostMapping("/upload")

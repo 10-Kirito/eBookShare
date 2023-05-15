@@ -39,7 +39,6 @@ public class Books implements Serializable {
 
     private String coverimage;
 
-    private String downloadlink;
 
     private String category;
 
@@ -64,8 +63,6 @@ public class Books implements Serializable {
     private String url;
 
 
-    private String fileuuid;
-
     public Books(Auditbooks auditbooks){
         this.bookname = auditbooks.getBookname();
         this.author = auditbooks.getAuthor();
@@ -73,7 +70,6 @@ public class Books implements Serializable {
         this.isbn = auditbooks.getIsbn();
         this.description = auditbooks.getDescription();
         this.coverimage = auditbooks.getCoverimage();
-        this.downloadlink = auditbooks.getDownloadlink();
         this.category = auditbooks.getCategory();
         this.likes = 0;
         this.favorites = 0;

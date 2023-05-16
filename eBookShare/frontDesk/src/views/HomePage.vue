@@ -306,19 +306,19 @@ export default {
       }
     },
     showInfo(index) {
-      console.log("this has been enter")
+      // console.log("this has been enter")
       this.showLeftDetails = index
     },
     hideInfo(index) {
-      console.log("this has been out")
+      // console.log("this has been out")
       this.showLeftDetails = -1
     },
     showInfo2(index) {
-      console.log("this has been enter")
+      // console.log("this has been enter")
       this.showRightDetails = index
     },
     hideInfo2(index) {
-      console.log("this has been out")
+      // console.log("this has been out")
       this.showRightDetails = -1
     }
   }

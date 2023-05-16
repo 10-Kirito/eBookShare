@@ -161,4 +161,14 @@ public class UsersController {
         usersMapper.deleteById(users);
         return Result.success();
     }
+
+
+    @GetMapping("/{username}")
+    public Result getUser(@PathVariable String username){
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        Users users = usersMapper.selectOne(queryWrapper);
+
+        return Result.success(users);
+    }
 }

@@ -17,17 +17,17 @@
 
 
 
-      <el-form-item label="学号">
-        <el-input v-model="form.studentid" autocomplete="off" />
+      <el-form-item label="账号">
+        <el-input v-model="form.username" autocomplete="off" disabled/>
       </el-form-item>
-      <el-form-item label="姓名">
-        <el-input v-model="form.name" autocomplete="off" />
+      <el-form-item label="密码">
+        <el-input v-model="form.password" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="性别">
-        <el-input v-model="form.sex" autocomplete="off" />
+      <el-form-item label="邮箱">
+        <el-input v-model="form.email" autocomplete="off" />
       </el-form-item>
-      <el-form-item label="年龄">
-        <el-input v-model="form.age" autocomplete="off" />
+      <el-form-item label="电话">
+        <el-input v-model="form.phone" autocomplete="off" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="save">确认</el-button>
@@ -58,7 +58,7 @@ export default {
     },
   methods:{
     async getUser(){
-      return  (await this.request.get("/student/studentid/" + this.user.studentid)).data
+      return  (await this.request.get("/users/" + this.user.studentid)).data
     },
     save(){
       //发送数据到后端

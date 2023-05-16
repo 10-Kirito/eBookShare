@@ -43,6 +43,12 @@ const routes = [
         name:'作者书籍',
         component:()=>import('@/views/Books/AuthorBooks.vue')
       }
+      ,
+      {
+        path: '/person',
+        name:'个人信息',
+        component:()=>import('@/views/person.vue')
+      }
     ]
   },
 

@@ -1,9 +1,7 @@
 package com.example.ebookshare.controller.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 //接受前端登录请求的参数
 @Data

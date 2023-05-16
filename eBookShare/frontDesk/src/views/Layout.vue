@@ -3,7 +3,7 @@
     <el-container>
       <!-- 首页头部-->
       <el-header >
-        <Header></Header>
+        <Header :user="user"></Header>
       </el-header>
 
       <!-- 首页主体部分-->
@@ -29,6 +29,28 @@ export default {
   name: "Layout",
   components: {
     Header
+  },
+  data() {
+    return{
+      user: {}
+    }
+  },
+  created() {
+    //从后台获取新数据
+    this.getUser()
+  },
+  methods:{
+    getUser(){
+      //从后台获取数据
+        let username = localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")).username:""
+        if(username!==""){
+          console.log("success")
+        this.request.get("http://localhost:9091/users/" + username).then(res =>{
+          //重新复制后台的最新数据
+          this.user = res.data
+        })
+      }
+    }
   }
 }
 

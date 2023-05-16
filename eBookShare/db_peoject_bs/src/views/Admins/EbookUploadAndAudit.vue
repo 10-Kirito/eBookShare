@@ -4,22 +4,22 @@
       <!--    根据实际表格情况，进行增删-->
       <el-form label-width="80px" size="small">
         <el-form-item label="书名">
-          <el-input v-model="form.bookname" autocomplete="off" placeholder="请输入书籍名称"/>
+          <el-input type="textarea" rows="1" v-model="form.bookname" autocomplete="off" placeholder="请输入书籍名称"></el-input>
         </el-form-item>
         <el-form-item label="作者">
-          <el-input v-model="form.author" autocomplete="off" placeholder="请输入作者"/>
+          <el-input type="textarea" rows="1" v-model="form.author" autocomplete="off" placeholder="请输入作者"/>
         </el-form-item>
         <el-form-item label="出版社">
-          <el-input v-model="form.publisher" autocomplete="off" placeholder="请输入出版社"/>
+          <el-input type="textarea" rows="1" v-model="form.publisher" autocomplete="off" placeholder="请输入出版社"/>
         </el-form-item>
         <el-form-item label="isbn">
-          <el-input v-model="form.isbn" autocomplete="off" placeholder="请输入书籍isbn"/>
+          <el-input type="textarea" rows="1" v-model="form.isbn" autocomplete="off" placeholder="请输入书籍isbn"/>
         </el-form-item>
         <el-form-item label="简介" >
           <el-input type="textarea" v-model="form.description" rows="6" autocomplete="off" placeholder="请输入简介"/>
         </el-form-item>
         <el-form-item label="分类">
-          <el-input v-model="form.category" autocomplete="off" placeholder="请输入分类"/>
+          <el-input type="textarea" rows="1" v-model="form.category" autocomplete="off" placeholder="请输入分类"/>
         </el-form-item>
 
 
@@ -89,10 +89,18 @@ export default {
       uploadData: {},
       dialogVisible: false,
       dialogImageUrl: "",
+      queryParams:"",
       user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
     }
   },
   methods:{
+    btKeyUp() {
+      // 不允许输入中文
+      // this.form.bookname= this.form.bookname.replace(/[\u4e00-\u9fa5]/ig,'')
+      // 不允许输入特殊符号
+      this.form.bookname= this.form.bookname.replace(/[^\w\u4E00-\u9FA5]/g, '')
+
+    },
     handlePictureCardPreview(file) {
       this.dialogVisible = true
       if (!file.url) {

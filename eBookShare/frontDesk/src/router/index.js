@@ -9,6 +9,11 @@ const routes = [
     redirect: '/home'
   },
   {
+    path: '/login',
+    name: '登录',
+    component: () => import('@/views/Login/Login.vue')
+  },
+  {
     path: '/home',
     name: 'home',
     component: () => import('@/views/Layout.vue'),

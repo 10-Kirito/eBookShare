@@ -30,8 +30,6 @@ public class RelationshipController {
     @Resource
     RelationshipServiceImpl relationshipService;
 
-    @Resource
-    RelationshipController relationshipController;
 
     // 购买书籍接口
     @GetMapping("/buybook")  //接口路径,多条件查询

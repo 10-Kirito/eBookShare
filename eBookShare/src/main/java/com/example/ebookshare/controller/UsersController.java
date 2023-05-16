@@ -75,11 +75,10 @@ public class UsersController {
         String username = adminDTO.getUsername();
         String password = adminDTO.getPassword();
         if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
-            //校验字符串是否是空
+            //校验字符串是否为空
             return  Result.error(Constants.CODE_400,"参数错误");
         }
         AdminDTO dto= usersService.login(adminDTO);
-        String a = "";
         return Result.success(dto);
     }
     @PostMapping("/register")
@@ -91,7 +90,7 @@ public class UsersController {
         String phone = adminDTO.getPhone();
 
         if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
-            //校验字符串是否是空
+            //校验字符串是否为空
             return  Result.error(Constants.CODE_400,"参数错误");
         }
         //首先判断是否已经有用户名

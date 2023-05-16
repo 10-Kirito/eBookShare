@@ -1,5 +1,5 @@
 <template>
-  <div @click="goToPreview">
+  <div @click="goToPreview" style="height: 420px;">
     <!--  下面的代码目的是为了展示位于书架上的一本图书！-->
 
 
@@ -14,9 +14,9 @@
       </div>
 
       <!--  图片显示部分-->
-      <el-card style="height: 455px">
-        <div style="position: relative; width: 100%; height: 100%;">
-          <img :src="bookDetails.testView" class="image" style="height: 370px; width: 250px">
+      <el-card style="height: 100%">
+        <div style=" width: 100%; height: 100%;">
+          <img :src="bookDetails.testView" class="image" style="height: 370px; ">
         </div>
         <div style="margin-top: 2px; margin-bottom: 2px">
           {{ bookInfo.bookname }}
@@ -46,7 +46,7 @@ export default {
         // 绝对路径访问图片信息:
         bookView: "/images/books.png",
 
-        testView: "http://124.71.166.37:9091/file/bookpic/35219a1a0e374446b3f4295b2d1607d4.png"
+        testView: "http://124.71.166.37:9091/file/bookpic/95682c942b8b475bb90ec9f51bd57019.png"
         // 相对路径访问图片信息:
         //bookView: require("../assets/images/books.png")
       }
@@ -58,7 +58,7 @@ export default {
   methods: {
     // 如果点击图书封面的话，会去在线预览电子图书
     goToPreview(){
-      let url = 'http://localhost:9090/file/1de53068902f460b9c7b3bbe99719460.pdf';
+      let url = 'http://124.71.166.37:9091/file/5c50f98e6850407fa82991b6e248915a.pdf';
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
     }
   }

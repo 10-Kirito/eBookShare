@@ -1,15 +1,15 @@
 <template>
-  <div style="width: 60%; margin-left: 420px" >
+  <div style="width: 60%; margin-left: 220px" >
     <!-- 图书信息展示-->
-    <el-row v-for="(row ,index1) in rowCount" :key="row" style="margin-bottom: 30px">
-        <el-col :span="6" v-for="(col, index2) in colCount" :key="col" >
-          <book-from-shelf v-if="dataload" :book-info="booksData[(row - 1) * colCount + col - 1]" style="width: 270px; height: 420px"></book-from-shelf>
+    <el-row :gutter="24" v-for="(row ,index1) in rowCount" :key="row" style="margin-bottom: 30px;min-width: 1200px">
+        <el-col :span="6" v-for="(col, index2) in colCount" :key="col" style="width: 270px">
+            <book-from-shelf  v-if="dataload" :bookInfo="booksData[(row - 1) * colCount + col - 1]" style="width: 100%;"></book-from-shelf>
         </el-col>
     </el-row>
 
 
     <!-- 分页查询选项-->
-    <el-row style="margin-top: 60px">
+    <el-row style="margin-top: 40px">
       <div >
         <el-pagination
             @size-change="handleSizeChange"

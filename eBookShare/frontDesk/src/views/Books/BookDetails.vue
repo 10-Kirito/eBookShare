@@ -21,7 +21,8 @@
             <div >
               <el-image :src="bookDetails.img" fit="cover" lazy style="height: 26pc;"/>
             </div>
-
+            <el-button type="success" icon="el-icon-view" plain style="margin-left: 0px;margin-top: 5px;width: 300px" @click="previewBook">预览</el-button>
+            <el-button type="primary" icon="el-icon-download" plain style="margin-left: 0px;margin-top: 5px;width: 300px">下载</el-button>
           </el-col>
           <el-col :xs="24" :sm="18" class="book-info">
             <el-row class="align-left">
@@ -90,9 +91,9 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row type="flex" justify="left" >
-          <el-button type="primary" icon="el-icon-download" plain style="margin-left: 30px;width: 300px">下载</el-button>
-        </el-row>
+<!--        <el-row type="flex" justify="left" >-->
+<!--          <el-button type="primary" icon="el-icon-download" plain style="margin-left: 30px;width: 300px">下载</el-button>-->
+<!--        </el-row>-->
       </el-main>
     </el-container>
     </div>
@@ -145,6 +146,10 @@ export default {
         query:{params:JSON.stringify(author)}
       })
     },
+    previewBook(){
+      let url = 'http://localhost:9090/file/1de53068902f460b9c7b3bbe99719460.pdf';
+      window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
+    }
   }
 }
 </script>

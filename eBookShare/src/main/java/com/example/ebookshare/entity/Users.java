@@ -34,7 +34,7 @@ public class Users implements Serializable {
 
     private String phone;
 
-    private String avatarUrl;
+    private String avatarurl;
 
 
 }

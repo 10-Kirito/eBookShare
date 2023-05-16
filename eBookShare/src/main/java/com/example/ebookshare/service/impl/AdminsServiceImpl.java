@@ -39,6 +39,11 @@ public class AdminsServiceImpl extends ServiceImpl<AdminsMapper, Admins> impleme
         }
     }
 
+    @Override
+    public AdminDTO register(AdminDTO adminDTO) {
+        return null;
+    }
+
 
     private Admins getUserInfo(AdminDTO adminDTO){
         QueryWrapper<Admins> queryWrapper= new QueryWrapper<>();

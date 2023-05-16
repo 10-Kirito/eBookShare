@@ -1,5 +1,6 @@
 package com.example.ebookshare.service;
 
+import com.example.ebookshare.controller.dto.AdminDTO;
 import com.example.ebookshare.entity.Users;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IUsersService extends IService<Users> {
 
+    AdminDTO login(AdminDTO adminDTO);
 }

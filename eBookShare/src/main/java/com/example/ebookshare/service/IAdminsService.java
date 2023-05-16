@@ -15,4 +15,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface IAdminsService extends IService<Admins> {
 
     AdminDTO login(AdminDTO adminDTO);
+
+    AdminDTO register(AdminDTO adminDTO);
 }

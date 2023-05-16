@@ -14,6 +14,7 @@ public class AdminDTO {
     private String password;
     private String email;
     private String id;
+    private String phone;
     private String token;
     private String avatarurl;
 }

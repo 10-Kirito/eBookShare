@@ -1,12 +1,15 @@
 package com.example.ebookshare.controller;
 
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
+import com.example.ebookshare.controller.dto.AdminDTO;
 import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Users;
 import com.example.ebookshare.mapper.UsersMapper;
@@ -66,8 +69,59 @@ public class UsersController {
         //新增或者更新
         return usersService.saveOrUpdate(users);
     }
+    @PostMapping("/login")
+    public Result login(@RequestBody AdminDTO adminDTO){
+        //新增或者更新
+        String username = adminDTO.getUsername();
+        String password = adminDTO.getPassword();
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
+            //校验字符串是否是空
+            return  Result.error(Constants.CODE_400,"参数错误");
+        }
+        AdminDTO dto= usersService.login(adminDTO);
+        String a = "";
+        return Result.success(dto);
+    }
+    @PostMapping("/register")
+    public Result register(@RequestBody AdminDTO adminDTO){
+        //新增或者更新
+        String username = adminDTO.getUsername();
+        String password = adminDTO.getPassword();
+        String email = adminDTO.getEmail();
+        String phone = adminDTO.getPhone();
+
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
+            //校验字符串是否是空
+            return  Result.error(Constants.CODE_400,"参数错误");
+        }
+        //首先判断是否已经有用户名
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",username);
+        Users users2 = usersMapper.selectOne(queryWrapper);
+        if(users2 != null){ //在数据库中已有相同用户名
+            return Result.error(Constants.CODE_600,"用户名已存在");
+        }
 
 
+
+        Users users = new Users();
+        users.setPhone(phone);
+        users.setUsername(username);
+        users.setPassword(password);
+        users.setEmail(email);
+        usersService.save(users);
+        QueryWrapper<Users> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("username",username);
+        Users users3 = usersMapper.selectOne(queryWrapper2);
+
+        adminDTO.setUsername(String.valueOf(users3.getUsername()));
+        adminDTO.setId(String.valueOf(users3.getId()));
+        adminDTO.setEmail(String.valueOf(users3.getEmail()));
+        adminDTO.setAvatarurl(String.valueOf(users3.getAvatarurl()));
+        adminDTO.setPhone(String.valueOf(users3.getPhone()));
+
+        return Result.success(adminDTO);
+    }
     //导出用户信息
     @GetMapping("/export")
     public void export(HttpServletResponse response) throws Exception{

@@ -1,10 +1,14 @@
 package com.example.ebookshare.service.impl;
 
+import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.mapper.BooksMapper;
 import com.example.ebookshare.service.IBooksService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +21,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books> implements IBooksService {
 
+    @Autowired
+    BooksMapper booksMapper;
+
+    @Override
+    public List<Books> randomBooks(Integer number) {
+        return booksMapper.randomBooks(number);
+    }
 }

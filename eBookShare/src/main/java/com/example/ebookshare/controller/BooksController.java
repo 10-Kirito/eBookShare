@@ -60,6 +60,11 @@ public class BooksController {
     private BooksMapper booksMapper;
 
 
+    @GetMapping("/random")
+    public APIResponse<List<Books>> randomBooks(@RequestParam Integer number){
+        return new APIResponse<>(booksService.randomBooks(number), APIStatusCode.SUCCESS, "随机抽查10本图书");
+    }
+
     @GetMapping("/bookname/{bookname}")
     public Result findOne(@PathVariable String bookname){
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();

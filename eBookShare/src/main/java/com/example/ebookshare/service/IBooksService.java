@@ -1,7 +1,10 @@
 package com.example.ebookshare.service;
 
+import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Books;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IBooksService extends IService<Books> {
 
+    List<Books> randomBooks(Integer number);
 }

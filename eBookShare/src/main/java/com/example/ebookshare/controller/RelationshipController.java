@@ -65,7 +65,7 @@ public class RelationshipController {
         return page;
     }
     //根据某个用户，查找其收藏的书目分页信息
-    @GetMapping("/selectfavourbook")  //接口路径,多条件查询
+    @GetMapping("/selectfavour")  //接口路径,多条件查询
     public IPage<Books> selectfavourbook(@RequestParam Integer pageNum,
                                    @RequestParam Integer pageSize,
                                    @RequestParam Integer userid){

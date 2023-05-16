@@ -44,7 +44,7 @@
           <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index">
             <el-row :gutter="20">
               <el-col :span="6"  >
-                <el-image :src="book.img" @click="pushDetail(bookDetails[index])" fit="contain" lazy style="cursor: pointer;height: 150px;"/>
+                <el-image :src="book.coverimage" @click="pushDetail(bookDetails[index])" fit="contain" lazy style="cursor: pointer;height: 150px;"/>
               </el-col>
               <el-col :span="15" >
                 <el-row class="attriclass" >
@@ -59,29 +59,14 @@
                 </el-row>
                 <el-row class="attriclass"><div class="grid-content book-publisher" title="出版社">{{book.publisher}}</div></el-row>
                 <el-row class="attriclass"><span @click="redirectToAuthorBooks(book.author)" title="找到该作者的所有书籍" class="book-author">{{book.author}}</span></el-row>
-                <el-row :gutter="24" style="margin-top: 40px;margin-right: -70px">
-                  <el-col :span="2" ><div style="color: #8C8C8C;">年:</div></el-col>
-                  <el-col :span="6" ><div style="margin-top: 2px">{{book.publishedDate}}</div></el-col>
-                  <el-col :span="4" ><div style="color: #8C8C8C;">语言：</div></el-col>
-                  <el-col :span="4" ><div style="margin-top: 2px">{{book.Language}}</div></el-col>
-                  <el-col :span="4" ><div style="color: #8C8C8C;">文件：</div></el-col>
-                  <el-col :span="4" ><div style="margin-top: 2px">{{book.file}}</div></el-col>
+                <el-row class="attriclass" style="margin-top: 40px">
+                  <el-col :span="12" ><div style="color: #8C8C8C; ">标准书号: {{book.isbn}}</div></el-col>
+                  <el-col :span="8" ><div style="color: #8C8C8C;">类别：{{book.category}}</div></el-col>
+                  <el-col :span="4" ><div style="color: #8C8C8C;">文件：{{book.type}}</div></el-col>
                 </el-row>
               </el-col>
             </el-row>
           </el-card>
-
-
-          <!--分页选项-->
-          <el-pagination
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="pageNum"
-              :page-sizes="[2,5,10,20]"
-              :page-size="pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="total">
-          </el-pagination>
         </div>
       </el-col>
 
@@ -92,9 +77,9 @@
             <el-card class="box-card" style="margin-left: 10px; height: 1410px">
               <h1>今日最受欢迎电子图书</h1>
               <el-card v-for="(book, index) in todayPopularBooks" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
-                <el-row @mouseenter.native="showInfo2(index)" @mouseleave.native="hideInfo2(index)" @click.native="pushDetail(todayPopularBooks[index])" style="cursor: pointer;">
+                <el-row v-if="book" @mouseenter.native="showInfo2(index)" @mouseleave.native="hideInfo2(index)" @click.native="pushDetail(todayPopularBooks[index])" style="cursor: pointer;">
                   <el-col :span="8">
-                    <img :src="book.img" class="book-cover"/>
+                    <img :src="book.coverimage" class="book-cover"/>
                   </el-col>
                   <el-col :span="16" class="book-info">
                     <div class="book-title">{{ book.title }}</div>
@@ -120,9 +105,17 @@
 import router from "@/router";
 
 export default {
+  inject:['reload'],
   name: "Home",
   data() {
     return {
+      // 今日推荐图书信息:
+      recommendBooks:[],
+      recommendNumber: 10,
+
+      flag: true,
+
+
       pageTitle: '上海大学电子图书分享平台',
       //searchHTML: 'static/search/index.html',
       //书籍信息保存在这个数组中，//今日推荐阅读图书信息
@@ -234,14 +227,18 @@ export default {
         }
       ],
       searchQuery:'',
-      total:0,
-      pageNum:1,
-      pageSize:10,
+      // total:0,
+      // pageNum:1,
+      // pageSize:10,
       showLeftDetails: -1 ,// 当前显示详情的左侧图书索引
       showRightDetails: -1, // 当前显示详情的右侧图书索引
     };
   },
   created() {
+    this.getRecommendBooks();
+  },
+  beforeMount() {
+
   },
   methods: {
     searchBooks() {
@@ -252,28 +249,20 @@ export default {
         query:{params:JSON.stringify(this.searchQuery)}
       })
     },
-    load(){//分页查询今日推荐的图书
-      this.request.get("/",{           //更改后台接口
-        params:{
-          pageNum:this.pageNum,
-          pageSize:this.pageSize,
+    getRecommendBooks(){//分页查询今日推荐的图书
+      this.request.get("http://localhost:9091/books/random", {           //更改后台接口
+        params: {
+          number: this.recommendNumber
         }
-      }).then(res=>{
-        this.bookDetails=res.records           //根据后台数据更改
-        this.total=res.total
+      }).then(res => {
+        console.log(res.data);
+        this.bookDetails = res.data                   //根据后台数据更改
         this.bookDetails.forEach(book => {          //遍历数组，为每个对象添加 isCollected 属性 和 collectBtnClass 属性
           book.isCollected = false; // 默认值为 false
-          book.collectBtnClass="el-icon-star-off"     //默认值关闭
+          book.collectBtnClass = "el-icon-star-off"     //默认值关闭
         })
       })
-    },
-    handleSizeChange(pageSize){
-      this.pageSize=pageSize
-      this.load()
-    },
-    handleCurrentChange(pageNum){
-      this.pageNum=pageNum
-      this.load()
+
     },
     pushDetail(index){           //跳转路由函数
       // console.log(JSON.stringify(this.bookDetails[0]))

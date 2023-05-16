@@ -27,23 +27,21 @@ import java.util.List;
 public class AdminsController {
 
 
-        @Resource
-        private IAdminsService adminsService;
-
-
-        @PostMapping("/login")
-        public Result login(@RequestBody AdminDTO adminDTO){
-            //新增或者更新
-            String username = adminDTO.getUsername();
-            String password = adminDTO.getPassword();
-            if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
-                //校验字符串是否是空
-                return  Result.error(Constants.CODE_400,"参数错误");
-            }
-            AdminDTO dto= adminsService.login(adminDTO);
-            String a = "";
-            return Result.success(dto);
+    @Resource
+    private IAdminsService adminsService;
+    @PostMapping("/login")
+    public Result login(@RequestBody AdminDTO adminDTO){
+        //新增或者更新
+        String username = adminDTO.getUsername();
+        String password = adminDTO.getPassword();
+        if(StrUtil.isBlank(username) || StrUtil.isBlank(password)){
+            //校验字符串是否是空
+            return  Result.error(Constants.CODE_400,"参数错误");
         }
+        AdminDTO dto= adminsService.login(adminDTO);
+        String a = "";
+        return Result.success(dto);
+    }
     @GetMapping("/username/{username}")
     public Result findOne(@PathVariable String username){
         QueryWrapper<Admins> queryWrapper = new QueryWrapper<>();

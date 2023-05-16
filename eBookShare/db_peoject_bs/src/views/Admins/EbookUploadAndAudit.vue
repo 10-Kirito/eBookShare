@@ -190,16 +190,34 @@ export default {
       this.$message.error("获取信息：" + file.name)
       console.log(file.name);
       console.log(this.form);
-      var encodedFilename = encodeURIComponent(file.name);
+
+      // var filename_=encodeURL(file.name);
+      // var bookname_=encodeURL(this.form.bookname);
+      // var author_=encodeURL(this.form.author);
+      // var publisher_=encodeURL(this.form.publisher);
+      // var isbn_=encodeURL(this.form.isbn);
+      // var description_=encodeURL(this.form.description);
+      // var category_=encodeURL(this.form.category);
+
+      var filename_ = encodeURIComponent(file.name);
+      var bookname_ = encodeURIComponent(this.form.bookname);
+      var author_ = encodeURIComponent(this.form.author);
+      var publisher_ = encodeURIComponent(this.form.publisher);
+      var isbn_ = encodeURIComponent(this.form.isbn);
+      var description_ = encodeURIComponent(this.form.description);
+      var category_ = encodeURIComponent(this.form.category);
+
+
+
       this.request.get("/auditbooks/addbookinfo", {
         params: {
-          filename: encodedFilename,
-          bookname: this.form.bookname,
-          author: this.form.author,
-          publisher: this.form.publisher,
-          isbn: this.form.isbn,
-          description: this.form.description,
-          category: this.form.category,
+          filename: filename_,
+          bookname: bookname_,
+          author: author_,
+          publisher: publisher_,
+          isbn: isbn_,
+          description: description_,
+          category: category_,
         }
       })
           .then(res => {

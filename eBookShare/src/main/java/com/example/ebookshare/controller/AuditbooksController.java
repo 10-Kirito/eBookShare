@@ -30,6 +30,8 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -445,7 +447,7 @@ public class AuditbooksController {
                                   @RequestParam(defaultValue = "") String publisher,
                                   @RequestParam(defaultValue = "") String isbn,
                                   @RequestParam(defaultValue = "") String description,
-                                  @RequestParam(defaultValue = "") String category){
+                                  @RequestParam(defaultValue = "") String category) throws UnsupportedEncodingException {
         System.out.println(filename);
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
 
@@ -455,13 +457,19 @@ public class AuditbooksController {
         auditbooksService.remove(queryWrapper);
         if(books != null)
         {
+            bookname = URLDecoder.decode(bookname, "UTF-8");
+            author = URLDecoder.decode(author, "UTF-8");
+            publisher = URLDecoder.decode(publisher, "UTF-8");
+            isbn = URLDecoder.decode(isbn, "UTF-8");
+            description = URLDecoder.decode(description, "UTF-8");
+            category = URLDecoder.decode(category, "UTF-8");
+
             books.setBookname(bookname);
             books.setAuthor(author);
             books.setPublisher(publisher);
             books.setIsbn(isbn);
             books.setDescription(description);
             books.setCategory(category);
-            System.out.println(books);
             auditbooksService.save(books);
         }
         //对找到的数据进行设置

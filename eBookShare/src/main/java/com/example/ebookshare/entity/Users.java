@@ -35,6 +35,7 @@ public class Users implements Serializable {
     private String phone;
 
     private String avatarurl;
+    private Integer points;
 
 
 }

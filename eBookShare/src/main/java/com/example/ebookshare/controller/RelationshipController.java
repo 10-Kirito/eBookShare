@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.common.Result;
+import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Relationship;
 import com.example.ebookshare.entity.Users;
+import com.example.ebookshare.mapper.BooksMapper;
+import com.example.ebookshare.service.impl.BooksServiceImpl;
 import com.example.ebookshare.service.impl.RelationshipServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -29,8 +34,70 @@ import javax.annotation.Resource;
 public class RelationshipController {
     @Resource
     RelationshipServiceImpl relationshipService;
+    @Resource
+    BooksServiceImpl booksService;
+    @Resource
+    BooksMapper booksMapper;
 
 
+
+    //根据某个用户，查找其购买的书目分页信息
+    @GetMapping("/selectfavourbook")  //接口路径,多条件查询
+    public IPage<Books> selectboughtbook(@RequestParam Integer pageNum,
+                                         @RequestParam Integer pageSize,
+                                         @RequestParam Integer userid){
+        IPage<Books> page;
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userid",userid);
+        queryWrapper.eq("isowned",1);
+
+        List<Books> result = new ArrayList<>();
+        List<Relationship> relationships = relationshipService.list(queryWrapper);
+        for (Relationship o : relationships) {
+            QueryWrapper<Books> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("bookid",o.getBookid());
+
+            Books temp = booksMapper.selectOne(queryWrapper1);
+            result.add(temp);
+        }
+        page = listToPage(result,pageNum,pageSize);
+
+        return page;
+    }
+    //根据某个用户，查找其收藏的书目分页信息
+    @GetMapping("/selectfavourbook")  //接口路径,多条件查询
+    public IPage<Books> selectfavourbook(@RequestParam Integer pageNum,
+                                   @RequestParam Integer pageSize,
+                                   @RequestParam Integer userid){
+        IPage<Books> page;
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userid",userid);
+        queryWrapper.eq("isfavour",1);
+
+        List<Books> result = new ArrayList<>();
+        List<Relationship> relationships = relationshipService.list(queryWrapper);
+        for (Relationship o : relationships) {
+            QueryWrapper<Books> queryWrapper1 = new QueryWrapper<>();
+            queryWrapper1.eq("bookid",o.getBookid());
+
+            Books temp = booksMapper.selectOne(queryWrapper1);
+            result.add(temp);
+        }
+        page = listToPage(result,pageNum,pageSize);
+
+        return page;
+    }
+    public static IPage listToPage(List list, int pageNum, int pageSize){
+        List pageList = new ArrayList<>();
+        int curIdx = pageNum > 1 ? (pageNum - 1) * pageSize : 0;
+        for (int i = 0; i < pageSize && curIdx + i < list.size(); i++) {
+            pageList.add(list.get(curIdx + i));
+        }
+        IPage page = new Page<>(pageNum, pageSize);
+        page.setRecords(pageList);
+        page.setTotal(list.size());
+        return page;
+    }
     // 购买书籍接口
     @GetMapping("/buybook")  //接口路径,多条件查询
     public Result buybook(@RequestParam Integer bookid,

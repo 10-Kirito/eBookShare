@@ -15,10 +15,7 @@ import com.example.ebookshare.common.APIStatusCode;
 import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
-import com.example.ebookshare.entity.Admins;
-import com.example.ebookshare.entity.Auditbooks;
-import com.example.ebookshare.entity.Books;
-import com.example.ebookshare.entity.Files;
+import com.example.ebookshare.entity.*;
 import com.example.ebookshare.mapper.BooksMapper;
 import com.example.ebookshare.service.IAdminsService;
 import com.example.ebookshare.service.IBooksService;
@@ -68,6 +65,28 @@ public class BooksController {
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("bookname",bookname);
         return Result.success(booksService.getOne(queryWrapper));
+    }
+    //点赞 接口
+    @GetMapping("/likes/{bookid}")
+    public Result likesbook(@PathVariable String bookid){
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(queryWrapper);
+        books.setLikes(books.getLikes()+1);
+        booksService.update(queryWrapper);
+
+        return Result.success();
+    }
+    //收藏 接口
+    @GetMapping("/favorites/{bookid}")
+    public Result favoritesbook(@PathVariable String bookid){
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(queryWrapper);
+        books.setFavorites(books.getFavorites()+1);
+        booksService.update(queryWrapper);
+
+        return Result.success();
     }
 
     //新增或更新

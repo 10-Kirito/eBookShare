@@ -1,9 +1,9 @@
 <template>
-  <div @click="goToPreview" v-if="bookInfo">
+  <div @click="goToPreview" v-if="bookInfo" style="width: 420px">
     <!--  下面的代码目的是为了展示位于书架上的一本图书！-->
 
 
-    <el-tooltip placement="top" effect="light" style="height: 430px">
+    <el-tooltip placement="top" effect="light" style="height: 360px">
       <!--  鼠标移动提示部分-->
       <div slot="content">
         <span>{{ bookInfo.bookname }}</span>
@@ -14,10 +14,11 @@
       </div>
 
       <!--  图片显示部分-->
-      <el-card style="height: 455px">
+      <el-card style="height: 100%">
         <div style="position: relative; width: 100%; height: 100%;">
-          <img :src="bookInfo.coverimage" class="image" style="height: 370px; width: 250px">
+          <img :src="bookInfo.coverimage" class="image" style="height: 300px">
         </div>
+
         <div style="margin-top: 2px; margin-bottom: 2px">
           {{ bookInfo.bookname }}
         </div>

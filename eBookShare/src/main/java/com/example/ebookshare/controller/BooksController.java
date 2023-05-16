@@ -66,6 +66,28 @@ public class BooksController {
         queryWrapper.eq("bookname",bookname);
         return Result.success(booksService.getOne(queryWrapper));
     }
+    //点赞 接口
+    @GetMapping("/likes/{bookid}")
+    public Result likesbook(@PathVariable String bookid){
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(queryWrapper);
+        books.setLikes(books.getLikes()+1);
+        booksService.update(queryWrapper);
+
+        return Result.success();
+    }
+    //收藏 接口
+    @GetMapping("/favorites/{bookid}")
+    public Result favoritesbook(@PathVariable String bookid){
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(queryWrapper);
+        books.setFavorites(books.getFavorites()+1);
+        booksService.update(queryWrapper);
+
+        return Result.success();
+    }
 
     //新增或更新
     @PostMapping("/save")

@@ -77,7 +77,7 @@ export default {
 
 <style scoped>
 .header-with-background {
-  background-image: url('~@/assets/images/wooden.jpg');
+  background-image: url('~@/assets/images/whitehead.jpg');
   background-size: cover;
 }
 </style>

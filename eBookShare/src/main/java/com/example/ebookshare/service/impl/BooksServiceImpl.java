@@ -1,6 +1,5 @@
 package com.example.ebookshare.service.impl;
 
-import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.mapper.BooksMapper;
 import com.example.ebookshare.service.IBooksService;
@@ -27,5 +26,9 @@ public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books> implements
     @Override
     public List<Books> randomBooks(Integer number) {
         return booksMapper.randomBooks(number);
+    }
+    @Override
+    public List<Books> getTopTenBooks() {
+        return booksMapper.getTopTenBooks();
     }
 }

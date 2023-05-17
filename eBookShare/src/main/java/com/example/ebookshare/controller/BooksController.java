@@ -175,6 +175,41 @@ public class BooksController {
         queryWrapper.like("enable",0);
         return booksService.page(page,queryWrapper);
     }
+
+    //根据点赞量，筛选出前十本书
+    @GetMapping("/mostlikes")  //接口路径,多条件查询
+    public IPage<Books> findmostlikes(@RequestParam Integer pageNum,
+                                        @RequestParam Integer pageSize){
+        IPage<Books> page = new Page<>(pageNum,pageSize);
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("likes");
+
+//        List<Books> books = booksService.list(queryWrapper);
+        return booksService.page(page,queryWrapper);
+    }
+    // 找出图书总榜前十：点赞量+收藏量+下载量
+    @GetMapping("/overallbooklist")  //接口路径,多条件查询
+    public IPage<Books> OverallBookList(@RequestParam Integer pageNum,
+                                      @RequestParam Integer pageSize){
+        IPage<Books> page;
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("likes");
+
+        List<Books> books = booksService.getTopTenBooks();
+        page = listToPage(books,pageNum,pageSize);
+        return page;
+    }
+    public static IPage<Books> listToPage(List<Books> list, int pageNum, int pageSize){
+        List<Books> pageList = new ArrayList<>();
+        int curIdx = pageNum > 1 ? (pageNum - 1) * pageSize : 0;
+        for (int i = 0; i < pageSize && curIdx + i < list.size(); i++) {
+            pageList.add(list.get(curIdx + i));
+        }
+        IPage<Books> page = new Page<>(pageNum, pageSize);
+        page.setRecords(pageList);
+        page.setTotal(list.size());
+        return page;
+    }
     @DeleteMapping("/{bookid}")
     public Result  delete(@PathVariable Integer bookid){
         Books books = booksMapper.selectById(bookid);

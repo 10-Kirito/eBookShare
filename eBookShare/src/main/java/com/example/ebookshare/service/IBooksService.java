@@ -17,4 +17,6 @@ import java.util.List;
 public interface IBooksService extends IService<Books> {
 
     List<Books> randomBooks(Integer number);
+
+    List<Books> getTopTenBooks();
 }

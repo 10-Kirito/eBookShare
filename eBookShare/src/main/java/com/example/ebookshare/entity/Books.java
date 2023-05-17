@@ -62,6 +62,7 @@ public class Books implements Serializable {
 
     private String url;
 
+    private Integer downloads;
 
     public Books(Auditbooks auditbooks){
         this.bookname = auditbooks.getBookname();

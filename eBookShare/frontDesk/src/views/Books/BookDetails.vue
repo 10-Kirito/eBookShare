@@ -19,10 +19,10 @@
         <el-row class="book-card" :book_id="6138195">
           <el-col :xs="24" :sm="6" class="book-cover" >
             <div >
-              <el-image :src="bookDetails.img" fit="cover" lazy style="height: 26pc;"/>
+              <el-image :src="bookDetails.coverimage" fit="cover" lazy style="height: 26pc;"/>
             </div>
-            <el-button type="success" icon="el-icon-view" plain style="margin-left: 0px;margin-top: 5px;width: 300px" @click="previewBook">预览</el-button>
-            <el-button type="primary" icon="el-icon-download" plain style="margin-left: 0px;margin-top: 5px;width: 300px">下载</el-button>
+            <el-button type="success" icon="el-icon-view" plain style="margin-left: 0px;margin-top: 5px;width: 340px" @click="previewBook">预览</el-button>
+            <el-button type="primary" icon="el-icon-download" plain style="margin-left: 0px;margin-top: 5px;width: 340px">下载</el-button>
           </el-col>
           <el-col :xs="24" :sm="18" class="book-info">
             <el-row class="align-left">
@@ -30,12 +30,13 @@
             </el-row>
             <el-row class="align-left">
               <i class="book-author">
-                <span @click="redirectToAuthorBooks(bookDetails.author)" title="找到该作者的所有书籍" class="color1" style="cursor: pointer">{{ bookDetails.author }}</span>
+                <span class="color1" style="margin-left: -60px">{{bookDetails.bookname}}</span>
+                <br><br>
+                <span @click="redirectToAuthorBooks(bookDetails.author)" title="找到该作者的所有书籍" class="color1" style="cursor: pointer">作者:{{ bookDetails.author }}</span>
               </i>
             </el-row>
             <el-row class="align-left">
                 <div style="font-size: 20px;display: inline-block">
-<!--                    <i :class="collectBtnClass" @click="collectBtn" style="cursor: pointer;font-size: 25px;margin-right: 5px"></i>-->
                     <el-popover
                         placement="bottom"
                         width="230"
@@ -76,33 +77,60 @@
             <el-row :gutter="20"  class="row-bg">
               <el-col :span="2" ><div class="grid-content col-content" >种类:</div></el-col>
               <el-col :span="6" ><div class="grid-content col-content" >{{bookDetails.category}}</div></el-col>
-              <el-col :span="2" ><div class="grid-content col-content">年：</div></el-col>
-              <el-col :span="6" ><div class="grid-content col-content">{{bookDetails.publishedDate}}</div></el-col>
+              <el-col :span="2" ><div class="grid-content col-content">出版社：</div></el-col>
+              <el-col :span="6" ><div class="grid-content col-content">{{bookDetails.publisher}}</div></el-col>
             </el-row>
             <el-row :gutter="20"  class="row-bg" >
               <el-col :span="2"><div class="grid-content col-content">出版社:</div></el-col>
               <el-col :span="6"><div class="grid-content col-content">{{bookDetails.publisher}}</div></el-col>
-              <el-col :span="2"><div class="grid-content col-content">语言：</div></el-col>
-              <el-col :span="6"><div class="grid-content col-content">{{bookDetails.Language}}</div></el-col>
-            </el-row>
-            <el-row :gutter="20"  class="row-bg " >
               <el-col :span="2"><div class="grid-content col-content">ISBN:</div></el-col>
-              <el-col :xs="8" :sm="6" :md="40" :lg="50" :xl="10"><div class="grid-content col-content">{{bookDetails.ISBN}}</div></el-col>
+              <el-col :span="6"><div class="grid-content col-content">{{bookDetails.isbn}}</div></el-col>
             </el-row>
           </el-col>
         </el-row>
-<!--        <el-row type="flex" justify="left" >-->
-<!--          <el-button type="primary" icon="el-icon-download" plain style="margin-left: 30px;width: 300px">下载</el-button>-->
-<!--        </el-row>-->
       </el-main>
+      <el-footer>
+
+
+        <el-row>
+          <el-col :span="24">
+            <div class="grid-content bg-purple-dark" style="width: 45%; margin-left: 30%">
+              <p style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px">评论：</p>
+            </div>
+          </el-col>
+        </el-row>
+
+        <el-row :gutter="20" style="width: 50%; margin-left: 29%">
+          <el-col :span="18">
+              <el-input
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入内容"
+                  style="width: 710px; margin-bottom: 10px; font-size: 20px"
+                  v-model="textarea">
+              </el-input>
+          </el-col>
+          <el-col :span="2">
+              <el-button type="success" style="width: 100px; height: 72px; margin-left: 40px; font-size: 20px">评论</el-button>
+          </el-col>
+        </el-row>
+
+        <comments></comments>
+      </el-footer>
     </el-container>
+
     </div>
   </div>
 </template>
 
 <script>
+import comments from "@/components/comments.vue";
+
 export default {
   name: "BookDetails",
+  components:{
+    comments
+  },
   created() {
     const params = this.$route.query.params;
     if (params) {
@@ -147,7 +175,7 @@ export default {
       })
     },
     previewBook(){
-      let url = 'http://localhost:9090/file/1de53068902f460b9c7b3bbe99719460.pdf';
+      let url = this.bookDetails.url;
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
     }
   }
@@ -239,4 +267,5 @@ div {
   margin: 0;
   padding: 0;
 }
+
 </style>

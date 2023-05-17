@@ -41,7 +41,7 @@
         <div class="grid-content bg-purple-light">
           <h1>今日推荐阅读图书：</h1>
 
-          <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index">
+          <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index" style="margin-bottom: 15px">
             <el-row :gutter="20">
               <el-col :span="6"  >
                 <el-image :src="book.coverimage" @click="pushDetail(bookDetails[index])" fit="contain" lazy style="cursor: pointer;height: 150px;"/>
@@ -119,41 +119,7 @@ export default {
       pageTitle: '上海大学电子图书分享平台',
       //searchHTML: 'static/search/index.html',
       //书籍信息保存在这个数组中，//今日推荐阅读图书信息
-      bookDetails: [
-        {
-        img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-        title: "Book Title",
-        author: "Author Name",
-        publisher: "Publisher Name",
-        publishedDate: "2022-01-01",
-        description: "《麦田里的守望者》的主人公,16岁的中学生霍尔顿·考尔菲德是当代美国文学中最早出现的反英雄形象之一。霍尔顿出身在纽约一个富裕的中产阶级的家庭。学校里的老师和自己的家长强迫他好好读书,为的是“出人头地,而他看不惯周围的一切,根本没心思用功读书,因而老是挨罚。他的内心又十分苦闷、彷徨,这种精神上无法调和的极度矛盾最终令他彻底崩溃,躺倒在精神病院里。",
-        ISBN: "978-3-16-148410-0",
-        Format: "Hardcover",
-        Pages: "400",
-        Language: "English",
-        category:"category",
-        file:'PDF',
-        isCollected:false,
-        collectBtnClass:"el-icon-star-off"
-      },
-      {
-        img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-        title: "Book Title 2",
-        author: "Author Name 2",
-        publisher: "Publisher Name 2",
-        publishedDate: "2022-01-01",
-        description:
-            "Description of Book 2",
-        ISBN: "ISBN 2",
-        Format: "Hardcover",
-        Pages: "300",
-        Language: "English",
-        category: "category 2",
-        file: "PDF",
-        isCollected:false,
-        collectBtnClass:"el-icon-star-off"
-      }
-      ],
+      bookDetails: [],
       //图书总榜单信息，按图书下载量排行
       booksDownloadList:[
         {

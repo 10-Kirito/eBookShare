@@ -63,8 +63,8 @@ export default {
   methods:{
     logout(){
       localStorage.removeItem("loguserinfo")
-      location.reload()
       this.$router.push("/home")
+      location.reload()
       this.$message.success("退出成功")
     },
     test(){

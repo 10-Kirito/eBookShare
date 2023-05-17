@@ -6,7 +6,7 @@
       <el-upload
           style="text-align: center"
           class="avatar-uploader"
-          action="http://localhost:9090/file/upload"
+          action="http://localhost:9091/file/upload"
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
       >
@@ -58,12 +58,12 @@ export default {
     },
   methods:{
     async getUser(){
-      return  (await this.request.get("/users/" + this.user.studentid)).data
+      return  (await this.request.get("/users/" + this.user.username)).data
     },
     save(){
       //发送数据到后端
       //this.$message.success("保存信息："+this.form.avatarUrl)
-      this.request.post("/student",this.form).then(res => {
+      this.request.post("/users",this.form).then(res => {
             if(res){
               this.$message.success("保存成功")
               //触发父级更新user的方法
@@ -73,9 +73,9 @@ export default {
 
               //更新浏览器存储信息
               this.getUser().then(res =>{
-                res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
+                // res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
                 //localStorage.removeItem("loguserinfo")
-                localStorage.setItem("loguserinfo",JSON.stringify(user))
+                localStorage.setItem("loguserinfo",JSON.stringify(res))
               })
                 }else {
               this.$message.error("保存失败")

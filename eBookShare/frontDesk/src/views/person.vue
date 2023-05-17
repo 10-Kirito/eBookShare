@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <el-card style="width: 500px">
+  <div align="center">
+    <el-card style="width: 500px;">
       <!--    根据实际表格情况，进行增删-->
       <el-form label-width="80px" size="small">
         <el-upload
             style="text-align: center"
             class="avatar-uploader"
-            action="http://localhost:9090/file/upload"
+            action="http://localhost:9091/file/upload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
         >
@@ -17,17 +17,17 @@
 
 
 
-        <el-form-item label="学号">
-          <el-input v-model="form.studentid" autocomplete="off" />
+        <el-form-item label="账号">
+          <el-input v-model="form.username" autocomplete="off" disabled/>
         </el-form-item>
-        <el-form-item label="姓名">
-          <el-input v-model="form.name" autocomplete="off" />
+        <el-form-item label="密码">
+          <el-input v-model="form.password" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="性别">
-          <el-input v-model="form.sex" autocomplete="off" />
+        <el-form-item label="邮箱">
+          <el-input v-model="form.email" autocomplete="off" />
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input v-model="form.age" autocomplete="off" />
+        <el-form-item label="电话">
+          <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="save">确认</el-button>
@@ -53,17 +53,18 @@ export default {
   // 这里暂时写的是学生，后面需要更换成别的端口
   created() {
     this.getUser().then(res =>{
+      console.log(res)
       this.form = res
     })
   },
   methods:{
     async getUser(){
-      return  (await this.request.get("/student/studentid/" + this.user.studentid)).data
+      return  (await this.request.get("/users/" + this.user.username)).data
     },
     save(){
       //发送数据到后端
       //this.$message.success("保存信息："+this.form.avatarUrl)
-      this.request.post("/student",this.form).then(res => {
+      this.request.post("/users",this.form).then(res => {
         if(res){
           this.$message.success("保存成功")
           //触发父级更新user的方法
@@ -73,9 +74,9 @@ export default {
 
           //更新浏览器存储信息
           this.getUser().then(res =>{
-            res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
+            // res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
             //localStorage.removeItem("loguserinfo")
-            localStorage.setItem("loguserinfo",JSON.stringify(user))
+            localStorage.setItem("loguserinfo",JSON.stringify(res))
           })
         }else {
           this.$message.error("保存失败")
@@ -84,8 +85,16 @@ export default {
     },
     handleAvatarSuccess(res){
       this.form.avatarurl = res
-      //this.$message.success("路径"+this.form.avatarUrl)
-      //this.$message.success("路径"+res)
+
+      this.request.get("/file/useravartarinfo",{
+        params:{
+          avartarurl: res,
+          username: JSON.parse(localStorage.getItem("loguserinfo")).username
+        }
+      })
+          .then(res => {
+            this.$message.success("保存成功")
+          })
     }
   }
 }

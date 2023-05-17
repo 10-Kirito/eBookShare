@@ -8,7 +8,7 @@
 
       <!-- 首页主体部分-->
       <el-main>
-        <router-view></router-view>
+        <router-view @refreshUser="getUser"></router-view>
       </el-main>
 
       <!--  首页下半部分-->

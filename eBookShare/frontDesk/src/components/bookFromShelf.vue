@@ -1,5 +1,5 @@
 <template>
-  <div @click="goToPreview" v-if="bookInfo" style="width: 420px">
+  <div @click="goToPreview" v-if="bookInfo" style="width: 420px; margin-top: 20px;margin-left: 60px">
     <!--  下面的代码目的是为了展示位于书架上的一本图书！-->
 
 

@@ -49,7 +49,7 @@
               <el-col :span="15" >
                 <el-row class="attriclass" >
                   <el-col :span="23">
-                    <h3 @click="pushDetail(bookDetails[index])" style="cursor: pointer;text-decoration: underline">{{ book.title }}</h3>
+                    <h3 @click="pushDetail(bookDetails[index])" style="cursor: pointer;text-decoration: underline">{{ book.bookname }}</h3>
                   </el-col>
                   <el-col :span="1">
                     <el-tooltip class="item" effect="dark" :content="book.isCollected ? '取消收藏' : '收藏' ">
@@ -57,7 +57,7 @@
                     </el-tooltip>
                   </el-col>
                 </el-row>
-                <el-row class="attriclass"><div class="grid-content book-publisher" title="出版社">{{book.publisher}}</div></el-row>
+                <el-row style="margin-left: -40px;padding-top: -10px"><div class="grid-content book-publisher" title="出版社">{{book.publisher}}</div></el-row>
                 <el-row class="attriclass"><span @click="redirectToAuthorBooks(book.author)" title="找到该作者的所有书籍" class="book-author">{{book.author}}</span></el-row>
                 <el-row class="attriclass" style="margin-top: 40px">
                   <el-col :span="12" ><div style="color: #8C8C8C; ">标准书号: {{book.isbn}}</div></el-col>

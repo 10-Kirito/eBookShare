@@ -26,12 +26,12 @@
           </el-col>
           <el-col :xs="24" :sm="18" class="book-info">
             <el-row class="align-left">
-              <h1 class="book-title" style="margin: 0;padding: 0">{{ bookDetails.title }}</h1>
+              <h4 class="book-title" style="margin: 0px;padding: 0px;">{{ bookDetails.bookname }}</h4>
             </el-row>
             <el-row class="align-left">
               <i class="book-author">
-                <span class="color1" style="margin-left: -60px">{{bookDetails.bookname}}</span>
-                <br><br>
+<!--                <span class="color1" style="margin-left: -60px">{{ bookDetails.name }}</span>-->
+                <br>
                 <span @click="redirectToAuthorBooks(bookDetails.author)" title="找到该作者的所有书籍" class="color1" style="cursor: pointer">作者:{{ bookDetails.author }}</span>
               </i>
             </el-row>
@@ -148,7 +148,8 @@ export default {
     return {
       bookDetails: {},
       collectBtnClass:"el-icon-star-off",
-      bookValue:null
+      bookValue:null,
+      textarea:""
     }
   },
   methods:{

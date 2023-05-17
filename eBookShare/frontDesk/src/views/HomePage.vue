@@ -1,9 +1,9 @@
 <template>
 <div>
   <!--  首页主要组成部分-->
-  <div style="margin-bottom: 10px; margin-top: 20px">
+  <div style="margin-bottom: 10px" class="header-with-background">
     <el-row style="margin-bottom:30px">
-      <div>
+      <div style="margin-top: 50px">
         <input type="text" v-model="searchQuery" placeholder="输入关键字搜索图书" class="search ">
         <el-button @click="searchBooks" type="success" class="searchButton" >查询</el-button>
       </div>
@@ -371,5 +371,9 @@ h1 {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 16px;
+}
+.header-with-background {
+  background-image: url('~@/assets/images/whiteback.jpg');
+  /*background-size: cover;*/
 }
 </style>

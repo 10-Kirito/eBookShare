@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-header>
+    <el-header class="header-with-background">
       <!--   首页头部   -->
       <el-col :span="12" :offset="1" align="left">
         <div class="grid-content bg-purple">
@@ -76,5 +76,8 @@ export default {
 </script>
 
 <style scoped>
-
+.header-with-background {
+  background-image: url('~@/assets/images/wooden.jpg');
+  background-size: cover;
+}
 </style>

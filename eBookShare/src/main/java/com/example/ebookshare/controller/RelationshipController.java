@@ -57,7 +57,24 @@ public class RelationshipController {
         return Result.success(relationship);
     }
 
+    //评分
+    @GetMapping("/score")  //接口路径,多条件查询
+    public Result setscore(@RequestParam Integer bookid,
+                           @RequestParam Integer userid,
+                           @RequestParam Integer score){
 
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        queryWrapper.eq("userid",userid);
+        Relationship relationship = relationshipMapper.selectOne(queryWrapper);
+        if(relationship == null){
+            return Result.error("400","未查询到relationship数据");
+        }
+        relationship.setScore(score);
+        relationshipService.remove(queryWrapper);
+        relationshipService.save(relationship);
+        return Result.success();
+    }
 
     //根据某个用户，查找其购买的书目分页信息
     @GetMapping("/selectboughtbook")  //接口路径,多条件查询
@@ -138,6 +155,7 @@ public class RelationshipController {
             relationship1.setBookid(bookid);
             relationship1.setUserid(userid);
             relationship1.setIsowned(1);
+            relationship1.setIslike(0);
             relationship1.setIsfavour(0);
             relationship1.setIsuploader(0);
             relationshipService.save(relationship1);
@@ -156,8 +174,13 @@ public class RelationshipController {
         Relationship relationship = relationshipService.getOne(queryWrapper);
         if (relationship != null){ //数据库中已有 用户和该书的关系数据
             //修改状态位，随后返回
+            if(relationship.getIsfavour() == 0){
+                relationship.setIsfavour(1);
+            }
+            else {
+                relationship.setIsfavour(0);
+            }
             relationshipService.remove(queryWrapper);
-            relationship.setIsfavour(1);
             relationshipService.save(relationship);
         }
         else{//原先数据库中没有数据，新增一个
@@ -165,7 +188,42 @@ public class RelationshipController {
             relationship1.setBookid(bookid);
             relationship1.setUserid(userid);
             relationship1.setIsowned(0);
+            relationship1.setIslike(0);
             relationship1.setIsfavour(1);
+            relationship1.setIsuploader(0);
+            relationshipService.save(relationship1);
+        }
+        return Result.success();
+    }
+
+
+    //点赞书籍接口
+    @GetMapping("/likebook")  //接口路径,多条件查询
+    public Result likebook(@RequestParam Integer bookid,
+                             @RequestParam Integer userid){
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        queryWrapper.eq("userid",userid);
+        //先查找是否已有 数据项，如果已有，只需要修改状态位即可
+        Relationship relationship = relationshipService.getOne(queryWrapper);
+        if (relationship != null){ //数据库中已有 用户和该书的关系数据
+            //修改状态位，随后返回
+            if(relationship.getIslike() == 0){
+                relationship.setIslike(1);
+            }
+            else {
+                relationship.setIslike(0);
+            }
+            relationshipService.remove(queryWrapper);
+            relationshipService.save(relationship);
+        }
+        else{//原先数据库中没有数据，新增一个
+            Relationship relationship1 = new Relationship();
+            relationship1.setBookid(bookid);
+            relationship1.setUserid(userid);
+            relationship1.setIsowned(0);
+            relationship1.setIsfavour(0);
+            relationship1.setIslike(1);
             relationship1.setIsuploader(0);
             relationshipService.save(relationship1);
         }

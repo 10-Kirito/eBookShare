@@ -176,8 +176,26 @@ public class RelationshipController {
             //修改状态位，随后返回
             if(relationship.getIsfavour() == 0){
                 relationship.setIsfavour(1);
+                QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+                booksQueryWrapper.eq("bookid",bookid);
+                //更新book中的收藏量
+                Books books = booksMapper.selectOne(booksQueryWrapper);
+                if (books.getFavorites() == null) {
+                    books.setFavorites(0);
+                }
+                books.setFavorites(books.getFavorites()+1);
+                booksService.saveOrUpdate(books);
             }
-            else {
+            else { //撤销点赞
+                QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+                booksQueryWrapper.eq("bookid",bookid);
+                //更新book中的收藏量
+                Books books = booksMapper.selectOne(booksQueryWrapper);
+                if (books.getFavorites() == null) {
+                    books.setFavorites(0);
+                }
+                books.setFavorites(books.getFavorites()-1);
+                booksService.saveOrUpdate(books);
                 relationship.setIsfavour(0);
             }
             relationshipService.remove(queryWrapper);
@@ -191,6 +209,17 @@ public class RelationshipController {
             relationship1.setIslike(0);
             relationship1.setIsfavour(1);
             relationship1.setIsuploader(0);
+
+            QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+            booksQueryWrapper.eq("bookid",bookid);
+            //更新book中的收藏量
+            Books books = booksMapper.selectOne(booksQueryWrapper);
+            if (books.getFavorites() == null) {
+                books.setFavorites(0);
+            }
+            books.setFavorites(books.getFavorites()+1);
+            booksService.saveOrUpdate(books);
+            relationship1.setIsfavour(1);
             relationshipService.save(relationship1);
         }
         return Result.success();
@@ -210,9 +239,29 @@ public class RelationshipController {
             //修改状态位，随后返回
             if(relationship.getIslike() == 0){
                 relationship.setIslike(1);
+
+                QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+                booksQueryWrapper.eq("bookid",bookid);
+                //更新book中的收藏量
+                Books books = booksMapper.selectOne(booksQueryWrapper);
+                if (books.getLikes() == null) {
+                    books.setLikes(0);
+                }
+                books.setLikes(books.getLikes()+1);
+                booksService.saveOrUpdate(books);
             }
-            else {
+            else {//撤销点赞
                 relationship.setIslike(0);
+
+                QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+                booksQueryWrapper.eq("bookid",bookid);
+                //更新book中的收藏量
+                Books books = booksMapper.selectOne(booksQueryWrapper);
+                if (books.getLikes() == null) {
+                    books.setLikes(0);
+                }
+                books.setLikes(books.getLikes()-1);
+                booksService.saveOrUpdate(books);
             }
             relationshipService.remove(queryWrapper);
             relationshipService.save(relationship);
@@ -225,6 +274,17 @@ public class RelationshipController {
             relationship1.setIsfavour(0);
             relationship1.setIslike(1);
             relationship1.setIsuploader(0);
+
+            QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+            booksQueryWrapper.eq("bookid",bookid);
+            //更新book中的收藏量
+            Books books = booksMapper.selectOne(booksQueryWrapper);
+            if (books.getLikes() == null) {
+                books.setLikes(0);
+            }
+            books.setLikes(books.getLikes()+1);
+            booksService.saveOrUpdate(books);
+
             relationshipService.save(relationship1);
         }
         return Result.success();

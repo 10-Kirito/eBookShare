@@ -17,7 +17,7 @@
             <h1>图书总榜单</h1>
 
             <el-card v-for="(book, index) in booksDownloadList" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
-              <el-row @mouseenter.native="showInfo(index)" @mouseleave.native="hideInfo(index)" @click.native="pushDetail(booksDownloadList[index])" style="cursor: pointer;">
+                <el-row @mouseenter.native="showInfo(index)" @mouseleave.native="hideInfo(index)" @click.native="pushDetail(booksDownloadList[index])" style="cursor: pointer;">
                 <el-col :span="8">
                   <img :src="book.img" class="book-cover"/>
                 </el-col>
@@ -79,7 +79,7 @@
               <el-card v-for="(book, index) in todayPopularBooks" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
                 <el-row v-if="book" @mouseenter.native="showInfo2(index)" @mouseleave.native="hideInfo2(index)" @click.native="pushDetail(todayPopularBooks[index])" style="cursor: pointer;">
                   <el-col :span="8">
-                    <img :src="book.coverimage" class="book-cover"/>
+                    <img :src="book.img" class="book-cover"/>
                   </el-col>
                   <el-col :span="16" class="book-info">
                     <div class="book-title">{{ book.title }}</div>
@@ -228,7 +228,6 @@ export default {
           book.collectBtnClass = "el-icon-star-off"     //默认值关闭
         })
       })
-
     },
     pushDetail(index){           //跳转路由函数
       // console.log(JSON.stringify(this.bookDetails[0]))
@@ -250,15 +249,16 @@ export default {
         this.$message({
           message: '收藏成功',
           type: 'success'
-        });
+        })
         this.bookDetails[index].collectBtnClass="el-icon-star-on"
       }else{  //取消收藏
         this.$message({
           message: '取消成功',
           type: 'success'
-        });
+        })
         this.bookDetails[index].collectBtnClass="el-icon-star-off"
       }
+      this.$forceUpdate();
     },
     showInfo(index) {
       // console.log("this has been enter")

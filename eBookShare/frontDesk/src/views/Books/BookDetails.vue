@@ -43,7 +43,7 @@
                         trigger="click">
                       <div style="font-size: 12px;text-align: center">-----------你有多喜欢这本书？-----------</div>
                       <div class="block" style="text-align: center">
-                        <el-rate v-model="bookValue" allow-half="true"></el-rate>
+                        <el-rate v-model="bookValue" ></el-rate>
                       </div>
                       <i class="el-icon-medal" slot="reference" style="cursor: pointer"></i>
                     </el-popover>
@@ -56,9 +56,10 @@
                 </div>
 
               <div style="display: inline-block" class="ml-5">
-                <i class="el-icon-chat-dot-square" style="cursor: pointer;font-size: 25px;margin-right: 5px">
-                  <span style="font-size: 20px;margin-right: 5px">1 comment</span>
-                </i>
+                <el-tooltip content="评论">
+                  <el-button class="el-icon-chat-dot-square" circle style="cursor: pointer;font-size: 15px;margin-right: 5px"></el-button>
+                </el-tooltip>
+                  <span style="font-size: 20px;margin-right: 15px">1 comment</span>
               </div>
 
               <el-tooltip :content="bookDetails.isCollected ? '取消收藏' : '收藏' ">
@@ -92,30 +93,26 @@
       <el-footer>
 
 
-        <el-row>
-          <el-col :span="24">
-            <div class="grid-content bg-purple-dark" style="width: 45%; margin-left: 30%">
-              <p style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px">评论：</p>
-            </div>
-          </el-col>
-        </el-row>
+        <div class="grid-content bg-purple-dark" style="width: 900px; margin:10px auto">
+          <p style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px">评论：</p>
+        </div>
 
-        <el-row :gutter="20" style="width: 50%; margin-left: 29%">
-          <el-col :span="18">
-              <el-input
-                  type="textarea"
-                  :rows="2"
-                  placeholder="请输入内容"
-                  style="width: 710px; margin-bottom: 10px; font-size: 20px"
-                  v-model="textarea">
-              </el-input>
-          </el-col>
-          <el-col :span="2">
-              <el-button type="success" style="width: 100px; height: 72px; margin-left: 40px; font-size: 20px">评论</el-button>
-          </el-col>
-        </el-row>
+        <div style="width: 700px;margin: 0 auto">
+          <el-input
+              type="textarea"
+              :rows="2"
+              placeholder="请输入内容"
+              style="font-size: 20px"
+              v-model="textarea">
+          </el-input>
+          <div style="text-align: right;margin: 10px 0">
+              <el-button type="success" @click="submitComment">提交</el-button>
+          </div>
+        </div>
 
-        <comments></comments>
+        <div style="margin: 10px auto">
+          <comments></comments>
+        </div>
       </el-footer>
     </el-container>
 
@@ -149,7 +146,8 @@ export default {
       bookDetails: {},
       collectBtnClass:"el-icon-star-off",
       bookValue:null,
-      textarea:""
+      textarea:"",
+      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")).username:""
     }
   },
   methods:{
@@ -178,6 +176,18 @@ export default {
     previewBook(){
       let url = this.bookDetails.url;
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
+    },
+    submitComment(){
+      this.request.get("/commits",{
+        params:{
+          username:this.user,
+          bookid:this.bookDetails.bookid
+        }
+      }).then(res=>{
+        if(res.data==='200'){
+          this.$message.success("评论成功")
+        }
+      })
     }
   }
 }

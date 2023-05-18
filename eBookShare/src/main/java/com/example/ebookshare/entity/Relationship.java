@@ -34,5 +34,8 @@ public class Relationship implements Serializable {
     @ApiModelProperty("是否是上传者")
     private Integer isuploader;
 
+    private Integer score;
+
+    private Integer islike;
 
 }

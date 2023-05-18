@@ -111,7 +111,7 @@
         </div>
 
         <div style="margin: 10px auto">
-          <comments></comments>
+          <comments :bookDetail="bookDetails" :key="commentKey"></comments>
         </div>
       </el-footer>
     </el-container>
@@ -147,7 +147,8 @@ export default {
       collectBtnClass:"el-icon-star-off",
       bookValue:null,
       textarea:"",
-      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")).username:""
+      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
+      commentKey:0
     }
   },
   methods:{
@@ -178,16 +179,24 @@ export default {
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
     },
     submitComment(){
-      this.request.get("/commits",{
-        params:{
-          username:this.user,
-          bookid:this.bookDetails.bookid
-        }
-      }).then(res=>{
-        if(res.data==='200'){
-          this.$message.success("评论成功")
-        }
-      })
+      if(this.user.id==null) {
+        this.$message.error("评论失败，请先登录！")
+      }else {
+      this.request.get("/commits/mankecommits",{
+          params:{
+            userid:this.user.id,
+            bookid:this.bookDetails.bookid,
+            text:this.textarea
+          }
+        }).then(res=>{
+          if(res.code==='200'){
+            this.$message.success("评论成功")
+            this.commentKey++
+          }else {
+            this.$message.error("评论失败，请先登录！")
+          }
+        })
+      }
     }
   }
 }

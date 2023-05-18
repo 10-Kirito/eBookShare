@@ -33,14 +33,17 @@ public class CommitsController {
     @Resource
     CommitsMapper commitsMapper;
 
+
+
+
     @GetMapping("/mankecommits")  //接口路径,多条件查询
     public Result findDeletedPage(@RequestParam String userid,
                                   @RequestParam String bookid,
                                   @RequestParam String text){
         Commits commits = new Commits();
-        commits.setBookid(Integer.getInteger(bookid));
+        commits.setBookid(Integer.valueOf(bookid));
         commits.setText(text);
-        commits.setUserid(Integer.getInteger(userid));
+        commits.setUserid(Integer.valueOf(userid));
         commitsService.save(commits);
         return Result.success();
     }
@@ -54,6 +57,7 @@ public class CommitsController {
         IPage<Commits> page = new Page<>(pageNum,pageSize);
        QueryWrapper<Commits> queryWrapper = new QueryWrapper<>();
        queryWrapper.eq("bookid",bookid);
+        queryWrapper.orderByDesc("time");
         return commitsService.page(page,queryWrapper);
     }
 }

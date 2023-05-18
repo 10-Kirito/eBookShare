@@ -9,6 +9,7 @@ import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Relationship;
 import com.example.ebookshare.entity.Users;
 import com.example.ebookshare.mapper.BooksMapper;
+import com.example.ebookshare.mapper.RelationshipMapper;
 import com.example.ebookshare.service.impl.BooksServiceImpl;
 import com.example.ebookshare.service.impl.RelationshipServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +36,8 @@ public class RelationshipController {
     @Resource
     RelationshipServiceImpl relationshipService;
     @Resource
+    RelationshipMapper relationshipMapper;
+    @Resource
     BooksServiceImpl booksService;
     @Resource
     BooksMapper booksMapper;
@@ -44,14 +47,14 @@ public class RelationshipController {
     public Result findRelationship(@RequestParam Integer bookid,
                                          @RequestParam Integer userid){
 
-        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("bookid",bookid);
         queryWrapper.eq("userid",userid);
-        Books books = booksMapper.selectOne(queryWrapper);
-        if(books == null){
+        Relationship relationship = relationshipMapper.selectOne(queryWrapper);
+        if(relationship == null){
             return Result.error("400","未查询到relationship数据");
         }
-        return Result.success(books);
+        return Result.success(relationship);
     }
 
 

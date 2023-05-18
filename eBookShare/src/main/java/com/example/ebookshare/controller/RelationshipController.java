@@ -39,10 +39,25 @@ public class RelationshipController {
     @Resource
     BooksMapper booksMapper;
 
+    //当用户点击进入某本书的时候，查找点赞，收藏和评分关系
+    @GetMapping("/findrelation")  //接口路径,多条件查询
+    public Result findRelationship(@RequestParam Integer bookid,
+                                         @RequestParam Integer userid){
+
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        queryWrapper.eq("userid",userid);
+        Books books = booksMapper.selectOne(queryWrapper);
+        if(books == null){
+            return Result.error("400","未查询到relationship数据");
+        }
+        return Result.success(books);
+    }
+
 
 
     //根据某个用户，查找其购买的书目分页信息
-    @GetMapping("/selectfavourbook")  //接口路径,多条件查询
+    @GetMapping("/selectboughtbook")  //接口路径,多条件查询
     public IPage<Books> selectboughtbook(@RequestParam Integer pageNum,
                                          @RequestParam Integer pageSize,
                                          @RequestParam Integer userid){
@@ -64,6 +79,8 @@ public class RelationshipController {
 
         return page;
     }
+
+
     //根据某个用户，查找其收藏的书目分页信息
     @GetMapping("/selectfavour")  //接口路径,多条件查询
     public IPage<Books> selectfavourbook(@RequestParam Integer pageNum,

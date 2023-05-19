@@ -30,6 +30,7 @@
 <script>
 
 import bookFromShelf from "@/components/bookFromShelf.vue";
+import Vue from "vue";
 
 export default {
   name: "BookShelf",
@@ -44,7 +45,7 @@ export default {
 
       // 分页查询，每一页的个数 = rowCount * colCount
       currentPage: 1,
-      pageSize: this.rowCount * this.colCount,
+      pageSize: (this.rowCount * this.colCount),
       total: 100,
 
 
@@ -54,10 +55,20 @@ export default {
       dataload: false
     }
   },
-  beforeMount() {
-    this.getAllBooksData();
+    created() {
+        this.getUser();
+        this.getAllBooksData();
+    },
+    beforeMount() {
+    //this.getAllBooksData();
   },
   methods:{
+    getUser(){
+        const data = JSON.parse(localStorage.getItem('loguserinfo'))
+        if (data) {
+            this.user=data
+        }
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageSize = val;
@@ -67,8 +78,15 @@ export default {
       this.currentPage = val;
     },
     getAllBooksData(){
-      this.request.get("/books").then(res => {
-        this.booksData = res;
+      this.request.get("/FrontBooks/bookself",{
+          params:{
+              userid:this.user.id,
+              operator:"isowned",   //填写需要获取的是收藏还是拥有的还是喜欢的
+              pageNum:this.currentPage,
+              pageSize:this.rowCount*this.rowCount
+          }
+      }).then(res => {
+        this.booksData = res.data;
         console.log(this.booksData);
         this.dataload = true;
       })

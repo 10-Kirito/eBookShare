@@ -12,7 +12,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.common.APIStatusCode;
-import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
 import com.example.ebookshare.entity.*;
@@ -431,5 +430,16 @@ public class BooksController {
         List<Books> filesList = booksMapper.selectList(queryWrapper);
         //获取第一个，因为有可能重名，多条记录
         return filesList.size() == 0 ? null: filesList.get(0);
+    }
+
+
+
+    // 点击下载按钮的时候，同步更新数据库相关数据
+    @GetMapping("/updateDownload")
+    public APIResponse<?> updateDownload(@RequestParam Integer bookid){
+        Books books = booksService.getById(bookid);
+        books.setDownloads(books.getDownloads()+1);
+        booksService.saveOrUpdate(books);
+        return new APIResponse<>(null, APIStatusCode.SUCCESS, "更新成功");
     }
 }

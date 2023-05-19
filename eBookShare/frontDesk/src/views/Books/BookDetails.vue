@@ -22,7 +22,7 @@
               <el-image :src="bookDetails.coverimage" fit="cover" lazy style="height: 26pc;"/>
             </div>
             <el-button type="success" icon="el-icon-view" plain style="margin-left: 0px;margin-top: 5px;width: 340px" @click="previewBook">预览</el-button>
-            <el-button type="primary" icon="el-icon-download" plain style="margin-left: 0px;margin-top: 5px;width: 340px">下载</el-button>
+            <el-button type="primary" icon="el-icon-download" plain style="margin-left: 0px;margin-top: 5px;width: 340px" @click="downloads">下载</el-button>
           </el-col>
           <el-col :xs="24" :sm="18" class="book-info">
             <el-row class="align-left">
@@ -43,7 +43,8 @@
                         trigger="click">
                       <div style="font-size: 12px;text-align: center">-----------你有多喜欢这本书？-----------</div>
                       <div class="block" style="text-align: center">
-                        <el-rate v-model="bookValue" ></el-rate>
+
+                        <el-rate v-model="bookValue"></el-rate>
                       </div>
                       <i class="el-icon-medal" slot="reference" style="cursor: pointer"></i>
                     </el-popover>
@@ -196,7 +197,9 @@ export default {
             this.$message.error("评论失败，请先登录！")
           }
         })
-      }
+      }},
+    downloads(){
+      window.open(this.bookDetails.url);
     }
   }
 }
@@ -236,12 +239,6 @@ export default {
   cursor: pointer;
 }
 
-.el-row {
-  margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
 .el-col {
   border-radius: 4px;
 }

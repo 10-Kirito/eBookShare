@@ -1,9 +1,11 @@
 package com.example.ebookshare.service.impl;
 
+import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Relationship;
 import com.example.ebookshare.mapper.RelationshipMapper;
 import com.example.ebookshare.service.IRelationshipService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,5 +18,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RelationshipServiceImpl extends ServiceImpl<RelationshipMapper, Relationship> implements IRelationshipService {
+
+    @Autowired
+    RelationshipMapper relationshipMapper;
 
 }

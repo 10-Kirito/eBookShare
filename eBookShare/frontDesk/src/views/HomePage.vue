@@ -4,8 +4,9 @@
   <div style="margin-bottom: 10px" class="header-with-background">
     <el-row style="margin-bottom:30px">
       <div style="margin-top: 50px">
-        <input type="text" v-model="searchQuery" placeholder="输入关键字搜索图书" class="search ">
-        <el-button @click="searchBooks" type="success" class="searchButton" >查询</el-button>
+        <input class="input is-rounded" type="text" placeholder="输入关键字搜索图书" style="width: 40%; font-size: 25px" v-model="searchQuery">
+
+        <button class="button is-success is-rounded" @click="searchBooks" style="font-size: 26px; margin-left: 10px">查询</button>
       </div>
 
     </el-row>
@@ -53,7 +54,7 @@
                   </el-col>
                   <el-col :span="1">
                     <el-tooltip class="item" effect="dark" :content="book.isCollected ? '取消收藏' : '收藏' ">
-                      <i :class="book.collectBtnClass" @click="collectBtn(index)" style="cursor: pointer;font-size: 25px;margin-left: 18px;margin-top: 20px"></i>
+                      <i :class="book.collectBtnClass" @click="collectBtn(index,book)" style="cursor: pointer;font-size: 25px;margin-left: 18px;margin-top: 20px"></i>
                     </el-tooltip>
                   </el-col>
                 </el-row>
@@ -103,12 +104,16 @@
 
 <script>
 import router from "@/router";
+import Vue from "vue";
 
 export default {
   inject:['reload'],
   name: "Home",
   data() {
     return {
+      // 用户个人信息
+      user:{},
+
       // 今日推荐图书信息:
       recommendBooks:[],
       recommendNumber: 10,
@@ -201,12 +206,20 @@ export default {
     };
   },
   created() {
+    this.getUser();
     this.getRecommendBooks();
   },
   beforeMount() {
 
   },
   methods: {
+    //获取用户信息
+    getUser(){
+      const data = JSON.parse(localStorage.getItem('loguserinfo'))
+      if (data) {
+        Vue.set(this, 'user', data);
+      }
+    },
     searchBooks() {
       //跳转到搜索结果页进行搜索
       router.push({
@@ -243,22 +256,42 @@ export default {
         query:{params:JSON.stringify(author)}
       })
     },
-    collectBtn(index){//收藏
+    collectBtn(index,book){//收藏
       this.bookDetails[index].isCollected=!this.bookDetails[index].isCollected
       if(this.bookDetails[index].isCollected){
         this.$message({
           message: '收藏成功',
           type: 'success'
+        });
+        this.bookDetails[index].collectBtnClass="el-icon-star-on";
+
+        this.request.get("http://localhost:9091/relationship/favourbook", {
+          params:{
+            bookid: book.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
         })
-        this.bookDetails[index].collectBtnClass="el-icon-star-on"
+        console.log("收藏");
       }else{  //取消收藏
         this.$message({
           message: '取消成功',
           type: 'success'
+        });
+        this.bookDetails[index].collectBtnClass="el-icon-star-off";
+
+        this.request.get("http://localhost:9091/relationship/favourbook", {
+          params:{
+            bookid: book.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
         })
-        this.bookDetails[index].collectBtnClass="el-icon-star-off"
+        console.log("取消收藏");
       }
-      this.$forceUpdate();
+      this.$forceUpdate()
     },
     showInfo(index) {
       // console.log("this has been enter")
@@ -282,19 +315,8 @@ export default {
 
 <style scoped>
 
-.search{
-  height: 55px;
-  width: 600px;
-  font-size: 20px;
-}
-.searchButton{
-  height: 55px;
-  width: 100px;
-  font-size: 20px;
-  margin-left: 10px;
-}
 
-/*以下李洪辰代码不能动!*/
+
 
 .book-cover {
   width: 100%;
@@ -342,8 +364,7 @@ export default {
 
 .book-publisher{
   color: #8C8C8C;
-  font-size: 10pt;
-  margin-bottom: 5px;
+  margin-bottom:10px;
   cursor: pointer;
 }
 .book-author {

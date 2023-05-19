@@ -1,38 +1,29 @@
 <template>
   <div>
+    <el-card class="box-card">
+      <el-row :gutter="20">
+        <el-col :span="4">
+          <div class="grid-content bg-purple">
+            <el-avatar :size="60" :src="imagesurl">
+              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
+            </el-avatar>
+          </div>
+        </el-col>
 
+        <el-col :span="20">
+          <el-row>
+            {{this.datetime}}
+          </el-row>
 
+          <el-row>
+            <div class="grid-content bg-purple">
+              <p>{{this.text}}</p>
+            </div>
+          </el-row>
 
-
-
-
-<!--    <el-card class="box-card">-->
-<!--      <el-row :gutter="20">-->
-<!--        <el-col :span="4">-->
-<!--          <div class="grid-content bg-purple">-->
-<!--            <el-avatar :size="60" :src="imagesurl">-->
-<!--              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>-->
-<!--            </el-avatar>-->
-<!--          </div>-->
-<!--        </el-col>-->
-
-<!--        <el-col :span="20">-->
-<!--          <el-row>-->
-<!--            {{this.datetime}}-->
-<!--          </el-row>-->
-
-<!--          <el-row>-->
-<!--            <div class="grid-content bg-purple">-->
-<!--              <p>{{this.text}}</p>-->
-<!--            </div>-->
-<!--          </el-row>-->
-
-<!--        </el-col>-->
-<!--      </el-row>-->
-
-
-<!--    </el-card>-->
-
+        </el-col>
+      </el-row>
+    </el-card>
   </div>
 </template>
 

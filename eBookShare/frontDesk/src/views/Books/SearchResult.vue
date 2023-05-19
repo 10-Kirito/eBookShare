@@ -1,11 +1,10 @@
-@@ -0,0 +1,235 @@
 <template>
   <div>
     <el-main class="el-main">
       <div style="margin-bottom: 10px; margin-top: 20px">
         <el-row style="margin-bottom:30px">
-          <input type="text" v-model="searchQuery" placeholder="输入关键字搜索图书">
-          <button @click="searchBooks" style="height: 64px;width: 100px; font-size: 20px">查询</button>
+          <input class="input is-rounded" type="text" placeholder="输入关键字搜索图书" style="width: 40%; font-size: 25px" v-model="searchQuery">
+          <button class="button is-success is-rounded" @click="searchBooks" style="font-size: 26px; margin-left: 10px">查询</button>
         </el-row>
       </div>
 
@@ -195,28 +194,6 @@ export default {
 </script>
 
 <style scoped>
-button {
-  font-size: 16px;
-  padding: 8px;
-  background-color: #4caf50;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  height: 50px;
-  width: 100px;
-}
-
-
-input[type="text"] {
-  font-size: 16px;
-  padding: 8px;
-  margin-right: 8px;
-  width: 700px;
-  height: 50px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
 
 .bg-purple-light {
   background: #e5e9f2;

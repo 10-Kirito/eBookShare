@@ -22,9 +22,6 @@
         layout="total, prev, pager, next, jumper"
         :total="total">
     </el-pagination>
-    <div>
-        <comment-item v-for="item in 5" :key="item"></comment-item>
-    </div>
   </div>
 </template>
 

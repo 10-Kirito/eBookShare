@@ -9,6 +9,7 @@
             action="http://localhost:9091/file/upload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
+            :data="form.userid"
         >
           <!--        暂时没有头像，因为新增头像需要添加数据库里面-->
           <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />

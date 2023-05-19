@@ -39,7 +39,4 @@ public class Commits implements Serializable {
 
     private LocalDateTime time;
 
-    @TableField(exist = false)
-    private String username;
-
 }

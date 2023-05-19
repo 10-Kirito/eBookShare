@@ -167,7 +167,7 @@ public class RelationshipController {
 
     //收藏书籍接口
     @GetMapping("/favourbook")  //接口路径,多条件查询
-    public APIResponse<?> favourbook(@RequestParam Integer bookid,
+    public Result favourbook(@RequestParam Integer bookid,
                                   @RequestParam Integer userid){
         QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("bookid",bookid);
@@ -289,6 +289,6 @@ public class RelationshipController {
 
             relationshipService.save(relationship1);
         }
-        return new APIResponse<>(null, APIStatusCode.SUCCESS, "收藏成功");
+        return Result.success();
     }
 }

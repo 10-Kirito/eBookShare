@@ -75,7 +75,7 @@
         <div class="grid-content bg-purple-light">
           <div class="grid-content bg-purple" >
             <el-card class="box-card" style="margin-left: 10px; height: 1410px">
-              <h1>今日最受欢迎电子图书</h1>
+              <h1>图书下载榜单</h1>
               <el-card v-for="(book, index) in todayPopularBooks" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
                 <el-row v-if="book" @mouseenter.native="showInfo2(index)" @mouseleave.native="hideInfo2(index)" @click.native="pushDetail(todayPopularBooks[index])" style="cursor: pointer;">
                   <el-col :span="8">
@@ -120,7 +120,7 @@ export default {
       //searchHTML: 'static/search/index.html',
       //书籍信息保存在这个数组中，//今日推荐阅读图书信息
       bookDetails: [],
-      //图书总榜单信息，按图书下载量排行
+      //图书总榜单信息，按图书下载量+收藏量+点赞量排行
       booksDownloadList:[
         {
           img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
@@ -156,7 +156,7 @@ export default {
           downloadCount:"44"
         }
       ],
-      //今日最受欢迎图书信息，按照今日下载量和收藏量排行
+      //图书下载榜单信息，按照下载量排行
       todayPopularBooks:[
         {
           img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",

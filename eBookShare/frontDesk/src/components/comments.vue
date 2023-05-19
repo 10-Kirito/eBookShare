@@ -26,16 +26,11 @@
 </template>
 
 <script>
-import commentItem from "@/components/commentItem.vue";
 
 export default  {
   name: "comments",
   props:{
-    bookDetail:{},
-    key:""
-  },
-  components:{
-    // commentItem
+    bookDetail:{}
   },
   data(){
     return{
@@ -61,6 +56,7 @@ export default  {
         if(res.code==='200'){
           this.commentsList=res.data.records           //根据后台数据更改
           this.total=res.data.total
+          this.$emit('custom-event',this.total)
           // this.$message.success("获取评论成功")
         }else {
           // this.$message.error("获取失败！")

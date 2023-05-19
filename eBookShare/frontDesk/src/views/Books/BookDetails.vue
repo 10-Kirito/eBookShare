@@ -57,9 +57,9 @@
 
               <div style="display: inline-block" class="ml-5">
                 <el-tooltip content="评论">
-                  <el-button class="el-icon-chat-dot-square" circle style="cursor: pointer;font-size: 15px;margin-right: 5px"></el-button>
+                  <el-button @click="jumpToInput" class="el-icon-chat-dot-square" circle style="cursor: pointer;font-size: 15px;margin-right: 5px"></el-button>
                 </el-tooltip>
-                  <span style="font-size: 20px;margin-right: 15px">1 comment</span>
+                  <span style="font-size: 20px;margin-right: 15px">{{commentcount}} comments</span>
               </div>
 
               <el-tooltip :content="bookDetails.isCollected ? '取消收藏' : '收藏' ">
@@ -94,11 +94,12 @@
 
 
         <div class="grid-content bg-purple-dark" style="width: 900px; margin:10px auto">
-          <p style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px">评论：</p>
+          <p  style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px">评论：</p>
         </div>
 
         <div style="width: 700px;margin: 0 auto">
           <el-input
+              ref="inputRef"
               type="textarea"
               :rows="2"
               placeholder="请输入内容"
@@ -111,7 +112,7 @@
         </div>
 
         <div style="margin: 10px auto">
-          <comments :bookDetail="bookDetails" :key="commentKey"></comments>
+          <comments :bookDetail="bookDetails" :key="commentKey" @custom-event="handleCustomEvent"></comments>
         </div>
       </el-footer>
     </el-container>
@@ -148,10 +149,18 @@ export default {
       bookValue:null,
       textarea:"",
       user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
-      commentKey:0
+      commentKey:0,//用于重新渲染评论子组件
+      commentcount:""
     }
   },
   methods:{
+
+    jumpToInput() {
+      this.$refs.inputRef.$el.scrollIntoView({ behavior: 'smooth' });
+    },
+    handleCustomEvent(data){
+      this.commentcount=data;
+    },
     collectBtn(){//收藏
       this.bookDetails.isCollected=!this.bookDetails.isCollected
       if(this.bookDetails.isCollected){
@@ -191,7 +200,7 @@ export default {
         }).then(res=>{
           if(res.code==='200'){
             this.$message.success("评论成功")
-            this.commentKey++
+            this.commentKey++     //改变值重新渲染子组件
           }else {
             this.$message.error("评论失败，请先登录！")
           }

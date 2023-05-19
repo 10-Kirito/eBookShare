@@ -24,9 +24,18 @@ const routes = [
         component: () => import('@/views/HomePage.vue')
       },
       {
-        path: 'bookshelf',
+        path: '/bookshelf',
         name:'个人书架',
         component: () => import('@/views/BookShelf.vue')
+      },{
+        path: '/favourshelf',
+        name:'收藏书架',
+        component: () => import('@/views/FavourShelf.vue')
+      },
+      ,{
+        path: '/pointsmall',
+        name:'积分商城',
+        component: () => import('@/views/PointsMall.vue')
       },
       {
         path: '/bookdetails',

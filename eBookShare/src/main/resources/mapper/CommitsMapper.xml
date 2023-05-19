@@ -7,5 +7,6 @@
         from commits c,users u
         where c.userid=u.id
         and c.bookid=#{bookid}
+        order by c.time DESC
     </select>
 </mapper>

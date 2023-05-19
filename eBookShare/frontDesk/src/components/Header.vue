@@ -5,13 +5,30 @@
       <el-col :span="12" :offset="1" align="left">
         <div class="grid-content bg-purple">
           <router-link to="/" style="text-decoration: none">{{ pageTitle }}</router-link>
-
 <!--        <el-button @click="test">a按钮</el-button>-->
         </div>
       </el-col>
+
       <el-row type="flex" justify="end">
         <el-col :span="8"><router-link to="/" style="text-decoration: none">首页</router-link></el-col>
-        <el-col :span="8"><router-link to="/home/bookshelf"  style="text-decoration: none">个人书架</router-link></el-col>
+
+        <el-col :span="8">
+          <el-dropdown style="width: 150px; cursor: pointer; text-align: center">
+            <div style="display: inline-block">
+              <span>书架</span>
+              <i class="el-icon-arrow-down" style="margin-left: 5px;"></i>
+            </div>
+            <el-dropdown-menu slot="dropdown" style="width: 100px;text-align: center">
+              <el-dropdown-item style="font-size: 14px;padding: 5px 0">
+                <router-link to="/bookshelf"  style="text-decoration: none">个人书架</router-link>
+              </el-dropdown-item>
+              <el-dropdown-item style="font-size: 14px;padding: 5px 0">
+                <router-link to="/favourshelf"  style="text-decoration: none">收藏书架</router-link>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </el-col>
+
 
         <el-col :span="8">
           <div v-show="this.user.username==null">
@@ -21,10 +38,8 @@
           <div v-show="this.user.username!=null">
             <el-dropdown style="width: 150px; cursor: pointer; text-align: right">
               <div style="display: inline-block">
-                <!--      头像功能-->
-                <img :src="user.avatarurl" alt="" style="width: 30px;border-radius: 50%;position: relative;top:10px;right:5px">
+                <img :src="imagesurl" style="width: 30px;border-radius: 50%;position: relative;top:10px;right:5px">
                 <span>{{ user.username }}</span>
-                <!--      这里的参数是后台.controller.dto中admindto的内容-->
                 <i class="el-icon-arrow-down" style="margin-left: 5px;"></i>
               </div>
               <el-dropdown-menu slot="dropdown" style="width: 100px;text-align: center">
@@ -38,7 +53,11 @@
             </el-dropdown>
           </div>
         </el-col>
-
+        <div v-show="this.user.username!=null" style="width: 100px">
+            <div class="grid-content bg-purple">
+              <router-link to="/pointsmall" style="text-decoration: none">积分:{{ user.points }}</router-link>
+            </div>
+        </div>
       </el-row>
 
 
@@ -57,7 +76,8 @@ export default {
   },
   data(){
     return{
-      pageTitle: '上海大学电子图书分享平台'
+      pageTitle: '上海大学电子图书分享平台',
+      imagesurl: require("../assets/images/cutcamera.png")
     }
   },
   methods:{

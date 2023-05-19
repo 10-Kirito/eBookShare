@@ -3,7 +3,7 @@
     <div v-for="(item,i) in commentsList" :key="i" class="author-title reply-father">
       <el-avatar class="header-img" :size="40" :src="imagesurl"></el-avatar>
       <div class="author-info">
-        <span class="author-name">{{item.userid}}</span>
+        <span class="author-name">{{item.username}}</span>
         <span class="author-time">{{item.time}}</span>
       </div>
       <div class="talk-box">
@@ -58,9 +58,9 @@ export default  {
           bookid:this.bookDetail.bookid
         }
       }).then(res=>{
-        if(res){
-          this.commentsList=res.records           //根据后台数据更改
-          this.total=res.total
+        if(res.code==='200'){
+          this.commentsList=res.data.records           //根据后台数据更改
+          this.total=res.data.total
           // this.$message.success("获取评论成功")
         }else {
           // this.$message.error("获取失败！")

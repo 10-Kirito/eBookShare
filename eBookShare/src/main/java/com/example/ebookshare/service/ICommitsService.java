@@ -1,5 +1,6 @@
 package com.example.ebookshare.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.entity.Commits;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ICommitsService extends IService<Commits> {
 
+    Page<Commits> findBookCommits(Page<Object> page, Integer bookid);
 }

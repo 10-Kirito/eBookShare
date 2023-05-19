@@ -1,6 +1,7 @@
 package com.example.ebookshare.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -30,6 +31,9 @@ public class Commits implements Serializable {
     private Integer bookid;
 
     private Integer userid;
+
+    @TableField(exist = false)
+    private String username;
 
     private String text;
 

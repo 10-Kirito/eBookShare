@@ -8,6 +8,7 @@ import com.example.ebookshare.common.Result;
 import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Commits;
 import com.example.ebookshare.mapper.CommitsMapper;
+import com.example.ebookshare.service.ICommitsService;
 import com.example.ebookshare.service.impl.CommitsServiceImpl;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,7 @@ import javax.annotation.Resource;
 @RequestMapping("/commits")
 public class CommitsController {
     @Resource
-    CommitsServiceImpl commitsService;
+    ICommitsService commitsService;
     @Resource
     CommitsMapper commitsMapper;
 
@@ -51,13 +52,15 @@ public class CommitsController {
     //打开某本书的页面，检索针对某本书的评论，从上到下，按照时间先后顺序
     //返回一个分页
     @GetMapping("/findcommits")  //接口路径,多条件查询
-    public IPage<Commits> findBookCommits(@RequestParam Integer pageNum,
+    public Result findBookCommits(@RequestParam Integer pageNum,
                                   @RequestParam Integer pageSize,
-                                  @RequestParam String bookid){
-        IPage<Commits> page = new Page<>(pageNum,pageSize);
-       QueryWrapper<Commits> queryWrapper = new QueryWrapper<>();
-       queryWrapper.eq("bookid",bookid);
-        queryWrapper.orderByDesc("time");
-        return commitsService.page(page,queryWrapper);
+                                  @RequestParam Integer bookid){
+//        IPage<Commits> page = new Page<>(pageNum,pageSize);
+//       QueryWrapper<Commits> queryWrapper = new QueryWrapper<>();
+//       queryWrapper.eq("bookid",bookid);
+//        queryWrapper.orderByDesc("time");
+
+        Page<Commits> page = commitsService.findBookCommits(new Page<>(pageNum,pageSize),bookid);
+        return Result.success(page);
     }
 }

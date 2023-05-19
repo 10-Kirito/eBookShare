@@ -4,6 +4,8 @@ package com.example.ebookshare.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.ebookshare.common.APIResponse;
+import com.example.ebookshare.common.APIStatusCode;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Relationship;
@@ -165,8 +167,8 @@ public class RelationshipController {
 
     //收藏书籍接口
     @GetMapping("/favourbook")  //接口路径,多条件查询
-    public Result favourbook(@RequestParam Integer bookid,
-                           @RequestParam Integer userid){
+    public APIResponse<?> favourbook(@RequestParam Integer bookid,
+                                  @RequestParam Integer userid){
         QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("bookid",bookid);
         queryWrapper.eq("userid",userid);
@@ -287,6 +289,6 @@ public class RelationshipController {
 
             relationshipService.save(relationship1);
         }
-        return Result.success();
+        return new APIResponse<>(null, APIStatusCode.SUCCESS, "收藏成功");
     }
 }

@@ -1,5 +1,8 @@
 <template>
   <div style="width: 90%; margin-left: 5%" class="header-with-background">
+
+
+
     <!-- 图书信息展示-->
     <el-row :gutter="24" v-for="(row ,index1) in rowCount" v-if="booksData[(row - 1) * colCount]" :key="row" style="margin-bottom: 30px;min-width: 1200px">
         <el-col :span="6" v-for="(col, index2) in colCount" :key="col" style="width: 300px">
@@ -31,7 +34,7 @@ import bookFromShelf from "@/components/bookFromShelf.vue";
 export default {
   name: "BookShelf",
   components:{
-    bookFromShelf
+    bookFromShelf,
   },
   data(){
     return{

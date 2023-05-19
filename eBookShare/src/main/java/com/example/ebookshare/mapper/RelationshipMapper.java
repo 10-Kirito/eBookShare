@@ -1,5 +1,6 @@
 package com.example.ebookshare.mapper;
 
+import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Relationship;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

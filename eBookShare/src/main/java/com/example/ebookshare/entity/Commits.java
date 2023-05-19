@@ -12,7 +12,7 @@ import lombok.Setter;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author sel
@@ -39,5 +39,7 @@ public class Commits implements Serializable {
 
     private LocalDateTime time;
 
+    @TableField(exist = false)
+    private String username;
 
 }

@@ -5,11 +5,14 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.entity.*;
 import com.example.ebookshare.mapper.BooksMapper;
 import com.example.ebookshare.service.IBooksService;
+import com.example.ebookshare.service.IRelationshipService;
 import com.example.ebookshare.service.IUsersService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +28,10 @@ public class FrontBooksController {
     private BooksMapper booksMapper;
     @Resource
     private IUsersService usersService;
+
+
+    @Autowired
+    IRelationshipService iRelationshipService;
 
     //分页查看所有书籍
     @GetMapping("/Centerbooklist/page")
@@ -88,4 +95,6 @@ public class FrontBooksController {
         usersService.update(updateWrapper);
         return Result.success();
     }
+
+
 }

@@ -4,20 +4,27 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.common.APIResponse;
+import com.example.ebookshare.common.APIStatusCode;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.entity.*;
 import com.example.ebookshare.mapper.BooksMapper;
+import com.example.ebookshare.mapper.RelationshipMapper;
 import com.example.ebookshare.service.IBooksService;
 import com.example.ebookshare.service.IRelationshipService;
 import com.example.ebookshare.service.IUsersService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+
+
 @RestController
 @RequestMapping("/FrontBooks")
 public class FrontBooksController {
@@ -28,10 +35,10 @@ public class FrontBooksController {
     private BooksMapper booksMapper;
     @Resource
     private IUsersService usersService;
-
-
-    @Autowired
-    IRelationshipService iRelationshipService;
+    @Resource
+    private IRelationshipService relationshipService;
+    @Resource
+    private RelationshipMapper relationshipMapper;
 
     //分页查看所有书籍
     @GetMapping("/Centerbooklist/page")
@@ -59,17 +66,24 @@ public class FrontBooksController {
         queryWrapper.like("isdelete",0);
         return booksService.page(page,queryWrapper);
     }
-    //按下载量排序输入选择当天最多下载量还是总下载量（表中字段）
-    @GetMapping("/MostDownload")
-    public List<Books> mostdownload(@RequestParam(defaultValue = "downloads") String order){
+    //图书总榜单接口
+    @GetMapping("/MostRanking")
+    public APIResponse<List<Books>> MostRanking(){
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc(order);
-        return booksService.list(queryWrapper);
-
+        queryWrapper.orderByDesc("downloads").orderByDesc("likes").orderByDesc("favorites");
+        return new APIResponse<>(booksService.list(queryWrapper),APIStatusCode.SUCCESS,"获取下载、喜欢、收藏最多的排序");
+    }
+    //下载总榜单接口
+    @GetMapping("/MostDownload")
+    public APIResponse<List<Books>> MostDownload(){
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("downloads");
+        return new APIResponse<>(booksService.list(queryWrapper),APIStatusCode.SUCCESS,"获取最受欢迎的图书");
     }
     //搜索接口模糊查询书籍名作者和出版社
     @GetMapping("/search")
-    public List<Books> search(@RequestParam(defaultValue = "") String bookinfo){
+    public APIResponse<List<Books>> search(@RequestParam(defaultValue = "") String bookinfo,
+                                           @RequestParam(defaultValue = "") Integer userid){
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("Distinct *")
                 .like(StringUtils.isNotBlank(bookinfo),"bookname",bookinfo)
@@ -77,8 +91,20 @@ public class FrontBooksController {
                 .like(StringUtils.isNotBlank(bookinfo),"author",bookinfo)
                 .or()
                 .like(StringUtils.isNotBlank(bookinfo),"publisher",bookinfo);
-
-        return booksService.list(queryWrapper);
+        List<Books> books=booksService.list(queryWrapper);
+        //QueryWrapper<Relationship> newqueryWrapper=new QueryWrapper<>();
+        Set<Integer> booksid = books.stream().map(Books::getBookid).collect(Collectors.toSet());
+        List<Relationship> relationships = relationshipMapper.selectList(Wrappers.lambdaQuery(Relationship.class).eq(Relationship::getUserid,userid).in(Relationship::getBookid,booksid));
+        for (Relationship ship:relationships) {
+            for (Books book:books){
+                if(ship.getBookid()==book.getBookid())
+                    if(ship.getIsfavour()==1)
+                    book.setFavorites(-1);
+                else if (ship.getIslike()==1)
+                    book.setLikes(-1);
+            }
+        }
+        return new APIResponse<>(books,APIStatusCode.SUCCESS,"返回搜索结果");
     }
     //点赞接口
     @Transactional(rollbackFor = Exception.class)
@@ -95,6 +121,21 @@ public class FrontBooksController {
         usersService.update(updateWrapper);
         return Result.success();
     }
-
-
+    //个人书架相关接口
+    //拥有的书传入用户id和所要进行的操作，即要获取的是拥有的还是收藏的，传入String即为表中字段名,后两个为分页
+    @GetMapping("/bookself")
+    public APIResponse<List<Books>> BookSelf(@RequestParam(defaultValue = "1") Integer userid,
+                         @RequestParam(defaultValue = "isowned") String operator,
+                         @RequestParam(defaultValue = "1") Integer pageNum,
+                         @RequestParam(defaultValue = "12") Integer pageSize){
+        IPage<Relationship> page = new Page<>(pageNum,pageSize);
+        QueryWrapper<Relationship> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("userid",userid);
+        queryWrapper.eq(operator,1);
+        queryWrapper.select("bookid");
+        IPage<Relationship> bookid=relationshipService.page(page,queryWrapper);
+        Set<Integer> booksid = bookid.getRecords().stream().map(Relationship::getBookid).collect(Collectors.toSet());
+        List<Books> books = booksMapper.selectList(Wrappers.lambdaQuery(Books.class).in(Books::getBookid,booksid));
+        return new APIResponse<>(books,APIStatusCode.SUCCESS,"返回个人书架");
+    }
 }

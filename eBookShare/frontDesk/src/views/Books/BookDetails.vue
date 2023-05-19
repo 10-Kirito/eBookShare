@@ -66,7 +66,7 @@
               <el-tooltip :content="bookDetails.isCollected ? '取消收藏' : '收藏' ">
                 <el-button class="book-add-to-list" :class="bookDetails.collectBtnClass" circle @click="collectBtn" />
               </el-tooltip>
-              <el-tooltip content="感谢贡献者">
+                <el-tooltip :content="bookDetails.islike ? '取消点赞' : '点赞' ">
                 <el-button class="book-thank-contributors" icon="el-icon-thumb" circle />
               </el-tooltip>
             </el-row>

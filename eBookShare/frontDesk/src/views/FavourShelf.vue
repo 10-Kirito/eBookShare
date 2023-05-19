@@ -43,7 +43,7 @@ export default {
       currentPage: 1,
       pageSize: this.rowCount * this.colCount,
       total: 100,
-
+      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
 
       // 该用户个人书架中的图书信息
       booksData: [],
@@ -63,13 +63,20 @@ export default {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
     },
-    getAllBooksData(){
-      this.request.get("/books").then(res => {
-        this.booksData = res;
-        console.log(this.booksData);
-        this.dataload = true;
-      })
-    }
+      getAllBooksData(){
+          this.request.get("/FrontBooks/bookself",{
+              params:{
+                  userid:this.user.id,
+                  operator:"isfavour",   //填写需要获取的是收藏还是拥有的还是喜欢的
+                  pageNum:this.currentPage,
+                  pageSize:this.rowCount*this.rowCount
+              }
+          }).then(res => {
+              this.booksData = res.data;
+              console.log(this.booksData);
+              this.dataload = true;
+          })
+      }
   }
 }
 </script>

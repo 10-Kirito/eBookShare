@@ -17,12 +17,12 @@
                 <el-row :gutter="20">
                   <!--              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">-->
                   <el-col :span="6" class="book-cover" >
-                    <el-image :src="book.img" fit="contain" @click="pushDetail(index)" lazy style="cursor: pointer;height: 160px;margin-left: 80px"/>
+                    <el-image :src="book.coverimage" fit="contain" @click="pushDetail(index)" lazy style="cursor: pointer;height: 160px;margin-left: 80px"/>
                   </el-col>
                   <el-col :span="15" >
                     <el-row class="attriclass" >
                       <el-col :span="23">
-                        <h3 @click="pushDetail(index)" style="cursor: pointer;text-decoration: underline">{{ book.title }}</h3>
+                        <h3 @click="pushDetail(index)" style="cursor: pointer;text-decoration: underline">{{ book.bookname }}</h3>
                       </el-col>
                       <el-col :span="1">
                         <el-tooltip class="item" effect="dark" :content="book.isCollected ? '取消收藏' : '收藏' ">
@@ -34,11 +34,11 @@
                     <el-row class="attriclass"><span @click="redirectToAuthorBooks(book.author)" title="找到该作者的所有书籍" class="book-author">{{book.author}}</span></el-row>
                     <el-row :gutter="24" style="margin-top: 40px;margin-right: -70px">
                       <el-col :span="2" ><div style="color: #8C8C8C;">年:</div></el-col>
-                      <el-col :span="6" ><div style="margin-top: 2px">{{book.publishedDate}}</div></el-col>
-                      <el-col :span="4" ><div style="color: #8C8C8C;">语言：</div></el-col>
-                      <el-col :span="4" ><div style="margin-top: 2px">{{book.Language}}</div></el-col>
+                      <el-col :span="6" ><div style="margin-top: 2px">{{book.releasetime}}</div></el-col>
+<!--                      <el-col :span="4" ><div style="color: #8C8C8C;">语言：</div></el-col>
+                      <el-col :span="4" ><div style="margin-top: 2px">{{book.Language}}</div></el-col>-->
                       <el-col :span="4" ><div style="color: #8C8C8C;">文件：</div></el-col>
-                      <el-col :span="4" ><div style="margin-top: 2px">{{book.file}}</div></el-col>
+                      <el-col :span="4" ><div style="margin-top: 2px">{{book.url}}</div></el-col>
                     </el-row>
                   </el-col>
                 </el-row>
@@ -113,6 +113,7 @@ export default {
       total: 0,
       pageNum: 1,
       pageSize: 10,
+      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
     };
   },
   created() {
@@ -128,11 +129,34 @@ export default {
       console.warn('未找到参数');
     }
 
+    this.searchBooks();
     //this.load()        //加载初始数据
   },
   methods: {
     searchBooks() {
-      // 这里可以向服务器发起搜索请求，获取匹配的图书列表
+        this.request.get("/FrontBooks/search", {           //更改后台接口
+            params: {
+                bookinfo: this.searchQuery,
+                userid: this.user.id
+            }
+        }).then(res => {
+            console.log(res.data);
+            this.bookDetails = res.data                   //根据后台数据更改
+            this.bookDetails.forEach(book => {//遍历数组，为每个对象添加 isCollected 属性 和 collectBtnClass 属性
+                book.collectBtnClass = "el-icon-star-off"
+                if(book.favorites==-1){
+                    book.isCollected = true;
+                    book.collectBtnClass = "el-icon-star-on"
+                }
+                else
+                    book.isCollected = false;
+                if(book.likes==-1)
+                    book.islike=true;
+                else
+                    book.islike=false;
+                    //默认值关闭
+            })
+        })
       this.load();
     },
     redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面

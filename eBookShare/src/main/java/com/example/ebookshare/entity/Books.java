@@ -64,6 +64,7 @@ public class Books implements Serializable {
 
     private Integer downloads;
 
+
     public Books(Auditbooks auditbooks){
         this.bookname = auditbooks.getBookname();
         this.author = auditbooks.getAuthor();

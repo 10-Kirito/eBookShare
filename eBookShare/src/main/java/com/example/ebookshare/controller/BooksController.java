@@ -178,7 +178,7 @@ public class BooksController {
     //根据点赞量，筛选出前十本书
     @GetMapping("/mostlikes")  //接口路径,多条件查询
     public IPage<Books> findmostlikes(@RequestParam Integer pageNum,
-                                        @RequestParam Integer pageSize){
+                                      @RequestParam Integer pageSize){
         IPage<Books> page = new Page<>(pageNum,pageSize);
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("likes");
@@ -186,18 +186,24 @@ public class BooksController {
 //        List<Books> books = booksService.list(queryWrapper);
         return booksService.page(page,queryWrapper);
     }
+
+
     // 找出图书总榜前十：点赞量+收藏量+下载量
     @GetMapping("/overallbooklist")  //接口路径,多条件查询
-    public IPage<Books> OverallBookList(@RequestParam Integer pageNum,
-                                      @RequestParam Integer pageSize){
-        IPage<Books> page;
-        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("likes");
-
+    public APIResponse<List<Books>> OverallBookList(){
         List<Books> books = booksService.getTopTenBooks();
-        page = listToPage(books,pageNum,pageSize);
-        return page;
+        return new APIResponse<>(books, APIStatusCode.SUCCESS, "返回图书总榜单!");
     }
+
+
+    // 找出图书的下载总榜前十
+    @GetMapping("/downloadBooks")
+    public APIResponse<List<Books>> downloadBooks(){
+        return new APIResponse<>(booksService.downloadBooks(), APIStatusCode.SUCCESS, "返回图书下载榜单!");
+    }
+
+
+
     public static IPage<Books> listToPage(List<Books> list, int pageNum, int pageSize){
         List<Books> pageList = new ArrayList<>();
         int curIdx = pageNum > 1 ? (pageNum - 1) * pageSize : 0;

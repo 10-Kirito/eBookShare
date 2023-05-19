@@ -8,4 +8,10 @@
         order by rand(curdate())
         limit 0,#{number};
     </select>
+    <select id="downloadBooks" resultType="com.example.ebookshare.entity.Books">
+        select *
+        from books
+        order by downloads desc limit 10;
+    </select>
+
 </mapper>

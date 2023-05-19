@@ -31,4 +31,9 @@ public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books> implements
     public List<Books> getTopTenBooks() {
         return booksMapper.getTopTenBooks();
     }
+
+    @Override
+    public List<Books> downloadBooks() {
+        return booksMapper.downloadBooks();
+    }
 }

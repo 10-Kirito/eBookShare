@@ -14,17 +14,17 @@
       <!-- 左侧显示内容-->
       <el-col :span="6" style="color: #42b983">
         <div class="grid-content bg-purple" >
-          <el-card class="box-card" style="margin-right: 10px; height: 1410px">
+          <el-card class="box-card" style="margin-right: 10px; height: 100%">
             <h1>图书总榜单</h1>
 
             <el-card v-for="(book, index) in booksDownloadList" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
                 <el-row @mouseenter.native="showInfo(index)" @mouseleave.native="hideInfo(index)" @click.native="pushDetail(booksDownloadList[index])" style="cursor: pointer;">
                 <el-col :span="8">
-                  <img :src="book.img" class="book-cover"/>
+                  <img :src="book.coverimage" class="book-cover"/>
                 </el-col>
                 <el-col :span="16" class="book-info">
-                  <div class="book-title">{{ book.title }}</div>
-                  <div class="book-download">{{ book.downloadCount }}次下载</div>
+                  <div class="book-title">{{ book.bookname }}</div>
+                  <div class="book-download">{{ book.downloads }}次下载</div>
                   <div class="book-details" v-show="showLeftDetails===index">
                     <div class="book-author"><span @click="redirectToAuthorBooks(book.author)" title="找到该作者的所有书籍" class="book-author">{{book.author}}</span></div>
                     <div class="book-category" title="类别">{{ book.category }}</div>
@@ -75,16 +75,16 @@
       <el-col :span="6">
         <div class="grid-content bg-purple-light">
           <div class="grid-content bg-purple" >
-            <el-card class="box-card" style="margin-left: 10px; height: 1410px">
+            <el-card class="box-card" style="margin-left: 10px; height: 100%">
               <h1>图书下载榜单</h1>
               <el-card v-for="(book, index) in todayPopularBooks" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
                 <el-row v-if="book" @mouseenter.native="showInfo2(index)" @mouseleave.native="hideInfo2(index)" @click.native="pushDetail(todayPopularBooks[index])" style="cursor: pointer;">
                   <el-col :span="8">
-                    <img :src="book.img" class="book-cover"/>
+                    <img :src="book.coverimage" class="book-cover"/>
                   </el-col>
                   <el-col :span="16" class="book-info">
-                    <div class="book-title">{{ book.title }}</div>
-                    <div class="book-download">{{ book.downloadCount }}次下载</div>
+                    <div class="book-title">{{ book.bookname }}</div>
+                    <div class="book-download">{{ book.downloads }}次下载</div>
                     <div class="book-details" v-show="showRightDetails===index">
                       <div class="book-author"><span @click="redirectToAuthorBooks(book.author)" title="找到该作者的所有书籍" class="book-author">{{book.author}}</span></div>
                       <div class="book-category" title="类别">{{ book.category }}</div>
@@ -126,77 +126,9 @@ export default {
       //书籍信息保存在这个数组中，//今日推荐阅读图书信息
       bookDetails: [],
       //图书总榜单信息，按图书下载量+收藏量+点赞量排行
-      booksDownloadList:[
-        {
-          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-          title: "Book Title",
-          author: "Author Name",
-          publisher: "Publisher Name",
-          publishedDate: "2022-01-01",
-          description: "《麦田里的守望者》的主人公,16岁的中学生霍尔顿·考尔菲德是当代美国文学中最早出现的反英雄形象之一。霍尔顿出身在纽约一个富裕的中产阶级的家庭。学校里的老师和自己的家长强迫他好好读书,为的是“出人头地,而他看不惯周围的一切,根本没心思用功读书,因而老是挨罚。他的内心又十分苦闷、彷徨,这种精神上无法调和的极度矛盾最终令他彻底崩溃,躺倒在精神病院里。",
-          ISBN: "978-3-16-148410-0",
-          Format: "Hardcover",
-          Pages: "400",
-          Language: "English",
-          category:"category",
-          file:'PDF',
-          isCollected:false,
-          downloadCount:"48"
-        },
-        {
-          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-          title: "Book Title 2",
-          author: "Author Name 2",
-          publisher: "Publisher Name 2",
-          publishedDate: "2022-01-01",
-          description:
-              "Description of Book 2",
-          ISBN: "ISBN 2",
-          Format: "Hardcover",
-          Pages: "300",
-          Language: "English",
-          category: "category 2",
-          file: "PDF",
-          isCollected:false,
-          downloadCount:"44"
-        }
-      ],
+      booksDownloadList:[],
       //图书下载榜单信息，按照下载量排行
-      todayPopularBooks:[
-        {
-          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-          title: "Book Title",
-          author: "Author Name",
-          publisher: "Publisher Name",
-          publishedDate: "2022-01-01",
-          description: "《麦田里的守望者》的主人公,16岁的中学生霍尔顿·考尔菲德是当代美国文学中最早出现的反英雄形象之一。霍尔顿出身在纽约一个富裕的中产阶级的家庭。学校里的老师和自己的家长强迫他好好读书,为的是“出人头地,而他看不惯周围的一切,根本没心思用功读书,因而老是挨罚。他的内心又十分苦闷、彷徨,这种精神上无法调和的极度矛盾最终令他彻底崩溃,躺倒在精神病院里。",
-          ISBN: "978-3-16-148410-0",
-          Format: "Hardcover",
-          Pages: "400",
-          Language: "English",
-          category:"category",
-          file:'PDF',
-          isCollected:false,
-          downloadCount:"48"
-        },
-        {
-          img: "https://bookcover.yuewen.com/qdbimg/349573/1019103033/180",
-          title: "Book Title 2",
-          author: "Author Name 2",
-          publisher: "Publisher Name 2",
-          publishedDate: "2022-01-01",
-          description:
-              "Description of Book 2",
-          ISBN: "ISBN 2",
-          Format: "Hardcover",
-          Pages: "300",
-          Language: "English",
-          category: "category 2",
-          file: "PDF",
-          isCollected:false,
-          downloadCount:"44"
-        }
-      ],
+      todayPopularBooks:[],
       searchQuery:'',
       // total:0,
       // pageNum:1,
@@ -208,6 +140,9 @@ export default {
   created() {
     this.getUser();
     this.getRecommendBooks();
+
+    this.getDowndoadTop();
+    this.getTotalList();
   },
   beforeMount() {
 
@@ -219,6 +154,21 @@ export default {
       if (data) {
         Vue.set(this, 'user', data);
       }
+    },
+
+    // 获取图书总榜单信息
+    getTotalList(){
+      this.request.get("http://localhost:9091/books/overallbooklist").then(res => {
+        console.log(res);
+        this.booksDownloadList = res.data;
+      })
+    },
+    // 获取图书下载的总榜单
+    getDowndoadTop(){
+      this.request.get("http://localhost:9091/books/downloadBooks").then(res => {
+        console.log(res);
+        this.todayPopularBooks = res.data;
+      })
     },
     searchBooks() {
       //跳转到搜索结果页进行搜索
@@ -314,10 +264,6 @@ export default {
 </script>
 
 <style scoped>
-
-
-
-
 .book-cover {
   width: 100%;
   height: 100%;

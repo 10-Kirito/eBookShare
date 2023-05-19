@@ -22,4 +22,6 @@ public interface BooksMapper extends BaseMapper<Books> {
     @Select("SELECT * FROM books ORDER BY (likes + favorites + downloads) DESC LIMIT 10")
     List<Books> getTopTenBooks();
     List<Books> randomBooks(Integer number);
+
+    List<Books> downloadBooks();
 }

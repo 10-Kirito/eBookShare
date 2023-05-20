@@ -57,6 +57,11 @@ const routes = [
         path: '/person',
         name:'个人信息',
         component:()=>import('@/views/person.vue')
+      },
+      {
+        path: '/uploadbook',
+        name:'上传书籍',
+        component:()=>import('@/views/UploadBook.vue')
       }
     ]
   },

@@ -60,8 +60,13 @@ public class BooksController {
 
 
     @GetMapping("/random")
-    public APIResponse<List<Books>> randomBooks(@RequestParam Integer number){
-        return new APIResponse<>(booksService.randomBooks(number), APIStatusCode.SUCCESS, "随机抽查10本图书");
+    public APIResponse<List<Books>> randomBooks(@RequestParam Integer number,@RequestParam Integer userid){
+        if (userid == 0){
+            return new APIResponse<>(booksService.randomBooks(number), APIStatusCode.SUCCESS, "随机抽查10本图书");
+        }
+        else{
+            return new APIResponse<>(booksService.randomBooksWithUser(number,userid), APIStatusCode.SUCCESS, "随机抽查10本图书");
+        }
     }
 
     @GetMapping("/bookname/{bookname}")
@@ -190,16 +195,16 @@ public class BooksController {
 
     // 找出图书总榜前十：点赞量+收藏量+下载量
     @GetMapping("/overallbooklist")  //接口路径,多条件查询
-    public APIResponse<List<Books>> OverallBookList(){
-        List<Books> books = booksService.getTopTenBooks();
+    public APIResponse<List<Books>> OverallBookList(@RequestParam Integer userid){
+        List<Books> books = booksService.getTopTenBooks(userid);
         return new APIResponse<>(books, APIStatusCode.SUCCESS, "返回图书总榜单!");
     }
 
 
     // 找出图书的下载总榜前十
     @GetMapping("/downloadBooks")
-    public APIResponse<List<Books>> downloadBooks(){
-        return new APIResponse<>(booksService.downloadBooks(), APIStatusCode.SUCCESS, "返回图书下载榜单!");
+    public APIResponse<List<Books>> downloadBooks(@RequestParam Integer userid){
+        return new APIResponse<>(booksService.downloadBooks(userid), APIStatusCode.SUCCESS, "返回图书下载榜单!");
     }
 
 

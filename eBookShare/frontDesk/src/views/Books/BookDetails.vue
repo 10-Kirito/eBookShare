@@ -67,7 +67,7 @@
                 <el-button class="book-add-to-list" :class="bookDetails.collectBtnClass" circle @click="collectBtn" />
               </el-tooltip>
                 <el-tooltip :content="bookDetails.islike ? '取消点赞' : '点赞' ">
-                <el-button class="book-thank-contributors" icon="el-icon-thumb" circle />
+                <el-button class="book-thank-contributors" icon="el-icon-thumb" circle @click="likeBtn"/>
               </el-tooltip>
             </el-row>
 
@@ -95,7 +95,7 @@
 
 
         <div class="grid-content bg-purple-dark" style="width: 900px; margin:10px auto">
-          <p  style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px">评论：</p>
+          <p  style="color: #f9fafc; font-family: 'Arial Narrow'; font-size: 25px;margin-left: 10px">评论：</p>
         </div>
 
         <div style="width: 700px;margin: 0 auto">
@@ -169,13 +169,64 @@ export default {
           message: '收藏成功',
           type: 'success'
         });
-        this.bookDetails.collectBtnClass="el-icon-star-on"
+        this.bookDetails.collectBtnClass="el-icon-star-on";
+
+        this.request.get("http://localhost:9091/relationship/favourbook", {
+          params:{
+            bookid: this.bookDetails.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
+        })
+        console.log("收藏");
       }else{  //取消收藏
         this.$message({
           message: '取消成功',
           type: 'success'
         });
-        this.bookDetails.collectBtnClass="el-icon-star-off"
+        this.bookDetails.collectBtnClass="el-icon-star-off";
+
+        this.request.get("http://localhost:9091/relationship/favourbook", {
+          params:{
+            bookid: this.bookDetails.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
+        })
+        console.log("取消收藏");
+      }
+    },
+    likeBtn(){
+      if(!this.bookDetails.islike){//如果没有点赞
+        this.$message({
+          message: '点赞成功',
+          type: 'success'
+        });
+        this.bookDetails.islike=!this.bookDetails.islike
+        this.request.get("http://localhost:9091/relationship/likebook", {
+          params:{
+            bookid: this.bookDetails.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
+        })
+      }else{  //已经点赞过了
+        this.$message({
+          message: '取消点赞成功',
+          type:'success'
+        });
+        this.bookDetails.islike=!this.bookDetails.islike
+        this.request.get("http://localhost:9091/relationship/likebook", {
+          params:{
+            bookid: this.bookDetails.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
+        })
       }
     },
     redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面

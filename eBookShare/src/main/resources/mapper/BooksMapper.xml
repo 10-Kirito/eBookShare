@@ -9,9 +9,30 @@
         limit 0,#{number};
     </select>
     <select id="downloadBooks" resultType="com.example.ebookshare.entity.Books">
-        select *
-        from books
+        SELECT books.*,r.islike as islike,r.isfavour as isfavour
+        FROM books
+        left join relationship r
+        on books.bookid=r.bookid
+        and r.userid=#{userid}
         order by downloads desc limit 10;
+    </select>
+    <select id="randomBooksWithUser" resultType="com.example.ebookshare.entity.Books">
+        select books.*,r.islike as islike,r.isfavour as isfavour
+        from books
+        left join relationship r
+        on books.bookid=r.bookid
+        and r.userid=#{userid}
+        order by rand(curdate())
+            limit 0,#{number};
+    </select>
+    <select id="getTopTenBooks" resultType="com.example.ebookshare.entity.Books">
+        SELECT books.*,r.islike as islike,r.isfavour as isfavour
+        FROM books
+        left join relationship r
+        on books.bookid=r.bookid
+        and r.userid=#{userid}
+        ORDER BY (likes + favorites + downloads)
+        DESC LIMIT 10
     </select>
 
 </mapper>

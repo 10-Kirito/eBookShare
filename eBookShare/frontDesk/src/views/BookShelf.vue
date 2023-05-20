@@ -81,7 +81,7 @@ export default {
       this.request.get("/FrontBooks/bookself",{
           params:{
               userid:this.user.id,
-              operator:"isowned",   //填写需要获取的是收藏还是拥有的还是喜欢的
+              operator:"isuploader",   //填写需要获取的是收藏还是拥有的还是喜欢的
               pageNum:this.currentPage,
               pageSize:this.rowCount*this.rowCount
           }

@@ -28,12 +28,17 @@ public class BooksServiceImpl extends ServiceImpl<BooksMapper, Books> implements
         return booksMapper.randomBooks(number);
     }
     @Override
-    public List<Books> getTopTenBooks() {
-        return booksMapper.getTopTenBooks();
+    public List<Books> getTopTenBooks(Integer userid) {
+        return booksMapper.getTopTenBooks(userid);
     }
 
     @Override
-    public List<Books> downloadBooks() {
-        return booksMapper.downloadBooks();
+    public List<Books> downloadBooks(Integer userid) {
+        return booksMapper.downloadBooks(userid);
+    }
+
+    @Override
+    public List<Books> randomBooksWithUser(Integer number, Integer userid) {
+        return booksMapper.randomBooksWithUser(number,userid);
     }
 }

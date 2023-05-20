@@ -114,19 +114,18 @@ export default {
       // 用户个人信息
       user:{},
 
-      // 今日推荐图书信息:
-      recommendBooks:[],
-      recommendNumber: 10,
-
       flag: true,
 
 
       pageTitle: '上海大学电子图书分享平台',
-      //searchHTML: 'static/search/index.html',
+
       //书籍信息保存在这个数组中，//今日推荐阅读图书信息
       bookDetails: [],
+      recommendNumber: 7,
+
       //图书总榜单信息，按图书下载量+收藏量+点赞量排行
       booksDownloadList:[],
+
       //图书下载榜单信息，按照下载量排行
       todayPopularBooks:[],
       searchQuery:'',
@@ -144,13 +143,10 @@ export default {
     this.getDowndoadTop();
     this.getTotalList();
   },
-  beforeMount() {
-
-  },
   methods: {
     //获取用户信息
     getUser(){
-      const data = JSON.parse(localStorage.getItem('loguserinfo'))
+      const data = localStorage.getItem('loguserinfo')?JSON.parse(localStorage.getItem('loguserinfo')): {id:0}
       if (data) {
         Vue.set(this, 'user', data);
       }
@@ -158,16 +154,52 @@ export default {
 
     // 获取图书总榜单信息
     getTotalList(){
-      this.request.get("http://localhost:9091/books/overallbooklist").then(res => {
+      this.request.get("http://localhost:9091/books/overallbooklist",{
+        params: {
+          userid:this.user.id
+        }
+      }).then(res => {
         console.log(res);
         this.booksDownloadList = res.data;
+        this.booksDownloadList.forEach(book => {          //遍历数组，为每个对象添加 isCollected 属性 和 collectBtnClass 属性
+          book.collectBtnClass = "el-icon-star-off"
+          if(book.isfavour==1){
+            book.isCollected = true;
+            book.collectBtnClass = "el-icon-star-on"
+          }
+          else
+            book.isCollected = false;
+          if(book.islike==1)
+            book.islike=true;
+          else
+            book.islike=false;
+          //默认值关闭
+        })
       })
     },
     // 获取图书下载的总榜单
     getDowndoadTop(){
-      this.request.get("http://localhost:9091/books/downloadBooks").then(res => {
+      this.request.get("http://localhost:9091/books/downloadBooks",{
+        params: {
+          userid:this.user.id
+        }
+      }).then(res => {
         console.log(res);
         this.todayPopularBooks = res.data;
+        this.todayPopularBooks.forEach(book => {          //遍历数组，为每个对象添加 isCollected 属性 和 collectBtnClass 属性
+          book.collectBtnClass = "el-icon-star-off"
+          if(book.isfavour==1){
+            book.isCollected = true;
+            book.collectBtnClass = "el-icon-star-on"
+          }
+          else
+            book.isCollected = false;
+          if(book.islike==1)
+            book.islike=true;
+          else
+            book.islike=false;
+          //默认值关闭
+        })
       })
     },
     searchBooks() {
@@ -181,14 +213,25 @@ export default {
     getRecommendBooks(){//分页查询今日推荐的图书
       this.request.get("http://localhost:9091/books/random", {           //更改后台接口
         params: {
-          number: this.recommendNumber
+          number: this.recommendNumber,
+          userid:this.user.id
         }
       }).then(res => {
         console.log(res.data);
         this.bookDetails = res.data                   //根据后台数据更改
         this.bookDetails.forEach(book => {          //遍历数组，为每个对象添加 isCollected 属性 和 collectBtnClass 属性
-          book.isCollected = false; // 默认值为 false
-          book.collectBtnClass = "el-icon-star-off"     //默认值关闭
+          book.collectBtnClass = "el-icon-star-off"
+          if(book.isfavour==1){
+            book.isCollected = true;
+            book.collectBtnClass = "el-icon-star-on"
+          }
+          else
+            book.isCollected = false;
+          if(book.islike==1)
+            book.islike=true;
+          else
+            book.islike=false;
+          //默认值关闭
         })
       })
     },

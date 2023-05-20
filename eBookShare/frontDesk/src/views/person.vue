@@ -34,7 +34,7 @@
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="save">确认</el-button>
+          <el-button type="primary" style="width: 50%;margin-left: -80px" @click="save">确认</el-button>
         </el-form-item>
       </el-form>
 

@@ -46,6 +46,9 @@
                 <el-dropdown-item style="font-size: 14px;padding: 5px 0">
                   <router-link to="/person" style="text-decoration: none">个人信息</router-link>
                 </el-dropdown-item>
+                <el-dropdown-item style="font-size: 14px;padding: 5px 0">
+                  <router-link to="/uploadbook" style="text-decoration: none">上传书籍</router-link>
+                </el-dropdown-item>
                 <span style="text-decoration: none" @click="logout">
                   <el-dropdown-item style="font-size: 14px;padding: 5px 0">退出</el-dropdown-item>
                 </span>

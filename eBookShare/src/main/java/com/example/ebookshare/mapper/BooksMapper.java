@@ -19,9 +19,11 @@ import java.util.List;
  */
 @Mapper
 public interface BooksMapper extends BaseMapper<Books> {
-    @Select("SELECT * FROM books ORDER BY (likes + favorites + downloads) DESC LIMIT 10")
-    List<Books> getTopTenBooks();
+
+    List<Books> getTopTenBooks(Integer userid);
     List<Books> randomBooks(Integer number);
 
-    List<Books> downloadBooks();
+    List<Books> downloadBooks(Integer userid);
+
+    List<Books> randomBooksWithUser(Integer number, Integer userid);
 }

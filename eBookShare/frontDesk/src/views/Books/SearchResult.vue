@@ -130,9 +130,10 @@ export default {
     },
     redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面
       this.$router.push({
-        path:'/authorBooks',
+        path:'/searchResult',
         query:{params:JSON.stringify(author)}
       })
+      location.reload()
     },
     load(){//分页模糊查询图书
       this.request.get("/",{           //更改后台接口

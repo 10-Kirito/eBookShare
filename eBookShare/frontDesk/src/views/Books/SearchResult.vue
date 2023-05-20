@@ -137,11 +137,13 @@ export default {
         this.request.get("/FrontBooks/search", {           //更改后台接口
             params: {
                 bookinfo: this.searchQuery,
-                userid: this.user.id
+                userid: this.user.id,
+                pageNum:this.pageNum,
+                pageSize:this.pageSize
             }
         }).then(res => {
             console.log(res.data);
-            this.bookDetails = res.data                   //根据后台数据更改
+            this.bookDetails = res.data                 //根据后台数据更改
             this.bookDetails.forEach(book => {//遍历数组，为每个对象添加 isCollected 属性 和 collectBtnClass 属性
                 book.collectBtnClass = "el-icon-star-off"
                 if(book.favorites==-1){

@@ -83,20 +83,23 @@ public class FrontBooksController {
     //搜索接口模糊查询书籍名作者和出版社
     @GetMapping("/search")
     public APIResponse<List<Books>> search(@RequestParam(defaultValue = "") String bookinfo,
-                                           @RequestParam(defaultValue = "") Integer userid){
+                                           @RequestParam(defaultValue = "") Integer userid,
+                                           @RequestParam(defaultValue = "1") Integer pageNum,
+                                           @RequestParam(defaultValue = "12") Integer pageSize){
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        IPage<Books> page = new Page<>(pageNum,pageSize);
         queryWrapper.select("Distinct *")
                 .like(StringUtils.isNotBlank(bookinfo),"bookname",bookinfo)
                 .or()
                 .like(StringUtils.isNotBlank(bookinfo),"author",bookinfo)
                 .or()
                 .like(StringUtils.isNotBlank(bookinfo),"publisher",bookinfo);
-        List<Books> books=booksService.list(queryWrapper);
+        IPage<Books> books=booksService.page(page,queryWrapper);
         //QueryWrapper<Relationship> newqueryWrapper=new QueryWrapper<>();
-        Set<Integer> booksid = books.stream().map(Books::getBookid).collect(Collectors.toSet());
+        Set<Integer> booksid = books.getRecords().stream().map(Books::getBookid).collect(Collectors.toSet());
         List<Relationship> relationships = relationshipMapper.selectList(Wrappers.lambdaQuery(Relationship.class).eq(Relationship::getUserid,userid).in(Relationship::getBookid,booksid));
         for (Relationship ship:relationships) {
-            for (Books book:books){
+            for (Books book:books.getRecords()){
                 if(ship.getBookid()==book.getBookid())
                     if(ship.getIsfavour()==1)
                     book.setFavorites(-1);
@@ -104,7 +107,7 @@ public class FrontBooksController {
                     book.setLikes(-1);
             }
         }
-        return new APIResponse<>(books,APIStatusCode.SUCCESS,"返回搜索结果");
+        return new APIResponse<>(books.getRecords(),APIStatusCode.SUCCESS,"返回搜索结果");
     }
     //点赞接口
     @Transactional(rollbackFor = Exception.class)

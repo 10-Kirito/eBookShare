@@ -62,4 +62,6 @@ public class Auditbooks implements Serializable {
     private String url;
 
     private String suggestions;
+
+    private Integer userid;
 }

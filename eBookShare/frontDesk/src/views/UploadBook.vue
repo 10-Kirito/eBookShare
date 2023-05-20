@@ -28,7 +28,7 @@
             style="text-align: center"
             ref="uploadpic"
             class="avatar-uploader"
-            action="http://124.71.166.37:9091/auditbooks/uploadpic"
+            action="http://localhost:9091/auditbooks/uploadpic"
             :show-file-list="false"
             :auto-upload="false"
             :on-success="addBookInfo"
@@ -36,12 +36,11 @@
         >
           <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />
 
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i v-else class="el-icon-plus avatar-uploader-icon" style="border: 1px dashed seagreen;"></i>
           <el-dialog :visible.sync="dialogVisible" append-to-body>
             <img width="100%" :src="dialogImageUrl" alt="">
           </el-dialog>
         </el-upload>
-
 
         <el-form-item style="margin-left: -140px">
           <el-upload
@@ -50,7 +49,7 @@
               :data="uploadData"
               name="file"
               class="upload-demo"
-              action="http://124.71.166.37:9091/auditbooks/upload"
+              action="http://localhost:9091/auditbooks/upload"
               :limit="1"
               :auto-upload="false"
               :on-change="loadJsonFromFile"
@@ -78,6 +77,7 @@
 
 <script>
 export default {
+  inject:['reload'],
   name: "UploadBook",
   data() {
     return {
@@ -96,17 +96,8 @@ export default {
     addBookInfo(respon){
       let file = this.uploadFiles[0]
       // this.$message.error("获取文件名："+file.name)
-      this.$message.error("获取信息：" + file.name)
       console.log(file.name);
       console.log(this.form);
-
-      // var filename_=encodeURL(file.name);
-      // var bookname_=encodeURL(this.form.bookname);
-      // var author_=encodeURL(this.form.author);
-      // var publisher_=encodeURL(this.form.publisher);
-      // var isbn_=encodeURL(this.form.isbn);
-      // var description_=encodeURL(this.form.description);
-      // var category_=encodeURL(this.form.category);
 
       var filename_ = encodeURIComponent(file.name);
       var bookname_ = encodeURIComponent(this.form.bookname);
@@ -137,6 +128,8 @@ export default {
               this.$message.error("上传失败")
             }
           })
+
+      this.reload();
     },
     handlePictureCardPreview(file) {
       this.dialogVisible = true
@@ -170,12 +163,27 @@ export default {
     //手动上传书籍文件之后，将书籍的封面上传至服务器
     uploadPicFile(respon){
       console.log(respon);
+      // let temp = respon.data;
+      // throw this.request.get("/auditbooks/uploadUserinfo", {
+      //   params: {
+      //     md5: temp,
+      //     userid: this.user.id
+      //   }
+      // }).then(res => {
+      //   console.log(res);
+      // }).catch(error => {
+      //   console.error(error);
+      // })
+
+
       this.$refs.uploadpic.submit()
     },
     uploadError(){
       this.$message.error("文件上传失败")
     },
     beforeUpload(file){
+      this.uploadData.userid = this.user.id;
+
       console.log('文件：', file)
       var FileExt = file.name.replace(/.+\./, "")
       const isLtM = file.size / 1024 / 1024 < 100

@@ -94,7 +94,7 @@ public class AuditbooksController {
 
 
         Path sourcePath = Paths.get(auditbooksPAth + uuid);
-        Path destinationPath = Paths.get(booksPath+uuid);
+        Path destinationPath = Paths.get(booksPath + uuid);
 
         Path picsourcePath = Paths.get(auditbookspicPath+picuuid);
         Path picdestinationPath = Paths.get(bookpicPath+picuuid);
@@ -349,7 +349,9 @@ public class AuditbooksController {
 
     // 上传图书文件接口
     @PostMapping("/upload")
-    public APIResponse<String>  upload(@RequestParam MultipartFile file) throws IOException {
+    public APIResponse<String>  upload(@RequestParam Integer userid,@RequestParam MultipartFile file) throws IOException {
+        System.out.println(userid);
+
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
         long size = file.getSize();
@@ -393,11 +395,12 @@ public class AuditbooksController {
             saveFile.setMd5(md5);
             saveFile.setEnable(true);
             saveFile.setIsdelete(false);
+            saveFile.setUserid(userid);
             System.out.println(saveFile);
             auditbooksMapper.insert(saveFile);
         }
 
-        return new APIResponse<>(url, APIStatusCode.SUCCESS, "书籍上传成功"); //文件下载链接
+        return new APIResponse<>(md5, APIStatusCode.SUCCESS, "书籍上传成功"); //文件下载链接
         //上传成功后返回url
     }
 
@@ -545,4 +548,17 @@ public class AuditbooksController {
         out.close();
         writer.close();
     }
+
+
+//    @GetMapping("/uploadUserinfo")
+//    public APIResponse<String> uploadUserInfo(@RequestParam String md5, @RequestParam Integer userid){
+//
+//        QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("md5",md5);
+//        Auditbooks auditbooks = auditbooksMapper.selectOne(queryWrapper);
+//        auditbooks.setUserid(userid);
+//
+//        auditbooksService.saveOrUpdate(auditbooks);
+//        return new APIResponse<>(null, APIStatusCode.SUCCESS, "作者信息上传成功!");
+//    }
 }

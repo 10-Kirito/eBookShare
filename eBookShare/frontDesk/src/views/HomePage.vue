@@ -245,7 +245,7 @@ export default {
     },
     redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面
       this.$router.push({
-        path:'/searchResult',
+        path:'/searchResult ',
         query:{params:JSON.stringify(author)}
       })
     },

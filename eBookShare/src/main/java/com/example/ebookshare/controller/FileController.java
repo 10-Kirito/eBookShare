@@ -36,6 +36,12 @@ public class FileController {
     @Value("${books.upload.path}")
     private String bookDownloadPath;
 
+    @Value("${auditbooks.upload.path}")
+    private String auditBookDownloadPAth;
+
+    @Value("${auditbookpic.upload.path}")
+    private String auditBookPicDownloadPAth;
+
     @Value("${files.upload.path}")
     private String avartarPAth;
 
@@ -47,6 +53,7 @@ public class FileController {
 
 
 
+
     /**
      * 文件下载接口：http://124.71.166.37:9090/file/{fileUUid}
      * 这里的fileUUid是我们上传文件的时候自动生成的唯一标识符
@@ -54,6 +61,42 @@ public class FileController {
      * @param response
      * @throws IOException
      */
+    @GetMapping("/audit/{fileUUid}")
+    public void downloadAuditbook(@PathVariable String fileUUid , HttpServletResponse response) throws IOException {
+
+        //根据文件的唯一标识码获取文件
+        File uploadFile = new File(auditBookDownloadPAth + fileUUid);
+        //文件上传路径
+        //设置输出流格式
+        ServletOutputStream os =response.getOutputStream();
+        response.addHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode(fileUUid,"UTF-8"));
+        response.setContentType("application/octet-stream");
+
+        //读取文件的字节流
+        os.write(FileUtil.readBytes(uploadFile));
+        os.flush();
+        os.close();
+    }
+
+    @GetMapping("/bookpic/audit/{fileUUid}")
+    public void downloadAuditbookPic(@PathVariable String fileUUid , HttpServletResponse response) throws IOException {
+
+        //根据文件的唯一标识码获取文件
+        File uploadFile = new File(auditBookPicDownloadPAth + fileUUid);
+        //文件上传路径
+        //设置输出流格式
+        ServletOutputStream os =response.getOutputStream();
+        response.addHeader("Content-Disposition","attachment;filename=" + URLEncoder.encode(fileUUid,"UTF-8"));
+        response.setContentType("application/octet-stream");
+
+        //读取文件的字节流
+        os.write(FileUtil.readBytes(uploadFile));
+        os.flush();
+        os.close();
+    }
+
+
+
     @GetMapping("/{fileUUid}")
     public void download(@PathVariable String fileUUid , HttpServletResponse response) throws IOException {
 
@@ -70,6 +113,7 @@ public class FileController {
         os.flush();
         os.close();
     }
+
 
     @GetMapping("/bookpic/{fileUUid}")
     public void downloadbookPic(@PathVariable String fileUUid , HttpServletResponse response) throws IOException {
@@ -156,6 +200,7 @@ public class FileController {
         return url; //文件下载链接
         //上传成功后返回url
     }
+
 
 
 }

@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.print.Book;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -253,35 +255,35 @@ public class BooksController {
     }
 
 
-    @GetMapping("/addbookinfo")  //接口路径,多条件查询
-    public Result findDeletedPage(@RequestParam(defaultValue = "") String filename,
-                                        @RequestParam(defaultValue = "") String bookname,
-                                        @RequestParam(defaultValue = "") String author,
-                                        @RequestParam(defaultValue = "") String publisher,
-                                        @RequestParam(defaultValue = "") String isbn,
-                                        @RequestParam(defaultValue = "") String description,
-                                        @RequestParam(defaultValue = "") String category){
-//        IPage<Books> page = new Page<>(pageNum,pageSize);
-        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
-        if(!"".equals(bookname)){
-            queryWrapper.like("filename",filename);
-        }
-        //为了避免检索的时候可能出现问题，逆向进行查找
-        queryWrapper.orderByDesc("bookid");
-        Books books = booksService.getOne(queryWrapper);
-        if(books != null)
-        {
-            books.setBookname(bookname);
-            books.setAuthor(author);
-            books.setPublisher(publisher);
-            books.setIsbn(isbn);
-            books.setDescription(description);
-            books.setCategory(category);
-            booksService.updateById(books);
-        }
-        //对找到的数据进行设置
-        return Result.success();
-    }
+//    @GetMapping("/addbookinfo")  //接口路径,多条件查询
+//    public Result findDeletedPage(@RequestParam(defaultValue = "") String filename,
+//                                        @RequestParam(defaultValue = "") String bookname,
+//                                        @RequestParam(defaultValue = "") String author,
+//                                        @RequestParam(defaultValue = "") String publisher,
+//                                        @RequestParam(defaultValue = "") String isbn,
+//                                        @RequestParam(defaultValue = "") String description,
+//                                        @RequestParam(defaultValue = "") String category){
+////        IPage<Books> page = new Page<>(pageNum,pageSize);
+//        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+//        if(!"".equals(bookname)){
+//            queryWrapper.like("filename",filename);
+//        }
+//        //为了避免检索的时候可能出现问题，逆向进行查找
+//        queryWrapper.orderByDesc("bookid");
+//        Books books = booksService.getOne(queryWrapper);
+//        if(books != null)
+//        {
+//            books.setBookname(bookname);
+//            books.setAuthor(author);
+//            books.setPublisher(publisher);
+//            books.setIsbn(isbn);
+//            books.setDescription(description);
+//            books.setCategory(category);
+//            booksService.updateById(books);
+//        }
+//        //对找到的数据进行设置
+//        return Result.success();
+//    }
     @GetMapping("/deletedexport")
     public void deletedexport(HttpServletResponse response) throws Exception{
         //需要筛选出没有被删除的书籍
@@ -345,44 +347,117 @@ public class BooksController {
         writer.close();
     }
 
-    @PostMapping("/uploadpic")
-    public APIResponse<String> uploadpic(@RequestParam MultipartFile file) throws IOException {
-        //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
-        //向目录添加文件
-        String orginalFilename = file.getOriginalFilename();
-        String type = FileUtil.extName(orginalFilename);
-        long size = file.getSize();
-        //定义一个文件唯一的标识码
-        String uuid = IdUtil.fastSimpleUUID();
-        String fileUUid = uuid + StrUtil.DOT +type;
-        File uploadFile = new File(bookpicPath + fileUUid);
-        File parentFile = uploadFile.getParentFile();
-        if(!parentFile.exists()){
-            parentFile.mkdirs();
-        }
-        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
-        String url;
-        String md5;
-        //上传文件到磁盘
-        file.transferTo(uploadFile);
-        //获取文件的md5
-        md5 = SecureUtil.md5(uploadFile);
-        url = bookpicPath+fileUUid;
+//    @PostMapping("/uploadpic")
+//    public APIResponse<String> uploadpic(@RequestParam MultipartFile file) throws IOException {
+//        //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
+//        //向目录添加文件
+//        String orginalFilename = file.getOriginalFilename();
+//        String type = FileUtil.extName(orginalFilename);
+//        long size = file.getSize();
+//        //定义一个文件唯一的标识码
+//        String uuid = IdUtil.fastSimpleUUID();
+//        String fileUUid = uuid + StrUtil.DOT +type;
+//        File uploadFile = new File(bookpicPath + fileUUid);
+//        File parentFile = uploadFile.getParentFile();
+//        if(!parentFile.exists()){
+//            parentFile.mkdirs();
+//        }
+//        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+//        String url;
+//        String md5;
+//        //上传文件到磁盘
+//        file.transferTo(uploadFile);
+//        //获取文件的md5
+//        md5 = SecureUtil.md5(uploadFile);
+//        url = bookpicPath+fileUUid;
+//
+//        //向数据库添加数据
+//        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.orderByDesc("releasetime");
+//        queryWrapper.isNull("coverimage");
+//        Books books = booksMapper.selectOne(queryWrapper);
+//        books.setCoverimage(url);
+//        booksService.saveOrUpdate(books);
+//
+//
+//        return new APIResponse<>(url, APIStatusCode.SUCCESS, "文件上传成功"); //文件下载链接
+//    }
 
-        //向数据库添加数据
-        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByDesc("releasetime");
-        queryWrapper.isNull("coverimage");
-        Books books = booksMapper.selectOne(queryWrapper);
-        books.setCoverimage(url);
+//    @PostMapping("/upload")
+//    public String  upload(@RequestParam MultipartFile file) throws IOException {
+//        String orginalFilename = file.getOriginalFilename();
+//        String type = FileUtil.extName(orginalFilename);
+//        long size = file.getSize();
+//
+//        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
+//
+//        //定义一个文件唯一的标识码
+//        String uuid = IdUtil.fastSimpleUUID();
+//        String fileUUid = uuid + StrUtil.DOT +type;
+//        File uploadFile = new File(fileuploadPAth + fileUUid);
+//
+//        File parentFile = uploadFile.getParentFile();
+//        if(!parentFile.exists()){
+//            parentFile.mkdirs();
+//        }
+//
+//        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+//        String url;
+//        String md5;
+//        //上传文件到磁盘
+//        file.transferTo(uploadFile);
+//        //获取文件的md5
+//        md5 = SecureUtil.md5(uploadFile);
+//        //数据库查询是否存在相同的记录
+//        Books dbFiles = getFileByMd5(md5);
+//        if (dbFiles != null){
+//            url = dbFiles.getUrl();
+//            //删除之前已存在的重复文件，以便于上传最新版文件
+//            uploadFile.delete();
+//        }else {
+//            //数据库不存在重复的文件
+//            //把获取到的文件存储到磁盘目录
+////            url = "http://localhost:9090/file/"+fileUUid;
+//            url = fileuploadPAth+fileUUid;
+//            Books saveFile = new Books();
+//            saveFile.setFilename(orginalFilename);
+//            saveFile.setType(type);
+//            saveFile.setSize(size/1024); //最后存储单位是kb
+//            saveFile.setUrl(url);
+//            saveFile.setMd5(md5);
+//            saveFile.setEnable(true);
+//            booksMapper.insert(saveFile);
+//        }
+//        //获取文件url
+//        //把获取到的文件存储到磁盘目录中
+//
+//        //文件路径
+//        //存储数据库
+//
+//        return url; //文件下载链接
+//        //上传成功后返回url
+//    }
+//    private Books getFileByMd5(String md5){
+//        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("md5",md5);
+//        List<Books> filesList = booksMapper.selectList(queryWrapper);
+//        //获取第一个，因为有可能重名，多条记录
+//        return filesList.size() == 0 ? null: filesList.get(0);
+//    }
+
+
+
+    // 点击下载按钮的时候，同步更新数据库相关数据
+    @GetMapping("/updateDownload")
+    public APIResponse<?> updateDownload(@RequestParam Integer bookid){
+        Books books = booksService.getById(bookid);
+        books.setDownloads(books.getDownloads()+1);
         booksService.saveOrUpdate(books);
-
-
-        return new APIResponse<>(url, APIStatusCode.SUCCESS, "文件上传成功"); //文件下载链接
+        return new APIResponse<>(null, APIStatusCode.SUCCESS, "更新成功");
     }
 
     @PostMapping("/upload")
-    public String  upload(@RequestParam MultipartFile file) throws IOException {
+    public APIResponse<String>  upload(@RequestParam MultipartFile file) throws IOException {
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
         long size = file.getSize();
@@ -407,6 +482,7 @@ public class BooksController {
         //获取文件的md5
         md5 = SecureUtil.md5(uploadFile);
         //数据库查询是否存在相同的记录
+        System.out.println("----------------------------");
         Books dbFiles = getFileByMd5(md5);
         if (dbFiles != null){
             url = dbFiles.getUrl();
@@ -414,9 +490,9 @@ public class BooksController {
             uploadFile.delete();
         }else {
             //数据库不存在重复的文件
-            //把获取到的文件存储到磁盘目录
-//            url = "http://localhost:9090/file/"+fileUUid;
-            url = fileuploadPAth+fileUUid;
+            //url = "http://localhost:9090/file/"+fileUUid;
+            //url = auditbooksPAth+fileUUid;
+            url = "http://124.71.166.37:9091/file/"+fileUUid;
             Books saveFile = new Books();
             saveFile.setFilename(orginalFilename);
             saveFile.setType(type);
@@ -424,17 +500,53 @@ public class BooksController {
             saveFile.setUrl(url);
             saveFile.setMd5(md5);
             saveFile.setEnable(true);
+            saveFile.setIsdelete(false);
+            System.out.println(saveFile);
             booksMapper.insert(saveFile);
         }
-        //获取文件url
-        //把获取到的文件存储到磁盘目录中
 
-        //文件路径
-        //存储数据库
-
-        return url; //文件下载链接
+        return new APIResponse<>(url, APIStatusCode.SUCCESS, "书籍上传成功"); //文件下载链接
         //上传成功后返回url
     }
+
+    @PostMapping("/uploadpic")
+    public APIResponse<String> uploadbookinfo(@RequestParam MultipartFile file) throws IOException {
+        //逻辑：因为没有参考的数据，所以查找时间最近的数据，但是没有图片的数据，将此图片直接添加到其中
+        //向目录添加文件
+        String orginalFilename = file.getOriginalFilename();
+        String type = FileUtil.extName(orginalFilename);
+        long size = file.getSize();
+        //定义一个文件唯一的标识码
+        String uuid = IdUtil.fastSimpleUUID();
+        String fileUUid = uuid + StrUtil.DOT +type;
+        File uploadFile = new File(bookpicPath + fileUUid);
+        //暂时不需要进行判断
+        //File parentFile = uploadFile.getParentFile();
+        //if(!parentFile.exists()){
+        //    parentFile.mkdirs();
+        //}
+        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+        String url;
+        //String md5;
+        //将书籍封面保存至服务器中
+        file.transferTo(uploadFile);
+        //获取书籍封面的md5
+        //md5 = SecureUtil.md5(uploadFile);
+        //url = auditbookspicPath+fileUUid;
+        url = "http://124.71.166.37:9091/file/bookpic/"+fileUUid;
+        //向数据库添加数据
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("bookid").last("LIMIT 1");
+        //queryWrapper.isNull("coverimage");
+        Books books = booksMapper.selectOne(queryWrapper);
+
+        // 存储图片的下载地址
+        books.setCoverimage(url);
+        booksService.saveOrUpdate(books);
+
+        return new APIResponse<>(url, APIStatusCode.SUCCESS, "图片上传成功"); //文件下载链接
+    }
+
     private Books getFileByMd5(String md5){
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("md5",md5);
@@ -443,14 +555,40 @@ public class BooksController {
         return filesList.size() == 0 ? null: filesList.get(0);
     }
 
+    @GetMapping("/addbookinfo")  //接口路径,多条件查询
+    public Result addbookinfo(@RequestParam(defaultValue = "") String filename,
+                              @RequestParam(defaultValue = "") String bookname,
+                              @RequestParam(defaultValue = "") String author,
+                              @RequestParam(defaultValue = "") String publisher,
+                              @RequestParam(defaultValue = "") String isbn,
+                              @RequestParam(defaultValue = "") String description,
+                              @RequestParam(defaultValue = "") String category) throws UnsupportedEncodingException {
+        System.out.println(filename);
+        QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
 
+        //为了避免检索的时候可能出现问题，逆向进行查找
+        queryWrapper.orderByDesc("bookid").last("LIMIT 1");
+        Books books = booksService.getOne(queryWrapper);
+        booksService.remove(queryWrapper);
+        if(books != null)
+        {
+            bookname = URLDecoder.decode(bookname, "UTF-8");
+            author = URLDecoder.decode(author, "UTF-8");
+            publisher = URLDecoder.decode(publisher, "UTF-8");
+            isbn = URLDecoder.decode(isbn, "UTF-8");
+            description = URLDecoder.decode(description, "UTF-8");
+            category = URLDecoder.decode(category, "UTF-8");
 
-    // 点击下载按钮的时候，同步更新数据库相关数据
-    @GetMapping("/updateDownload")
-    public APIResponse<?> updateDownload(@RequestParam Integer bookid){
-        Books books = booksService.getById(bookid);
-        books.setDownloads(books.getDownloads()+1);
-        booksService.saveOrUpdate(books);
-        return new APIResponse<>(null, APIStatusCode.SUCCESS, "更新成功");
+            books.setBookname(bookname);
+            books.setAuthor(author);
+            books.setPublisher(publisher);
+            books.setIsbn(isbn);
+            books.setDescription(description);
+            books.setCategory(category);
+            booksService.save(books);
+        }
+        //对找到的数据进行设置
+        return Result.success();
     }
+
 }

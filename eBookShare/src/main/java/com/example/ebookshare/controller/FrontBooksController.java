@@ -19,7 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -140,5 +142,26 @@ public class FrontBooksController {
         Set<Integer> booksid = bookid.getRecords().stream().map(Relationship::getBookid).collect(Collectors.toSet());
         List<Books> books = booksMapper.selectList(Wrappers.lambdaQuery(Books.class).in(Books::getBookid,booksid));
         return new APIResponse<>(books,APIStatusCode.SUCCESS,"返回个人书架");
+    }
+    @GetMapping("/score")
+    public APIResponse<?> ScoreBook(@RequestParam(defaultValue = "1") Integer userid,
+                                    @RequestParam(defaultValue = "60") Integer bookid,
+                                    @RequestParam(defaultValue = "3") Integer score){
+    UpdateWrapper<Relationship> updateWrapper=new UpdateWrapper<>();
+    updateWrapper.eq("userid",userid).eq("bookid",bookid);
+    updateWrapper.set("score",score);
+    relationshipService.update(updateWrapper);
+    return new APIResponse<>(GetAvgScore(bookid).getData(),APIStatusCode.SUCCESS,"返回得分");
+    }
+    @GetMapping("/GetAvgScore")
+    public APIResponse<?> GetAvgScore(@RequestParam(defaultValue = "61") Integer bookid){
+        QueryWrapper<Relationship> queryWrapper=new QueryWrapper<>();
+        queryWrapper.select("avg(score) as avgScore").eq("bookid",bookid);
+        List<Map<String, Object>> rel=relationshipMapper.selectMaps(queryWrapper);
+        rel.removeAll(Collections.singleton(null));
+       if(rel==null||rel.isEmpty())
+            return new APIResponse<>(null,APIStatusCode.SUCCESS,"返回得分");
+       else
+            return new APIResponse<>(rel.stream().findFirst().orElse(null).values(),APIStatusCode.SUCCESS,"返回得分");
     }
 }

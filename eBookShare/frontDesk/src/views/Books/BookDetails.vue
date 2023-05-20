@@ -44,14 +44,14 @@
                       <div style="font-size: 12px;text-align: center">-----------你有多喜欢这本书？-----------</div>
                       <div class="block" style="text-align: center">
 
-                        <el-rate v-model="bookValue"></el-rate>
+                        <el-rate v-model="bookValue" @change="rateChange"></el-rate>
                       </div>
                       <i class="el-icon-medal" slot="reference" style="cursor: pointer"></i>
                     </el-popover>
                   <el-tooltip effect="dark" content="图书评级/文件质量" placement="bottom">
                     <i>
-                      <span class="book-rating-interest-score">{{ bookValue }}</span> /
-                      <span class="book-rating-quality-score">4.0</span>
+                      <span class="book-rating-interest-score">{{ bookAvgValue }}</span> /
+                      <span class="book-rating-quality-score">5.0</span>
                     </i>
                   </el-tooltip>
                 </div>
@@ -142,12 +142,14 @@ export default {
     } else {
       console.warn('未找到参数');
     }
+    this.getBookAvgScore();
   },
   data() {
     return {
       bookDetails: {},
       collectBtnClass:"el-icon-star-off",
       bookValue:null,
+      bookAvgValue:null,
       textarea:"",
       user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
       commentKey:0,//用于重新渲染评论子组件
@@ -260,7 +262,32 @@ export default {
       }},
     downloads(){
       window.open(this.bookDetails.url);
-    }
+    },
+      getBookAvgScore(){
+          this.request.get("/FrontBooks/GetAvgScore",{
+              params:{
+                  bookid:this.bookDetails.bookid
+              }
+          }).then(res=> {
+              this.bookAvgValue=res.data;
+          })
+      },
+    rateChange(value){
+        if(this.user.id==null) {
+            this.$message.error("评论失败，请先登录！")
+        }else {
+            this.request.get("/FrontBooks/score",{
+                params:{
+                    userid:this.user.id,
+                    bookid:this.bookDetails.bookid,
+                    score:value
+                }
+        }).then(res=> {
+                this.bookAvgValue=res.data;
+        })
+      }}
+
+
   }
 }
 </script>

@@ -30,7 +30,7 @@ files:
   upload:
     # path: D:\Desktop\files\
     path: /root/ebookshare/files/
-    #path: C:\Users\yijin\Desktop\eBookShare\files\
+#    path: E:\root\ebookshare\files
 books:
   upload:
     path: /root/ebookshare/books/

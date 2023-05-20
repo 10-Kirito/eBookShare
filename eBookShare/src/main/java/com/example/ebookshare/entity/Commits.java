@@ -33,6 +33,9 @@ public class Commits implements Serializable {
     private Integer userid;
 
     @TableField(exist = false)
+    private String avatarurl;
+
+    @TableField(exist = false)
     private String username;
 
     private String text;

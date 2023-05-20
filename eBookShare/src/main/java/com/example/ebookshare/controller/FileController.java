@@ -104,8 +104,8 @@ public class FileController {
         os.flush();
         os.close();
     }
-    @PostMapping("/upload")
-    public String  upload(@RequestParam MultipartFile file,@RequestParam String userid) throws IOException {
+    @PostMapping("/avartar/upload")
+    public String  upload(@RequestParam MultipartFile file,@RequestParam("id") String userid) throws IOException {
         String orginalFilename = file.getOriginalFilename();
         String type = FileUtil.extName(orginalFilename);
         long size = file.getSize();
@@ -138,7 +138,7 @@ public class FileController {
         //数据库不存在重复的文件
         //把获取到的文件存储到磁盘目录
 //            url = "http://124.71.166.37:9091/avartar/file/"+fileUUid;
-        url = "http://124.71.166.37:9091/avartar/file/"+fileUUid;
+        url = "http://124.71.166.37:9091/file/avartar/"+fileUUid;
 //        }
         //获取文件url
         //把获取到的文件存储到磁盘目录中
@@ -152,7 +152,7 @@ public class FileController {
             return null;
         }
         users.setAvatarurl(url);
-        usersService.update(users,queryWrapper);
+        usersService.saveOrUpdate(users);
         return url; //文件下载链接
         //上传成功后返回url
     }

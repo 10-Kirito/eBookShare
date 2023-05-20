@@ -38,7 +38,7 @@
           <div v-show="this.user.username!=null">
             <el-dropdown style="width: 150px; cursor: pointer; text-align: right">
               <div style="display: inline-block">
-                <img :src="imagesurl" style="width: 30px;border-radius: 50%;position: relative;top:10px;right:5px">
+                <img :src="user.avatarurl" style="width: 30px;border-radius: 50%;position: relative;top:10px;right:5px">
                 <span>{{ user.username }}</span>
                 <i class="el-icon-arrow-down" style="margin-left: 5px;"></i>
               </div>

@@ -3,7 +3,7 @@
 <mapper namespace="com.example.ebookshare.mapper.CommitsMapper">
 
     <select id="findBookCommits" resultType="com.example.ebookshare.entity.Commits">
-        select c.*,u.username
+        select c.*,u.username,u.avatarurl
         from commits c,users u
         where c.userid=u.id
         and c.bookid=#{bookid}

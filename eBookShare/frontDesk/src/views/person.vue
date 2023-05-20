@@ -1,4 +1,7 @@
 <template>
+<!--  action="http://localhost:9091/file/upload"-->
+<!--  action="http://124.71.166.37:9091/file/avartar/upload"-->
+
   <div align="center">
     <el-card style="width: 500px;">
       <!--    根据实际表格情况，进行增删-->
@@ -6,10 +9,10 @@
         <el-upload
             style="text-align: center"
             class="avatar-uploader"
-            action="http://localhost:9091/file/upload"
+            action="http://124.71.166.37:9091/file/avartar/upload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
-            :data="form.userid"
+            :data="this.form"
         >
           <!--        暂时没有头像，因为新增头像需要添加数据库里面-->
           <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />
@@ -87,15 +90,8 @@ export default {
     handleAvatarSuccess(res){
       this.form.avatarurl = res
 
-      this.request.get("/file/useravartarinfo",{
-        params:{
-          avartarurl: res,
-          username: JSON.parse(localStorage.getItem("loguserinfo")).username
-        }
-      })
-          .then(res => {
-            this.$message.success("保存成功")
-          })
+
+      this.$message.success("保存成功")
     }
   }
 }

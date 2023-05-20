@@ -1,7 +1,7 @@
 <template>
   <div style="width: 1000px; margin:16px auto">
     <div v-for="(item,i) in commentsList" :key="i" class="author-title reply-father">
-      <el-avatar class="header-img" :size="40" :src="imagesurl"></el-avatar>
+      <el-avatar class="header-img" :size="40" :src="item.avatarurl"></el-avatar>
       <div class="author-info">
         <span class="author-name">{{item.username}}</span>
         <span class="author-time">{{item.time}}</span>

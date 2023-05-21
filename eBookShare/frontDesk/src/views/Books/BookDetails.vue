@@ -48,10 +48,10 @@
                       </div>
                       <i class="el-icon-medal" slot="reference" style="cursor: pointer"></i>
                     </el-popover>
-                  <el-tooltip effect="dark" content="图书评级/文件质量" placement="bottom">
+                  <el-tooltip effect="dark" content="图书评级/图书总评" placement="bottom">
                     <i>
-                      <span class="book-rating-interest-score">{{ bookAvgValue }}</span> /
-                      <span class="book-rating-quality-score">5.0</span>
+                      <span class="book-rating-interest-score">{{ bookValue }}</span> /
+                      <span class="book-rating-quality-score">{{ bookAvgValue[0] }}</span>
                     </i>
                   </el-tooltip>
                 </div>
@@ -263,16 +263,17 @@ export default {
     downloads(){
       window.open(this.bookDetails.url);
     },
-      getBookAvgScore(){
-          this.request.get("/FrontBooks/GetAvgScore",{
-              params:{
-                  bookid:this.bookDetails.bookid
-              }
-          }).then(res=> {
-              this.bookAvgValue=res.data;
-          })
-      },
-    rateChange(value){
+    getBookAvgScore(){
+        this.request.get("/FrontBooks/GetAvgScore",{
+            params:{
+                bookid:this.bookDetails.bookid
+            }
+        }).then(res=> {
+            this.bookAvgValue=res.data;
+          console.log(this.bookAvgValue)
+        })
+    },
+    rateChange(){
         if(this.user.id==null) {
             this.$message.error("评论失败，请先登录！")
         }else {
@@ -280,10 +281,11 @@ export default {
                 params:{
                     userid:this.user.id,
                     bookid:this.bookDetails.bookid,
-                    score:value
+                    score:this.bookValue
                 }
         }).then(res=> {
-                this.bookAvgValue=res.data;
+              this.bookAvgValue=res.data;
+              console.log(this.bookAvgValue)
         })
       }}
 

@@ -147,10 +147,21 @@ public class FrontBooksController {
     public APIResponse<?> ScoreBook(@RequestParam(defaultValue = "1") Integer userid,
                                     @RequestParam(defaultValue = "60") Integer bookid,
                                     @RequestParam(defaultValue = "3") Integer score){
-    UpdateWrapper<Relationship> updateWrapper=new UpdateWrapper<>();
-    updateWrapper.eq("userid",userid).eq("bookid",bookid);
-    updateWrapper.set("score",score);
-    relationshipService.update(updateWrapper);
+    QueryWrapper<Relationship> updateWrapper=new QueryWrapper<>();
+    updateWrapper.eq("userid",userid);
+    updateWrapper.eq("bookid",bookid);
+    Relationship relationship= relationshipMapper.selectOne(updateWrapper);
+    if (relationship == null){
+        Relationship relationship2 = new Relationship();
+        relationship2.setUserid(userid);
+        relationship2.setBookid(bookid);
+        relationship2.setScore(score);
+        relationshipService.save(relationship2);
+        return new APIResponse<>(GetAvgScore(bookid).getData(),APIStatusCode.SUCCESS,"返回得分");
+    }
+    relationship.setScore(score);
+    relationshipService.remove(updateWrapper);
+    relationshipService.save(relationship);
     return new APIResponse<>(GetAvgScore(bookid).getData(),APIStatusCode.SUCCESS,"返回得分");
     }
     @GetMapping("/GetAvgScore")

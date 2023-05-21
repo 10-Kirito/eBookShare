@@ -175,4 +175,35 @@ public class FrontBooksController {
        else
             return new APIResponse<>(rel.stream().findFirst().orElse(null).values(),APIStatusCode.SUCCESS,"返回得分");
     }
+
+    @GetMapping("/getscore")
+    public Result getscore(@RequestParam(defaultValue = "0") Integer userid,
+                           @RequestParam(defaultValue = "0") Integer bookid) {
+        if (userid == 0 || bookid == 0) {
+            return Result.error("300", "传入数据错误");
+        }
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userid",userid);
+        queryWrapper.eq("bookid",bookid);
+        Relationship relationship = relationshipMapper.selectOne(queryWrapper);
+        if (relationship == null){
+            return Result.error("400","为查找到用户relationship数据");
+        }
+        queryWrapper.isNull("score");
+
+
+        Relationship relationship2 = relationshipMapper.selectOne(queryWrapper);
+        if (relationship2 != null){ //分数属性是空
+            return Result.error("500","用户未评分");
+        }
+
+
+        QueryWrapper<Relationship> queryWrapper2 = new QueryWrapper<>();
+        queryWrapper2.eq("userid",userid);
+        queryWrapper2.eq("bookid",bookid);
+        Relationship relationship3 = relationshipMapper.selectOne(queryWrapper2);
+        return Result.success(relationship3);
+    }
+
+
 }

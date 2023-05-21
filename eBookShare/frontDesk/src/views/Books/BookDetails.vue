@@ -143,6 +143,7 @@ export default {
       console.warn('未找到参数');
     }
     this.getBookAvgScore();
+    this.getBookScore();
   },
   data() {
     return {
@@ -272,6 +273,21 @@ export default {
             this.bookAvgValue=res.data;
           console.log(this.bookAvgValue)
         })
+    },
+    getBookScore(){
+      this.request.get("/FrontBooks/getscore",{
+        params:{
+          bookid:this.bookDetails.bookid,
+          userid:this.user.id
+        }
+      }).then(res=> {
+        if(res.code==='200'){
+          this.bookValue=res.data.score;
+        }
+        else{
+          this.bookValue=0;
+        }
+      })
     },
     rateChange(){
         if(this.user.id==null) {

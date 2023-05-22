@@ -129,7 +129,7 @@ public class FrontBooksController {
     //个人书架相关接口
     //拥有的书传入用户id和所要进行的操作，即要获取的是拥有的还是收藏的，传入String即为表中字段名,后两个为分页
     @GetMapping("/bookself")
-    public APIResponse<List<Books>> BookSelf(@RequestParam(defaultValue = "1") Integer userid,
+    public APIResponse<List<Books>> BookSelf(@RequestParam(defaultValue = "0") Integer userid,
                          @RequestParam(defaultValue = "isowned") String operator,
                          @RequestParam(defaultValue = "1") Integer pageNum,
                          @RequestParam(defaultValue = "12") Integer pageSize){
@@ -144,9 +144,9 @@ public class FrontBooksController {
         return new APIResponse<>(books,APIStatusCode.SUCCESS,"返回个人书架");
     }
     @GetMapping("/score")
-    public APIResponse<?> ScoreBook(@RequestParam(defaultValue = "1") Integer userid,
-                                    @RequestParam(defaultValue = "60") Integer bookid,
-                                    @RequestParam(defaultValue = "3") Integer score){
+    public APIResponse<?> ScoreBook(@RequestParam(defaultValue = "0") Integer userid,
+                                    @RequestParam(defaultValue = "0") Integer bookid,
+                                    @RequestParam(defaultValue = "0") Integer score){
     QueryWrapper<Relationship> updateWrapper=new QueryWrapper<>();
     updateWrapper.eq("userid",userid);
     updateWrapper.eq("bookid",bookid);
@@ -165,7 +165,7 @@ public class FrontBooksController {
     return new APIResponse<>(GetAvgScore(bookid).getData(),APIStatusCode.SUCCESS,"返回得分");
     }
     @GetMapping("/GetAvgScore")
-    public APIResponse<?> GetAvgScore(@RequestParam(defaultValue = "61") Integer bookid){
+    public APIResponse<?> GetAvgScore(@RequestParam(defaultValue = "0") Integer bookid){
         QueryWrapper<Relationship> queryWrapper=new QueryWrapper<>();
         queryWrapper.select("avg(score) as avgScore").eq("bookid",bookid);
         List<Map<String, Object>> rel=relationshipMapper.selectMaps(queryWrapper);

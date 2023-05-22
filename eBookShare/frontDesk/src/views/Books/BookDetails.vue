@@ -8,13 +8,13 @@
         5. 下面是关于本书的留言评价，这些数据存放在数据库当中；
         6. 最下面是提供一个评论的入口，用户可以在这里提交自己的评价；
     -->
-    <div class="parent-container">
+    <div class="parent-container"  v-if="bookDetails.bookname">
       <el-container class="el-container">
 
       <el-main>
         <el-breadcrumb separator-class="el-icon-arrow-right" style="font-size: 20px;margin-bottom: 20px">
           <el-breadcrumb-item :to="{ path: '/' }" style="color: red;">主页</el-breadcrumb-item>
-          <el-breadcrumb-item>{{ bookDetails.title }}</el-breadcrumb-item>
+          <el-breadcrumb-item>{{ bookDetails.bookname }}</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row class="book-card" :book_id="6138195">
           <el-col :xs="24" :sm="6" class="book-cover" >
@@ -83,8 +83,8 @@
               <el-col :span="6" ><div class="grid-content col-content">{{bookDetails.publisher}}</div></el-col>
             </el-row>
             <el-row :gutter="20"  class="row-bg" >
-              <el-col :span="2"><div class="grid-content col-content">出版社:</div></el-col>
-              <el-col :span="6"><div class="grid-content col-content">{{bookDetails.publisher}}</div></el-col>
+              <el-col :span="2"><div class="grid-content col-content">文件类型:</div></el-col>
+              <el-col :span="6"><div class="grid-content col-content">{{bookDetails.type}}</div></el-col>
               <el-col :span="2"><div class="grid-content col-content">ISBN:</div></el-col>
               <el-col :span="6"><div class="grid-content col-content">{{bookDetails.isbn}}</div></el-col>
             </el-row>
@@ -149,10 +149,10 @@ export default {
     return {
       bookDetails: {},
       collectBtnClass:"el-icon-star-off",
-      bookValue:null,
-      bookAvgValue:null,
+      bookValue:0,
+      bookAvgValue: [],
       textarea:"",
-      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
+      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")): {id:0},
       commentKey:0,//用于重新渲染评论子组件
       commentcount:""
     }
@@ -166,6 +166,12 @@ export default {
       this.commentcount=data;
     },
     collectBtn(){//收藏
+      if(this.user.id==0){
+        this.$message.error("请先登录");
+        return;
+      }
+
+
       this.bookDetails.isCollected=!this.bookDetails.isCollected
       if(this.bookDetails.isCollected){
         this.$message({
@@ -202,6 +208,12 @@ export default {
       }
     },
     likeBtn(){
+      if(this.user.id===0){
+        this.$message.error("请先登录");
+        return;
+      }
+
+
       if(!this.bookDetails.islike){//如果没有点赞
         this.$message({
           message: '点赞成功',
@@ -243,7 +255,7 @@ export default {
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
     },
     submitComment(){
-      if(this.user.id==null) {
+      if(this.user.id===0) {
         this.$message.error("评论失败，请先登录！")
       }else {
       this.request.get("/commits/mankecommits",{
@@ -262,6 +274,10 @@ export default {
         })
       }},
     downloads(){
+      if(this.user.id===0){
+        this.$message.error("请先登录");
+        return;
+      }
       window.open(this.bookDetails.url);
     },
     getBookAvgScore(){
@@ -290,8 +306,8 @@ export default {
       })
     },
     rateChange(){
-        if(this.user.id==null) {
-            this.$message.error("评论失败，请先登录！")
+        if(this.user.id===0) {
+            this.$message.error("评分失败，请先登录！")
         }else {
             this.request.get("/FrontBooks/score",{
                 params:{
@@ -303,8 +319,8 @@ export default {
               this.bookAvgValue=res.data;
               console.log(this.bookAvgValue)
         })
-      }}
-
+      }
+    }
 
   }
 }

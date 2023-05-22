@@ -245,11 +245,17 @@ export default {
     },
     redirectToAuthorBooks(author){          //将作者作为参数跳转到 找到作者的所有书籍 页面
       this.$router.push({
-        path:'/searchResult ',
+        path:'/searchResult',
         query:{params:JSON.stringify(author)}
       })
     },
     collectBtn(index,book){//收藏
+      if(this.user.id==0){
+        this.$message.error("请先登录");
+        return;
+      }
+
+
       this.bookDetails[index].isCollected=!this.bookDetails[index].isCollected
       if(this.bookDetails[index].isCollected){
         this.$message({

@@ -57,6 +57,10 @@ export default {
   },
     created() {
         this.getUser();
+        if(this.user.id==0){
+          this.$message.error("请先登录");
+          return;
+        }
         this.getAllBooksData();
     },
     beforeMount() {
@@ -64,10 +68,11 @@ export default {
   },
   methods:{
     getUser(){
-        const data = JSON.parse(localStorage.getItem('loguserinfo'))
+        const data = localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")): {id:0}
         if (data) {
             this.user=data
         }
+
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);

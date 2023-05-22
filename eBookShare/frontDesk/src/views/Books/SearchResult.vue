@@ -80,7 +80,7 @@ export default {
       total: 0,
       pageNum: 1,
       pageSize: 10,
-      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")):"",
+      user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")): {id:0},
     };
   },
   created() {
@@ -160,6 +160,11 @@ export default {
       this.load()
     },
     collectBtn(index){//收藏
+      if(this.user.id==0){
+        this.$message.error("请先登录");
+        return;
+      }
+
       this.bookDetails[index].isCollected=!this.bookDetails[index].isCollected
       if(this.bookDetails[index].isCollected){
         this.$message({

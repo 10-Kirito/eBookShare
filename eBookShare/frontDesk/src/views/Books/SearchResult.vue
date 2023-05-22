@@ -26,7 +26,7 @@
                       </el-col>
                       <el-col :span="1">
                         <el-tooltip class="item" effect="dark" :content="book.isCollected ? '取消收藏' : '收藏' ">
-                          <i :class="book.collectBtnClass" @click="collectBtn(index)" style="cursor: pointer;font-size: 25px;margin-left: 18px;margin-top: 20px"></i>
+                          <i :class="book.collectBtnClass" @click="collectBtn(index,book)" style="cursor: pointer;font-size: 25px;margin-left: 18px;margin-top: 20px"></i>
                         </el-tooltip>
                       </el-col>
                     </el-row>
@@ -159,7 +159,7 @@ export default {
       this.pageNum=pageNum
       this.load()
     },
-    collectBtn(index){//收藏
+    collectBtn(index,book){//收藏
       if(this.user.id==0){
         this.$message.error("请先登录");
         return;
@@ -171,14 +171,35 @@ export default {
           message: '收藏成功',
           type: 'success'
         });
-        this.bookDetails[index].collectBtnClass="el-icon-star-on"
+        this.bookDetails[index].collectBtnClass="el-icon-star-on";
+
+        this.request.get("http://localhost:9091/relationship/favourbook", {
+          params:{
+            bookid: book.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
+        })
+        console.log("收藏");
       }else{  //取消收藏
         this.$message({
           message: '取消成功',
           type: 'success'
         });
-        this.bookDetails[index].collectBtnClass="el-icon-star-off"
+        this.bookDetails[index].collectBtnClass="el-icon-star-off";
+
+        this.request.get("http://localhost:9091/relationship/favourbook", {
+          params:{
+            bookid: book.bookid,
+            userid: this.user.id
+          }
+        }).then(response => {
+          console.log(response);
+        })
+        console.log("取消收藏");
       }
+      this.$forceUpdate()
     },
     pushDetail(index){           //跳转路由函数
       // console.log(JSON.stringify(this.bookDetails[0]))

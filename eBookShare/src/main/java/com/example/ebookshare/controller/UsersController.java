@@ -222,4 +222,27 @@ public class UsersController {
         return Result.error("600","积分不足，购买失败");
 
     }
+    @GetMapping("/ifexistfree")
+    public Result ifExistFreeBuyPoints(@RequestParam(defaultValue = "0") Integer userid) {
+        if (userid == 0) {
+            return Result.error("300", "传入数据错误");
+        }
+        QueryWrapper<Users> usersQueryWrapper = new QueryWrapper<>();
+        usersQueryWrapper.eq("id",userid);
+        Users users = usersMapper.selectOne(usersQueryWrapper);
+        if (users == null){
+            return Result.error("500","找不到用户信息");
+        }
+
+        //判断是否有免费下载次数
+        if(users.getFreedownload()>0){
+            return Result.success("200","该用户拥有免费购买次数");
+        }
+        else {
+            return Result.error("600","该用户没有免费购买次数");
+        }
+
+
+    }
+
 }

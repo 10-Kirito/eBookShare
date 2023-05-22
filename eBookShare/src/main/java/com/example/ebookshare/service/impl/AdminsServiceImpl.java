@@ -31,7 +31,7 @@ public class AdminsServiceImpl extends ServiceImpl<AdminsMapper, Admins> impleme
 //            userDTO.setToken(token);
             adminDTO.setId(String.valueOf(one.getId()));
             adminDTO.setEmail(String.valueOf(one.getEmail()));
-            adminDTO.setAvatarurl(String.valueOf(one.getAvatarUrl()));
+            adminDTO.setAvatarurl(String.valueOf(one.getAvatarurl()));
             //后续这里需要设置token
             return adminDTO;
         }else {

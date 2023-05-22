@@ -32,7 +32,7 @@ public class Admins implements Serializable {
 
     private String email;
 
-    private String avatarUrl;
+    private String avatarurl;
 
 
 }

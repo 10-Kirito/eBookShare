@@ -7,6 +7,7 @@ import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
 import com.example.ebookshare.entity.Admins;
+import com.example.ebookshare.mapper.AdminsMapper;
 import org.springframework.web.bind.annotation.*;
 import com.example.ebookshare.service.IAdminsService;
 
@@ -29,6 +30,9 @@ public class AdminsController {
 
     @Resource
     private IAdminsService adminsService;
+
+    @Resource
+    private AdminsMapper adminsMapper;
     @PostMapping("/login")
     public Result login(@RequestBody AdminDTO adminDTO){
         //新增或者更新
@@ -62,7 +66,13 @@ public class AdminsController {
         public boolean  delete(@PathVariable Integer id){
             return adminsService.removeById(id);
         }
-
+         @GetMapping("/getadmins/{id}")
+         public Result  delete22(@PathVariable Integer id){
+        QueryWrapper<Admins> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",id);
+         Admins admins = adminsMapper.selectOne(queryWrapper);
+         return Result.success(admins);
+         }
 
         @PostMapping("/del/batch")
         public boolean  deleteBatch(@RequestBody List<Integer> ids){

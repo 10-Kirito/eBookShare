@@ -13,15 +13,15 @@
     </div>
 
     <div style="margin: 10px 0">
-        <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>
+      <!--        <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>-->
 
       <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
     </div>
 
     <el-table :data="tableData" border stripe header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
       <!--          多选框-->
-<!--      <el-table-column type="selection" width="55" />-->
-      <el-table-column prop="isbn" label="ISBN" width="120">
+      <!--      <el-table-column type="selection" width="55" />-->
+      <el-table-column prop="isbn" label="ISBN" width="150">
       </el-table-column>
       <el-table-column prop="bookname" label="书籍名称" width="150">
       </el-table-column>
@@ -69,7 +69,7 @@
       />
 
     </div>
-<!--    编辑  弹出的界面-->
+    <!--    编辑  弹出的界面-->
     <el-dialog title="书籍信息" :visible.sync="dialogFormVisible" width="30%" >
       <el-form label-width="80px" size="small">
         <el-form-item label="ISBN">

@@ -20,7 +20,7 @@
     </div>
       <el-dropdown-menu slot="dropdown">
       <el-dropdown-item>
-        <router-link to="/manage/person" >个人信息</router-link>
+        <router-link to="/admins/person" >个人信息</router-link>
       </el-dropdown-item>
       <el-dropdown-item>
         <span style="text-decoration: none" @click="logout">退出</span>

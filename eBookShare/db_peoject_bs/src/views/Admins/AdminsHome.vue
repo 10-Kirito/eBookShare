@@ -1,28 +1,42 @@
 <template>
   <div>
-    <el-col :span="12">
-      <div id = "main" style="width: 500px; height: 400px"></div>
-    </el-col>
-    <el-col :span="12">
-      <div id = "pie" style="width: 500px; height: 400px"></div>
-    </el-col>
+    <!--    <el-col :span="12">-->
+    <!--      <div id = "main" style="width: 500px; height: 400px"></div>-->
+    <!--    </el-col>-->
+    <!--    <el-col :span="12">-->
+    <!--      <div id = "pie" style="width: 500px; height: 400px"></div>-->
+    <!--    </el-col>-->
 
-
-    <el-button type="primary" class="ml-5" @click="EBookup">测试用户上传与审核<i class = "el-icon-bottom"></i></el-button>
+    <div>
+      <h1>欢迎进入学生选课管理系统</h1>
+      <br>
+      <el-card className="box-card">
+        <div>
+          <div className="text item "><i className="el-icon-s-home" style="margin:10px"></i>项目名：E-book后端管理系统
+          </div>
+          <div className="text item"><i className="el-icon-user-solid" style="margin:10px"></i>小组成员：周鹏飞，李洪辰，王唯翰，易津锐
+          </div>
+          <div className="text item"><i className="el-icon-location" style="margin:10px"></i>上海大学</div>
+          <div className="text item"><i className="el-icon-error" style="margin:10px"></i>仅供学习，禁止抄袭</div>
+        </div>
+      </el-card>
+    </div>
+    <!--    <el-button type="primary" class="ml-5" @click="EBookup">测试用户上传与审核<i class = "el-icon-bottom"></i></el-button>-->
   </div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
+
 export default {
   name: "Home",
-  data(){
-    return{
+  data() {
+    return {
       dialogFormVisible: false,
     }
   },
-  methods:{
-    EBookup(){
+  methods: {
+    EBookup() {
       this.$router.push("/admins/ebookupAndAudit")
     },
   },
@@ -81,11 +95,11 @@ export default {
           type: 'pie',
           radius: '50%',
           data: [
-            { value: 1048, name: 'Search Engine' },
-            { value: 735, name: 'Direct' },
-            { value: 580, name: 'Email' },
-            { value: 484, name: 'Union Ads' },
-            { value: 300, name: 'Video Ads' }
+            {value: 1048, name: 'Search Engine'},
+            {value: 735, name: 'Direct'},
+            {value: 580, name: 'Email'},
+            {value: 484, name: 'Union Ads'},
+            {value: 300, name: 'Video Ads'}
           ],
           emphasis: {
             itemStyle: {

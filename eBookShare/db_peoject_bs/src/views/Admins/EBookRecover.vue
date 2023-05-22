@@ -84,8 +84,8 @@
     </el-table>
     <div style="padding: 10px 0" >
       <el-pagination
-          v-model:current-page="currentPage4"
-          v-model:page-size="pageSize4"
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
           :current-page="pageNum"
           :page-sizes="[2, 5, 10, 20]"
           :page-size="pageSize"

@@ -4,7 +4,7 @@
       <el-input style="width: 200px" placeholder="请输入用户名" suffix-icon="el-icon-search" v-model="username"></el-input>
       <el-input style="width: 200px" placeholder="请输入电子邮箱" class="ml-5" suffix-icon="el-icon-message" v-model="email"></el-input>
       <el-input style="width: 200px" placeholder="请输入电话号码" class="ml-5" suffix-icon="el-icon-message" v-model="phone"></el-input>
-<!--      <el-input style="width: 200px" placeholder="请输入出版社" class="ml-5" suffix-icon="el-icon-message" v-model="publisher"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入出版社" class="ml-5" suffix-icon="el-icon-message" v-model="publisher"></el-input>-->
       <!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
       <!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
       <!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
@@ -15,7 +15,7 @@
     <div style="margin: 10px 0">
 
 
-      <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>
+      <!--      <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>-->
       <el-button type="primary" class="ml-5" @click="handleEdit2">新增用户<i class = "el-icon-bottom"></i></el-button>
       <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
     </div>
@@ -31,10 +31,10 @@
       </el-table-column>
       <el-table-column prop="phone" label="电话号码">
       </el-table-column>
-<!--      <el-table-column prop="category" label="类别">-->
-<!--      </el-table-column>-->
-<!--      <el-table-column prop="releasetime" label="上传时间">-->
-<!--      </el-table-column>-->
+      <!--      <el-table-column prop="category" label="类别">-->
+      <!--      </el-table-column>-->
+      <!--      <el-table-column prop="releasetime" label="上传时间">-->
+      <!--      </el-table-column>-->
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
@@ -60,7 +60,7 @@
     <div style="padding: 10px 0" >
       <el-pagination
           v-model:current-page="currentPage4"
-          v-model:page-size="pageSize4"
+          v-model:page-size="pageSize"
           :current-page="pageNum"
           :page-sizes="[2, 5, 10, 20]"
           :page-size="pageSize"
@@ -89,9 +89,9 @@
         <el-form-item label="电话号码">
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
-<!--        <el-form-item label="类别">-->
-<!--          <el-input v-model="form.category" autocomplete="off" />-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="类别">-->
+        <!--          <el-input v-model="form.category" autocomplete="off" />-->
+        <!--        </el-form-item>-->
       </el-form>
       <template #footer>
       <span class="dialog-footer">

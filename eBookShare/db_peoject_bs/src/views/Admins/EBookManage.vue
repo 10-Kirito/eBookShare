@@ -5,40 +5,40 @@
       <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="bookname"></el-input>
       <el-input style="width: 200px" placeholder="请输入作者" class="ml-5" suffix-icon="el-icon-message" v-model="author"></el-input>
       <el-input style="width: 200px" placeholder="请输入出版社" class="ml-5" suffix-icon="el-icon-message" v-model="publisher"></el-input>
-<!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
-<!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
+      <!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
 
     <div style="margin: 10px 0">
-<!--      <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>-->
-<!--      <el-popconfirm-->
-<!--          class="ml-5"-->
-<!--          confirm-button-text="确认"-->
-<!--          cancel-button-text="取消"-->
-<!--          :icon="InfoFilled"-->
-<!--          icon-color="#626AEF"-->
-<!--          title="是否批量删除?"-->
-<!--          @confirm="delBatch"-->
-<!--          @cancel="cancelEvent"-->
-<!--      >-->
-<!--        <el-button type="danger" slot="reference">批量删除<i class = "el-icon-remove-outline"></i></el-button>-->
-<!--      </el-popconfirm>-->
-<!--      <el-upload action="http://localhost:9090/books/upload" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
-<!--        <el-button type="primary" class="ml-5">导入<i class = "el-icon-bottom"></i></el-button>-->
-<!--      </el-upload>-->
+      <!--      <el-button type="primary" @click="handleAdd">新增<i class="el-icon-circle-plus-outline"></i></el-button>-->
+      <!--      <el-popconfirm-->
+      <!--          class="ml-5"-->
+      <!--          confirm-button-text="确认"-->
+      <!--          cancel-button-text="取消"-->
+      <!--          :icon="InfoFilled"-->
+      <!--          icon-color="#626AEF"-->
+      <!--          title="是否批量删除?"-->
+      <!--          @confirm="delBatch"-->
+      <!--          @cancel="cancelEvent"-->
+      <!--      >-->
+      <!--        <el-button type="danger" slot="reference">批量删除<i class = "el-icon-remove-outline"></i></el-button>-->
+      <!--      </el-popconfirm>-->
+      <!--      <el-upload action="http://localhost:9090/books/upload" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">-->
+      <!--        <el-button type="primary" class="ml-5">导入<i class = "el-icon-bottom"></i></el-button>-->
+      <!--      </el-upload>-->
 
-        <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>
+      <el-button type="primary" class="ml-5" @click="EBookup">书籍上传<i class = "el-icon-bottom"></i></el-button>
 
-      <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
+      <el-button type="primary" @click="exp" class="ml-5">书籍导出<i class = "el-icon-top"></i></el-button>
     </div>
 
     <el-table :data="tableData" border stripe header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
       <!--          多选框-->
-<!--      <el-table-column type="selection" width="55" />-->
-      <el-table-column prop="isbn" label="ISBN" width="120">
+      <!--      <el-table-column type="selection" width="55" />-->
+      <el-table-column prop="isbn" label="ISBN" width="150">
       </el-table-column>
       <el-table-column prop="bookname" label="书籍名称" width="150">
       </el-table-column>
@@ -74,8 +74,8 @@
     </el-table>
     <div style="padding: 10px 0" >
       <el-pagination
-          v-model:current-page="currentPage4"
-          v-model:page-size="pageSize4"
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
           :current-page="pageNum"
           :page-sizes="[2, 5, 10, 20]"
           :page-size="pageSize"
@@ -89,7 +89,7 @@
       />
 
     </div>
-<!--    编辑  弹出的界面-->
+    <!--    编辑  弹出的界面-->
     <el-dialog title="书籍信息" :visible.sync="dialogFormVisible" width="30%" >
       <el-form label-width="80px" size="small">
         <el-form-item label="ISBN">

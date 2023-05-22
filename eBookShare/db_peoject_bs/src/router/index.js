@@ -26,6 +26,7 @@ const routes = [
       {path:'usermanage', name: '用户管理', component:() => import('../views/Admins/UserManage.vue')},
       {path:'ebookupAndAudit', name: '用户上传与审核', component:() => import('../views/Admins/EbookUploadAndAudit.vue')},
       {path:'ebookAudit', name: '书籍审核', component:() => import('../views/Admins/EBookAudit.vue')},
+      {path:'person', name: '管理员信息', component:() => import('../views/Person.vue')},
       // {path:'classtable', name: '课表查询', component:() => import('../views/student/StudentClassTable.vue')}
 
 

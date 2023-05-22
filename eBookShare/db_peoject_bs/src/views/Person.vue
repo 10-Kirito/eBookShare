@@ -1,40 +1,44 @@
 <template>
-  <div>
-  <el-card style="width: 500px">
-<!--    根据实际表格情况，进行增删-->
-    <el-form label-width="80px" size="small">
-      <el-upload
-          style="text-align: center"
-          class="avatar-uploader"
-          action="http://localhost:9091/file/upload"
-          :show-file-list="false"
-          :on-success="handleAvatarSuccess"
-      >
-<!--        暂时没有头像，因为新增头像需要添加数据库里面-->
-        <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+  <!--  action="http://localhost:9091/file/upload"-->
+  <!--  action="http://124.71.166.37:9091/file/avartar/upload"-->
+
+  <div align="center">
+    <el-card style="width: 500px;margin-top: 150px">
+      <!--    根据实际表格情况，进行增删-->
+      <el-form label-width="80px" size="small">
+<!--        <el-upload-->
+<!--            style="text-align: center"-->
+<!--            class="avatar-uploader"-->
+<!--            action="http://124.71.166.37:9091/file/adminavartar/upload"-->
+<!--            :show-file-list="false"-->
+<!--            :on-success="handleAvatarSuccess"-->
+<!--            :data="this.form"-->
+<!--        >-->
+<!--          &lt;!&ndash;        暂时没有头像，因为新增头像需要添加数据库里面&ndash;&gt;-->
+<!--          <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />-->
+<!--          <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+<!--        </el-upload>-->
 
 
 
-      <el-form-item label="账号">
-        <el-input v-model="form.username" autocomplete="off" disabled/>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input v-model="form.password" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="邮箱">
-        <el-input v-model="form.email" autocomplete="off" />
-      </el-form-item>
-      <el-form-item label="电话">
-        <el-input v-model="form.phone" autocomplete="off" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="save">确认</el-button>
-      </el-form-item>
-    </el-form>
+        <el-form-item label="账号" style="margin-top: 35px">
+          <el-input v-model="form.username" autocomplete="off" disabled/>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="form.password" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="form.email" autocomplete="off" />
+        </el-form-item>
+        <!--        <el-form-item label="电话">-->
+        <!--          <el-input v-model="form.phone" autocomplete="off" />-->
+        <!--        </el-form-item>-->
+        <el-form-item>
+          <el-button type="primary" style="width: 50%;margin-left: -80px" @click="save">确认</el-button>
+        </el-form-item>
+      </el-form>
 
-  </el-card>
+    </el-card>
   </div>
 </template>
 
@@ -50,42 +54,44 @@ export default {
     }
   },
 
-    // 这里暂时写的是学生，后面需要更换成别的端口
-    created() {
-      this.getUser().then(res =>{
-        this.form = res
-      })
-    },
+  // 这里暂时写的是学生，后面需要更换成别的端口
+  created() {
+    this.getUser().then(res =>{
+      console.log(res)
+      this.form = res
+    })
+  },
   methods:{
     async getUser(){
-      return  (await this.request.get("/users/" + this.user.username)).data
+      return  (await this.request.get("/admins/getadmins/" + this.user.id)).data
     },
     save(){
       //发送数据到后端
       //this.$message.success("保存信息："+this.form.avatarUrl)
-      this.request.post("/users",this.form).then(res => {
-            if(res){
-              this.$message.success("保存成功")
-              //触发父级更新user的方法
-              this.$emit("refreshUser")
-              //保存之后，触发manage的父级，通过父级中的功能来实现更新以及右上角头像的更新
+      this.request.post("/admins",this.form).then(res => {
+        if(res){
+          this.$message.success("保存成功")
+          //触发父级更新user的方法
+          this.$emit("refreshUser")
+          //保存之后，触发manage的父级，通过父级中的功能来实现更新以及右上角头像的更新
 
 
-              //更新浏览器存储信息
-              this.getUser().then(res =>{
-                // res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
-                //localStorage.removeItem("loguserinfo")
-                localStorage.setItem("loguserinfo",JSON.stringify(res))
-              })
-                }else {
-              this.$message.error("保存失败")
-            }
+          //更新浏览器存储信息
+          this.getUser().then(res =>{
+            // res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
+            //localStorage.removeItem("loguserinfo")
+            localStorage.setItem("loguserinfo",JSON.stringify(res))
           })
+        }else {
+          this.$message.error("保存失败")
+        }
+      })
     },
     handleAvatarSuccess(res){
       this.form.avatarurl = res
-      //this.$message.success("路径"+this.form.avatarUrl)
-      //this.$message.success("路径"+res)
+
+
+      this.$message.success("保存成功")
     }
   }
 }

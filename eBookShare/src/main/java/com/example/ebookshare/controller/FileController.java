@@ -10,10 +10,14 @@ import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.common.Result;
+import com.example.ebookshare.entity.Admins;
 import com.example.ebookshare.entity.Files;
 import com.example.ebookshare.entity.Users;
+import com.example.ebookshare.mapper.AdminsMapper;
 import com.example.ebookshare.mapper.FileMapper;
 import com.example.ebookshare.mapper.UsersMapper;
+import com.example.ebookshare.service.IAdminsService;
+import com.example.ebookshare.service.impl.AdminsServiceImpl;
 import com.example.ebookshare.service.impl.UsersServiceImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +55,11 @@ public class FileController {
     @Resource
     private UsersServiceImpl usersService;
 
+    @Resource
+    private IAdminsService adminsService;
+
+    @Resource
+    private AdminsMapper adminsMapper;
 
 
 
@@ -201,6 +210,58 @@ public class FileController {
         //上传成功后返回url
     }
 
+    @PostMapping("/adminavartar/upload")
+    public String  adminAvartarUpload(@RequestParam MultipartFile file,@RequestParam("id") String adminid) throws IOException {
+        String orginalFilename = file.getOriginalFilename();
+        String type = FileUtil.extName(orginalFilename);
+        long size = file.getSize();
+
+        //判断配置文件目录是否存在，若不存在则创建一个新的文件目录
+        //定义一个文件唯一的标识码
+        String uuid = IdUtil.fastSimpleUUID();
+        String fileUUid = uuid + StrUtil.DOT +type;
+        File uploadFile = new File(avartarPAth + fileUUid);
+
+        File parentFile = uploadFile.getParentFile();
+        if(!parentFile.exists()){
+            parentFile.mkdirs();
+        }
+
+        //实现：对于相同内容不同文件名的文件，因为md5一样，在数据库中每个有一个记录，但是在磁盘中，只会存在一个最新的文件
+        String url;
+        String md5;
+        //上传文件到磁盘
+        file.transferTo(uploadFile);
+        //获取文件的md5
+        md5 = SecureUtil.md5(uploadFile);
+        //数据库查询是否存在相同的记录
+//        Files dbFiles = getFileByMd5(md5);
+//        if (dbFiles != null){
+//            url = dbFiles.getUrl();
+//            //删除之前已存在的重复文件，以便于上传最新版文件
+//            uploadFile.delete();
+//        }else {
+        //数据库不存在重复的文件
+        //把获取到的文件存储到磁盘目录
+//            url = "http://124.71.166.37:9091/avartar/file/"+fileUUid;
+        url = "http://124.71.166.37:9091/file/avartar/"+fileUUid;
+//        }
+        //获取文件url
+        //把获取到的文件存储到磁盘目录中
+
+        //文件路径
+        //存储数据库
+        QueryWrapper<Admins> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id",adminid);
+        Admins admins = adminsMapper.selectOne(queryWrapper);
+        if(admins == null){
+            return null;
+        }
+        admins.setAvatarurl(url);
+        adminsService.saveOrUpdate(admins);
+        return url; //文件下载链接
+        //上传成功后返回url
+    }
 
 
 }

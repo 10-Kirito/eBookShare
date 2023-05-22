@@ -35,7 +35,7 @@
       </el-table-column>
       <el-table-column label="操作" width="330">
         <template slot-scope="scope">
-          <el-button type="success" @click="handleEdit(scope.row)">预览<i class="el-icon-edit"></i></el-button>
+          <el-button type="success" @click="preview(scope.row)">预览<i class="el-icon-edit"></i></el-button>
           <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
           <el-button type="success" @click="Pass(scope.row.bookid)">通过<i class="el-icon-edit"></i></el-button>
 
@@ -198,6 +198,12 @@ export default {
       this.form = row //将数据赋予弹窗
       this.dialogFormVisible = true //显示弹窗
     },
+    preview(row){
+      console.log(row)
+      let url = row.url;
+      window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
+    },
+
     Pass(bookid){
       this.request.post("/auditbooks/move/" + bookid).then(res => {
         console.log(res);

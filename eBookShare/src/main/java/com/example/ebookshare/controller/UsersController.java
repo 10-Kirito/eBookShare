@@ -11,9 +11,12 @@ import com.example.ebookshare.common.Constants;
 import com.example.ebookshare.common.Result;
 import com.example.ebookshare.controller.dto.AdminDTO;
 import com.example.ebookshare.entity.Books;
+import com.example.ebookshare.entity.Relationship;
 import com.example.ebookshare.entity.Users;
+import com.example.ebookshare.mapper.BooksMapper;
 import com.example.ebookshare.mapper.UsersMapper;
 import com.example.ebookshare.service.IUsersService;
+import com.example.ebookshare.service.impl.BooksServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -39,6 +42,13 @@ public class UsersController {
 
     @Resource
     UsersMapper usersMapper;
+
+    @Resource
+    BooksServiceImpl booksService;
+
+    @Resource
+    BooksMapper booksMapper;
+
     @GetMapping("/page")  //接口路径,多条件查询
     public IPage<Users> findPage(@RequestParam Integer pageNum,
                                  @RequestParam Integer pageSize,
@@ -171,5 +181,45 @@ public class UsersController {
         Users users = usersMapper.selectOne(queryWrapper);
 
         return Result.success(users);
+    }
+
+
+    @GetMapping("/pointbuybook")
+    public Result pointbuybook(@RequestParam(defaultValue = "0") Integer userid,
+                           @RequestParam(defaultValue = "0") Integer bookid) {
+        if (userid == 0 || bookid == 0) {
+            return Result.error("300", "传入数据错误");
+        }
+        QueryWrapper<Books> booksQueryWrapper = new QueryWrapper<>();
+        booksQueryWrapper.eq("bookid",bookid);
+        Books books = booksMapper.selectOne(booksQueryWrapper);
+        if (books == null){
+            return Result.error("400","找不到书籍信息");
+        }
+        QueryWrapper<Users> usersQueryWrapper = new QueryWrapper<>();
+        usersQueryWrapper.eq("id",userid);
+        Users users = usersMapper.selectOne(usersQueryWrapper);
+        if (users == null){
+            return Result.error("500","找不到用户信息");
+        }
+
+        //判断是否有免费下载次数
+        if(users.getFreedownload()>0){
+            users.setFreedownload(users.getFreedownload()-1);
+            usersService.saveOrUpdate(users,usersQueryWrapper);
+            return Result.success("200","使用免费次数购买成功");
+        }
+
+        //如果没有免费下载次数,查看积分并扣取
+        //默认一次扣取5积分
+        if(users.getPoints()>=5){
+            users.setPoints(users.getPoints()-5);
+            usersService.saveOrUpdate(users,usersQueryWrapper);
+            return Result.success("200","使用积分购买成功");
+        }
+
+        //如果积分不够
+        return Result.error("600","积分不足，购买失败");
+
     }
 }

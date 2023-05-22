@@ -22,6 +22,10 @@ public class Result {
     public static Result success(Object data){
         return new Result(Constants.CODE_200,"",data);
     }
+
+    public static Result success(String code,String msg){
+        return new Result(code,msg,null);
+    }
     public static Result error(String code,String msg){
         return new Result(code,msg,null);
     }

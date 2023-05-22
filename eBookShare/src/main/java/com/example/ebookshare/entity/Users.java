@@ -37,5 +37,5 @@ public class Users implements Serializable {
     private String avatarurl;
     private Integer points;
 
-
+    private Integer freedownload;
 }

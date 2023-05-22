@@ -278,7 +278,22 @@ export default {
         this.$message.error("请先登录");
         return;
       }
-      window.open(this.bookDetails.url);
+      else {
+        this.request.get("/users/pointbuybook",{
+          params: {
+            bookid:this.bookDetails.bookid,
+            userid:this.user.id
+          }
+        }).then(res=>{
+          if(res.code==='200'){
+            window.open(this.bookDetails.url);
+            this.$message.success("下载成功")
+          }else if(res.code==='600'){
+            this.$message.error("积分不足，下载失败")
+          }
+        })
+      }
+
     },
     getBookAvgScore(){
         this.request.get("/FrontBooks/GetAvgScore",{

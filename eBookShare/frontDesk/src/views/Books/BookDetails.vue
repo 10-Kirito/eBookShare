@@ -288,6 +288,7 @@ export default {
           if(res.code==='200'){
             window.open(this.bookDetails.url);
             this.$message.success("下载成功")
+            location.reload()
           }else if(res.code==='600'){
             this.$message.error("积分不足，下载失败")
           }

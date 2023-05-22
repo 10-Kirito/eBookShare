@@ -59,7 +59,7 @@
         <div v-show="this.user.username!=null" style="width: 300px;">
             <div class="grid-content bg-purple" style="height: 60px;display: flex; flex-direction: column">
               <div style="text-decoration: none;height: 30px;margin-top: -10px;font-size: 13px">积分:{{ user.points }} </div>
-              <div style="text-decoration: none;height: 30px;margin-top: -8px;font-size: 13px">免费下载次数:{{ user.points }} </div>
+              <div style="text-decoration: none;height: 30px;margin-top: -8px;font-size: 13px">免费下载次数:{{ user.freedownload }} </div>
             </div>
         </div>
       </el-row>

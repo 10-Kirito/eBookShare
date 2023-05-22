@@ -63,12 +63,14 @@ export default {
   color: #333;
   text-align: center;
   line-height: 60px;
+  padding: 0;
 }
 
 .el-main {
   background-color: #E9EEF3;
   color: #333;
   text-align: center;
+  padding: 0;
   /*line-height: 700px;*/
 }
 

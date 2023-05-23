@@ -384,7 +384,7 @@ public class AuditbooksController {
             uploadFile.delete();
         }else {
             //数据库不存在重复的文件
-            //url = "http://localhost:9090/file/"+fileUUid;
+            //url = "http://124.71.166.37:9091/file/"+fileUUid;
             //url = auditbooksPAth+fileUUid;
             url = "http://124.71.166.37:9091/file/audit/"+fileUUid;
             Auditbooks saveFile = new Auditbooks();

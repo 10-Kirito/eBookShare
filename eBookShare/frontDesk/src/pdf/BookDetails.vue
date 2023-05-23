@@ -49,7 +49,7 @@ export default {
       return this.$confirm(`Cancel the transfert of ${ file.name } ?`);
     },
     previewBook(){
-      let url = 'http://localhost:9090/file/1de53068902f460b9c7b3bbe99719460.pdf';
+      let url = 'http://124.71.166.37:9091/file/1de53068902f460b9c7b3bbe99719460.pdf';
       window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
     }
   }

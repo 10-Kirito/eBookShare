@@ -16,7 +16,7 @@
 
 
       <!--      <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>-->
-      <el-button type="primary" class="ml-5" @click="handleEdit2">新增用户<i class = "el-icon-bottom"></i></el-button>
+<!--      <el-button type="primary" class="ml-5" @click="handleEdit2">新增用户<i class = "el-icon-bottom"></i></el-button>-->
       <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
     </div>
 
@@ -173,7 +173,7 @@ export default {
     load(){
       //请求分页查询数据
       //通过axios向后台请求参数
-      //通过request.js中的baseurl已经将前面的http://localhost:9090部分省略了
+      //通过request.js中的baseurl已经将前面的http://124.71.166.37:9091部分省略了
       this.request.get("/users/page",{
         params:{
           pageNum: this.pageNum,
@@ -269,7 +269,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://localhost:9090/users/export")
+      window.open("http://124.71.166.37:9091/users/export")
     },
     del(id){
       this.request.delete("/users/" + id).then(res => {

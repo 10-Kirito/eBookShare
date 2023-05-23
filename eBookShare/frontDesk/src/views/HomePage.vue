@@ -20,7 +20,7 @@
             <el-card v-for="(book, index) in booksDownloadList" :key="index"  :class="index % 2 === 0 ? 'even' : 'odd'">
                 <el-row @mouseenter.native="showInfo(index)" @mouseleave.native="hideInfo(index)" @click.native="pushDetail(booksDownloadList[index])" style="cursor: pointer;">
                 <el-col :span="8">
-                  <img :src="book.coverimage" class="book-cover"/>
+                  <img :src="book.coverimage" class="book-cover" />
                 </el-col>
                 <el-col :span="16" class="book-info">
                   <div class="book-title">{{ book.bookname }}</div>
@@ -45,7 +45,7 @@
           <el-card class="box-card" v-for="(book,index) in bookDetails" :key="index" style="margin-bottom: 15px">
             <el-row :gutter="20">
               <el-col :span="6"  >
-                <el-image :src="book.coverimage" @click="pushDetail(bookDetails[index])" fit="contain" lazy style="cursor: pointer;height: 150px;"/>
+                <el-image :src="book.coverimage" @click="pushDetail(bookDetails[index])" fit="contain" style="cursor: pointer;height: 150px;" lazy/>
               </el-col>
               <el-col :span="15" >
                 <el-row class="attriclass" >

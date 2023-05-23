@@ -12,9 +12,9 @@
             <el-form-item prop="password">
               <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-lock" show-password v-model="user.password"></el-input>
             </el-form-item>
-            <div style="margin: 10px 0;text-align: center">
+            <div style="margin: 10px 0;text-align: center; width: 100%">
               <el-button type="primary" size="medium" autocomplete="off" @click="login">登录</el-button>
-              <el-button type="warning" size="medium" autocomplete="off" @click="$router.push('/register')">注册</el-button>
+              <!--<el-button type="warning" size="medium" autocomplete="off" @click="$router.push('/register')">注册</el-button>-->
             </div>
           </el-form>
         </div>

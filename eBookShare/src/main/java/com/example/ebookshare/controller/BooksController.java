@@ -417,7 +417,7 @@ public class BooksController {
 //        }else {
 //            //数据库不存在重复的文件
 //            //把获取到的文件存储到磁盘目录
-////            url = "http://localhost:9090/file/"+fileUUid;
+////            url = "http://124.71.166.37:9091/file/"+fileUUid;
 //            url = fileuploadPAth+fileUUid;
 //            Books saveFile = new Books();
 //            saveFile.setFilename(orginalFilename);
@@ -490,7 +490,7 @@ public class BooksController {
             uploadFile.delete();
         }else {
             //数据库不存在重复的文件
-            //url = "http://localhost:9090/file/"+fileUUid;
+            //url = "http://124.71.166.37:9091/file/"+fileUUid;
             //url = auditbooksPAth+fileUUid;
             url = "http://124.71.166.37:9091/file/"+fileUUid;
             Books saveFile = new Books();

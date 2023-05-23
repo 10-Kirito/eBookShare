@@ -151,7 +151,7 @@ export default {
       collectBtnClass:"el-icon-star-off",
       bookValue:0,
       bookAvgValue: [],
-      textarea:"",
+      textarea:null,
       user:localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")): {id:0},
       commentKey:0,//用于重新渲染评论子组件
       commentcount:""
@@ -180,7 +180,7 @@ export default {
         });
         this.bookDetails.collectBtnClass="el-icon-star-on";
 
-        this.request.get("http://localhost:9091/relationship/favourbook", {
+        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -196,7 +196,7 @@ export default {
         });
         this.bookDetails.collectBtnClass="el-icon-star-off";
 
-        this.request.get("http://localhost:9091/relationship/favourbook", {
+        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -220,7 +220,7 @@ export default {
           type: 'success'
         });
         this.bookDetails.islike=!this.bookDetails.islike
-        this.request.get("http://localhost:9091/relationship/likebook", {
+        this.request.get("http://124.71.166.37:9091/relationship/likebook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -234,7 +234,7 @@ export default {
           type:'success'
         });
         this.bookDetails.islike=!this.bookDetails.islike
-        this.request.get("http://localhost:9091/relationship/likebook", {
+        this.request.get("http://124.71.166.37:9091/relationship/likebook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -302,7 +302,11 @@ export default {
                 bookid:this.bookDetails.bookid
             }
         }).then(res=> {
+          if(res.data==null){
+            this.bookAvgValue=[0]
+          }else{
             this.bookAvgValue=res.data;
+          }
           console.log(this.bookAvgValue)
         })
     },

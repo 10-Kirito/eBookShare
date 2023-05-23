@@ -226,7 +226,7 @@ export default {
       UserLogin(){
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) { //表单校验合法
-            this.request.post("http://localhost:9091/users/login", this.loginUser).then(res => {
+            this.request.post("http://124.71.166.37:9091/users/login", this.loginUser).then(res => {
               if (res.code == "200") {
                 localStorage.setItem("loguserinfo", JSON.stringify(res.data))
                 this.$router.push("/home") //跳转到主界面
@@ -277,7 +277,7 @@ export default {
           user.password = this.regUser.regPwd
           user.email=this.regUser.regEmail
           user.phone = this.regUser.regPhone
-          this.request.post("http://localhost:9091/users/register",user).then(res=>{
+          this.request.post("http://124.71.166.37:9091/users/register",user).then(res=>{
             if(res.code==="200"){
               this.$message.success("注册成功！")
               this.changeToLogin()

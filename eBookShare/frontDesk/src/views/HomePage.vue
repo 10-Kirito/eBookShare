@@ -154,7 +154,7 @@ export default {
 
     // 获取图书总榜单信息
     getTotalList(){
-      this.request.get("http://localhost:9091/books/overallbooklist",{
+      this.request.get("http://124.71.166.37:9091/books/overallbooklist",{
         params: {
           userid:this.user.id
         }
@@ -179,7 +179,7 @@ export default {
     },
     // 获取图书下载的总榜单
     getDowndoadTop(){
-      this.request.get("http://localhost:9091/books/downloadBooks",{
+      this.request.get("http://124.71.166.37:9091/books/downloadBooks",{
         params: {
           userid:this.user.id
         }
@@ -211,7 +211,7 @@ export default {
       })
     },
     getRecommendBooks(){//分页查询今日推荐的图书
-      this.request.get("http://localhost:9091/books/random", {           //更改后台接口
+      this.request.get("http://124.71.166.37:9091/books/random", {           //更改后台接口
         params: {
           number: this.recommendNumber,
           userid:this.user.id
@@ -264,7 +264,7 @@ export default {
         });
         this.bookDetails[index].collectBtnClass="el-icon-star-on";
 
-        this.request.get("http://localhost:9091/relationship/favourbook", {
+        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
           params:{
             bookid: book.bookid,
             userid: this.user.id
@@ -280,7 +280,7 @@ export default {
         });
         this.bookDetails[index].collectBtnClass="el-icon-star-off";
 
-        this.request.get("http://localhost:9091/relationship/favourbook", {
+        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
           params:{
             bookid: book.bookid,
             userid: this.user.id

@@ -1,5 +1,5 @@
 <template>
-  <!--  action="http://localhost:9091/file/upload"-->
+  <!--  action="http://124.71.166.37:9091/file/upload"-->
   <!--  action="http://124.71.166.37:9091/file/avartar/upload"-->
 
   <div align="center">

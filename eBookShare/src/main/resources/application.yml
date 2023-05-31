@@ -5,8 +5,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://124.71.166.37:3306/ebooksys?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
-    username: root
-    password: yjr3062439765
+    username: ****
+    password: *********
   servlet:
     multipart:
       max-file-size: 1000MB       # 设置单个文件最大大小为100MB
@@ -28,30 +28,24 @@ mybatis-plus:
 
 files:
   upload:
-    path: D:\Desktop\files\
-    # path: /root/ebookshare/files/
-#    path: E:\root\ebookshare\files
+    path: /root/ebookshare/files/
+    # path: D:\Desktop\files\
 books:
   upload:
-    # path: /root/ebookshare/books/
-    path: D:\Desktop\books\
-    #path: C:\Users\yijin\Desktop\eBookShare\files\books\
+    path: /root/ebookshare/books/
+    # path: D:\Desktop\books\
 bookpic:
   upload:
-    #path: /root/ebookshare/books/bookcoverimage/
-    path: D:\Desktop\books\bookcoverimage\
-    #path: C:\Users\yijin\Desktop\eBookShare\files\books\bookcoverimage\
-
+    path: /root/ebookshare/books/bookcoverimage/
+    # path: D:\Desktop\books\bookcoverimage\
 
 auditbooks:
   upload:
-    # path: /root/ebookshare/auditbooks/
-    path: D:\Desktop\auditbooks\
-    #path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\
+    path: /root/ebookshare/auditbooks/
+    # path: D:\Desktop\auditbooks\
 
 auditbookpic:
   upload:
-    # path: /root/ebookshare/auditbooks/bookcoverimage/
-    path: D:\Desktop\auditbooks\bookcoverimage\
-    #path: C:\Users\yijin\Desktop\eBookShare\files\auditbooks\bookcoverimage\
+    path: /root/ebookshare/auditbooks/bookcoverimage/
+    # path: D:\Desktop\auditbooks\bookcoverimage\
 

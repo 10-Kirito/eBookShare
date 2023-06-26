@@ -28,8 +28,9 @@ const routes = [
       {path:'ebookAudit', name: '书籍审核', component:() => import('../views/Admins/EBookAudit.vue')},
       {path:'person', name: '管理员信息', component:() => import('../views/Person.vue')},
       // {path:'classtable', name: '课表查询', component:() => import('../views/student/StudentClassTable.vue')}
-
-
+      {path: 'products', name: '商品管理',component: () => import('../views/shop/Products.vue')},
+      {path: 'lunbo', name: '轮播图管理', component: () => import('../views/shop/Lunbo.vue')},
+      {path: 'orders', name: '订单管理', component: () => import('../views/shop/Orders.vue')},
     ],
 
   }
@@ -49,7 +50,7 @@ const router = new VueRouter({
 
 router.beforeEach((to,from,next)=>{
   //console.log(from)
-  localStorage.setItem("currentPathName",from.name)  //设置当前路由名称,为了在header组件中使用
+  localStorage.setItem("currentPathName",to.name)  //设置当前路由名称,为了在header组件中使用
   store.commit("setPath")  //触发store数据更新
   next()   //路由放行
 })

@@ -4,9 +4,9 @@ module.exports = defineConfig({
   lintOnSave: false,  //关闭语法检查
   devServer:{
     host: '0.0.0.0',
-    port:8080,
+    port:8081,
     client: {
-      webSocketURL: 'ws://0.0.0.0:8080/ws',
+      webSocketURL: 'ws://0.0.0.0:8081/ws',
     },
     headers: {
       'Access-Control-Allow-Origin': '*',

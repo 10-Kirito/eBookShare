@@ -32,8 +32,8 @@ export default {
 
 
 
-<style>
-#app {
+<style scoped>
+/*#app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -52,5 +52,5 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
-}
+}*/
 </style>

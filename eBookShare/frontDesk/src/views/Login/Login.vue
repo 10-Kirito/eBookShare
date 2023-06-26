@@ -295,7 +295,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .base{
     height: 100vh;
     display: flex;

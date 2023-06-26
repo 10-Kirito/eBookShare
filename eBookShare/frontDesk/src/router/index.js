@@ -66,6 +66,19 @@ const routes = [
     ]
   },
 
+  {
+    path: '/shop',
+    name: 'Shop',
+    component: () => import('@/views/shop/Front.vue'),
+    redirect:"/shop/home",
+    children: [
+      {path: 'home',name:'首页',component:()=>import('../views/shop/Home.vue')},
+      {path: 'detail', name: '商品详情',component: () => import('../views/shop/Detail.vue')},
+      {path: 'cart', name: '购物车',component: () => import('../views/shop/Cart.vue')},
+      {path: 'orders', name: '我的订单',component: () => import('../views/shop/Orders.vue')},
+    ]
+  },
+
 
   {
     path: '/test',

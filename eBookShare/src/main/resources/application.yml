@@ -5,8 +5,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://124.71.166.37:3306/ebooksys?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
-    username: ****
-    password: *********
+    username: root
+    password: yjr3062439765
   servlet:
     multipart:
       max-file-size: 1000MB       # 设置单个文件最大大小为100MB
@@ -48,4 +48,13 @@ auditbookpic:
   upload:
     path: /root/ebookshare/auditbooks/bookcoverimage/
     # path: D:\Desktop\auditbooks\bookcoverimage\
+
+productimg:
+  upload:
+    path: E:/code/files/productimg/
+
+lunboimg:
+  upload:
+    path: E:/code/files/lunboimg/
+
 

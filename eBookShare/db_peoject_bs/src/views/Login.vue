@@ -1,3 +1,4 @@
+
 <template>
 
   <div class="login_container">
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import { MD5 } from 'crypto-js';
 export default {
   name: "Login",
   data(){
@@ -63,7 +65,7 @@ export default {
       //进行输入数据的校验，如果数据不合法就不会向后端发送请求
       this.$refs['userForm'].validate((valid) => {
         if (valid){ //表单校验合法
-
+          this.user.password = this.encryptPassword(this.user.password);
           //第一次判断是否是学生登录
           this.request.post("/admins/login",this.user).then(res =>{
             if(res.code == '200'){   //判断是否是自己定义的异常处理，这里是指数据库验证成功
@@ -81,6 +83,11 @@ export default {
         }
       })
 
+    },
+
+    encryptPassword(password){
+      const  enctypotedPassword = MD5(password).toString();
+      return enctypotedPassword;
     }
   }
 

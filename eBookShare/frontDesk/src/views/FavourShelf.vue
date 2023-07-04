@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 90%; margin-left: 5%" class="header-with-background">
+  <div style="width: 90%; margin-left: 5%;min-height: 600px" class="header-with-background">
     <!-- 图书信息展示-->
     <el-row :gutter="24" v-for="(row ,index1) in rowCount" v-if="booksData[(row - 1) * colCount]" :key="row" style="margin-bottom: 30px;min-width: 1200px">
       <el-col :span="6" v-for="(col, index2) in colCount" :key="col" style="width: 300px">
@@ -9,9 +9,10 @@
 
 
     <!-- 分页查询选项-->
-    <el-row style="margin-top: 10px">
+    <el-row style="margin-top: 10px;position: relative;top: 150px">
       <div >
         <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"

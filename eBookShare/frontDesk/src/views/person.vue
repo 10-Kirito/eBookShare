@@ -2,7 +2,7 @@
 <!--  action="http://124.71.166.37:9091/file/upload"-->
 <!--  action="http://124.71.166.37:9091/file/avartar/upload"-->
 
-  <div align="center">
+  <div align="center" style="min-height: 6000px">
     <el-card style="width: 500px;">
       <!--    根据实际表格情况，进行增删-->
       <el-form label-width="80px" size="small">
@@ -19,13 +19,11 @@
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
 
-
-
         <el-form-item label="账号">
           <el-input v-model="form.username" autocomplete="off" disabled/>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.password" autocomplete="off" />
+          <el-button type="primary" size="small" style="margin-left: -298px" @click="openDialog">修改密码</el-button>
         </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="form.email" autocomplete="off" />
@@ -34,21 +32,68 @@
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" style="width: 50%;margin-left: -80px" @click="save">确认</el-button>
+          <el-button type="success" size="medium" style="width: 50%;margin-left: -80px" @click="save">确认</el-button>
         </el-form-item>
       </el-form>
-
     </el-card>
+
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
+      <el-form label-width="80px" :model="ruleForm" status-icon :rules="rules"  ref="checkForm">
+        <el-form-item label="新密码"  prop="pass">
+          <el-input type="password" v-model="ruleForm.pass" ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码"  prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="savePassword">保 存</el-button>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
-<script>
 
+<script>
 
 export default {
   name: "Person",
   data() {
+    var validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        if (this.ruleForm.checkPass !== '') {
+          this.$refs.checkForm.validateField('checkPass');
+        }
+        callback();
+      }
+    };
+    var validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== this.ruleForm.pass) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
     return {
+      ruleForm: {
+        pass: '',
+        checkPass: ''
+      },
+      rules: {
+        pass: [
+          { validator: validatePass, trigger: 'blur' }
+        ],
+        checkPass: [
+          { validator: validatePass2, trigger: 'blur' }
+        ]
+      },
+      dialogFormVisible:false,
       form: {},
       user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
     }
@@ -62,6 +107,28 @@ export default {
     })
   },
   methods:{
+    openDialog(){
+      this.dialogFormVisible=true
+    },
+    savePassword(){
+      this.$refs.checkForm.validate((valid) => {
+        if (valid) {
+          this.form.password=this.ruleForm.pass
+          this.request.post("/users/",this.form).then(res=>{
+            if(res){
+              this.$message.success("保存成功")
+              this.dialogFormVisible=false
+            }else {
+              this.$message.error("保存失败")
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+
     async getUser(){
       return  (await this.request.get("/users/" + this.user.username)).data
     },
@@ -89,8 +156,6 @@ export default {
     },
     handleAvatarSuccess(res){
       this.form.avatarurl = res
-
-
       this.$message.success("保存成功")
     }
   }

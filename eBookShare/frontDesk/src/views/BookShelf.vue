@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 90%; margin-left: 5%" class="header-with-background">
+  <div style="width: 90%; margin-left: 5%;min-height: 600px" class="header-with-background">
 
 
 
@@ -12,9 +12,10 @@
 
 
     <!-- 分页查询选项-->
-    <el-row style="margin-top: 10px">
+    <el-row style="margin-top: 10px;position: relative;top: 150px">
       <div >
         <el-pagination
+            background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page.sync="currentPage"

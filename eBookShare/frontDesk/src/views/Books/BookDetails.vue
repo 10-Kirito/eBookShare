@@ -180,7 +180,7 @@ export default {
         });
         this.bookDetails.collectBtnClass="el-icon-star-on";
 
-        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
+        this.request.get("/relationship/favourbook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -196,7 +196,7 @@ export default {
         });
         this.bookDetails.collectBtnClass="el-icon-star-off";
 
-        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
+        this.request.get("/relationship/favourbook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -220,7 +220,7 @@ export default {
           type: 'success'
         });
         this.bookDetails.islike=!this.bookDetails.islike
-        this.request.get("http://124.71.166.37:9091/relationship/likebook", {
+        this.request.get("/relationship/likebook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -234,7 +234,7 @@ export default {
           type:'success'
         });
         this.bookDetails.islike=!this.bookDetails.islike
-        this.request.get("http://124.71.166.37:9091/relationship/likebook", {
+        this.request.get("/relationship/likebook", {
           params:{
             bookid: this.bookDetails.bookid,
             userid: this.user.id
@@ -252,7 +252,7 @@ export default {
     },
     previewBook(){
       let url = this.bookDetails.url;
-      window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url}`);
+      window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${url+'/preview'}`);
     },
     submitComment(){
       if(this.user.id===0) {
@@ -286,9 +286,17 @@ export default {
           }
         }).then(res=>{
           if(res.code==='200'){
-            window.open(this.bookDetails.url);
+            window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${this.bookDetails.url}`);
+            // this.$router.push('/pdf');
+            // this.$router.push({
+            //   name:'pdf',
+            //   params:{
+            //     url:this.bookDetails.url
+            //   }
+            // });
+            // window.open(this.bookDetails.url);
             this.$message.success("下载成功")
-            location.reload()
+            //location.reload()
           }else if(res.code==='600'){
             this.$message.error("积分不足，下载失败")
           }

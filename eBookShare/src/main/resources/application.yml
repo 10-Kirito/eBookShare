@@ -51,10 +51,12 @@ auditbookpic:
 
 productimg:
   upload:
-    path: E:/code/files/productimg/
+    path: /root/ebookshare/files/productimg/
+    # path: D:/Desktop/files/productimg/
 
 lunboimg:
   upload:
-    path: E:/code/files/lunboimg/
+    path: /root/ebookshare/files/lunboimg/
+    # path: D:/Desktop/files/lunboimg/
 
 

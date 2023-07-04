@@ -166,6 +166,9 @@
 <script>
 import '@/assets/css/Login.css';
 import {Axios as request} from "axios";
+// import md5 from 'md5.js';
+// import crypto from 'crypto'
+import { MD5 } from 'crypto-js';
 export default {
     name:'Login',
     data(){
@@ -223,10 +226,14 @@ export default {
         this.isShow = !this.isShow
       },
       //用户登录
+      //vue目录安装npm install crypto-js     来进行加密
       UserLogin(){
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) { //表单校验合法
-            this.request.post("http://124.71.166.37:9091/users/login", this.loginUser).then(res => {
+            // this.$message.success("加密前密码："+this.loginUser.password);
+            this.loginUser.password = this.encryptPassword(this.loginUser.password);
+            // this.$message.success("加密后密码："+this.loginUser.password);
+            this.request.post("/users/login", this.loginUser).then(res => {
               if (res.code == "200") {
                 localStorage.setItem("loguserinfo", JSON.stringify(res.data))
                 this.$router.push("/home") //跳转到主界面
@@ -241,6 +248,10 @@ export default {
             })
           }
         })
+      },
+      encryptPassword(password){
+       const  enctypotedPassword = MD5(password).toString();
+        return enctypotedPassword;
       },
       //用户注册
       userRegister(){

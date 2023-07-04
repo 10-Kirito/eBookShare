@@ -65,7 +65,6 @@ const routes = [
       }
     ]
   },
-
   {
     path: '/shop',
     name: 'Shop',
@@ -78,12 +77,10 @@ const routes = [
       {path: 'orders', name: '我的订单',component: () => import('../views/shop/Orders.vue')},
     ]
   },
-
-
   {
-    path: '/test',
-    name: 'test',
-    component: () => import('@/pdf/BookDetails.vue')
+    path: '/pdf',
+    name: 'pdf',
+    component: () => import('@/pdf/index.vue')
   },
   {
     path: '/test1',

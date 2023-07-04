@@ -4,7 +4,7 @@
     <div style="display: flex;height: 60px;line-height: 60px;border-bottom: 1px solid #eee;background-color: white">
       <div style="width: 350px;display: flex;padding-left: 70px">
         <div style="width: 60px">
-          <img src="../../assets/logo1.jpg" alt="" style="width: 50px;position: relative;top:5px;right: 0;border-radius: 50%">
+          <img src="../../assets/logo.png" alt="" style="width: 50px;position: relative;top:5px;right: 0;border-radius: 50%">
         </div>
         <div style="flex: 1">积分商城</div>
       </div>

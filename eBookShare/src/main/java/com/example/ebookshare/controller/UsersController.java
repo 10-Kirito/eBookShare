@@ -230,8 +230,6 @@ public class UsersController {
 
         //判断是否有免费下载次数
         if(users.getFreedownload()>0){
-            users.setFreedownload(users.getFreedownload()-1);
-            usersService.saveOrUpdate(users,usersQueryWrapper);
 
             if (relationship != null){
 //                找到了对应的现成数据
@@ -239,6 +237,9 @@ public class UsersController {
                     //用户已购买书籍
                     return Result.success("10","用户已购买书籍");
                 }
+                users.setFreedownload(users.getFreedownload()-1);
+                usersService.saveOrUpdate(users,usersQueryWrapper);
+
                 relationship.setIsowned(1);
                 relationshipService.saveOrUpdate(relationship);
             }
@@ -256,16 +257,26 @@ public class UsersController {
         //如果没有免费下载次数,查看积分并扣取
         //默认一次扣取5积分
         if(users.getPoints()>=5){
-            users.setPoints(users.getPoints()-5);
-            usersService.saveOrUpdate(users,usersQueryWrapper);
+
 
             if (relationship != null){
 //                找到了对应的现成数据
+                if (relationship.getIsowned()==1){
+                    //用户已购买书籍
+                    return Result.success("10","用户已购买书籍");
+                }
+                users.setPoints(users.getPoints()-5);
+                usersService.saveOrUpdate(users,usersQueryWrapper);
+
                 relationship.setIsowned(1);
                 relationshipService.saveOrUpdate(relationship);
             }
             else {
 //                找不到对应的现成数据,就创建新的表项
+                if (relationship.getIsowned()==1){
+                    //用户已购买书籍
+                    return Result.success("10","用户已购买书籍");
+                }
                 Relationship relationship1 = new Relationship();
                 relationship1.setIsowned(1);
                 relationship1.setBookid(bookid);

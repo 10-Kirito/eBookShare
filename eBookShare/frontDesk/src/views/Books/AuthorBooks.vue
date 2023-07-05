@@ -149,16 +149,10 @@ export default {
     collectBtn(index) {//收藏
       this.bookDetails[index].isCollected = !this.bookDetails[index].isCollected
       if (this.bookDetails[index].isCollected) {
-        this.$message({
-          message: '收藏成功',
-          type: 'success'
-        });
+        this.$message.success('收藏成功');
         this.bookDetails[index].collectBtnClass = "el-icon-star-on"
       } else {  //取消收藏
-        this.$message({
-          message: '取消成功',
-          type: 'success'
-        });
+        this.$message.success('取消成功');
         this.bookDetails[index].collectBtnClass = "el-icon-star-off"
       }
     }

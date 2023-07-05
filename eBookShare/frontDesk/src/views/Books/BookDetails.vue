@@ -174,10 +174,7 @@ export default {
 
       this.bookDetails.isCollected=!this.bookDetails.isCollected
       if(this.bookDetails.isCollected){
-        this.$message({
-          message: '收藏成功',
-          type: 'success'
-        });
+        this.$message.success('收藏成功');
         this.bookDetails.collectBtnClass="el-icon-star-on";
 
         this.request.get("/relationship/favourbook", {
@@ -190,10 +187,7 @@ export default {
         })
         console.log("收藏");
       }else{  //取消收藏
-        this.$message({
-          message: '取消成功',
-          type: 'success'
-        });
+        this.$message.success('取消成功');
         this.bookDetails.collectBtnClass="el-icon-star-off";
 
         this.request.get("/relationship/favourbook", {
@@ -215,10 +209,7 @@ export default {
 
 
       if(!this.bookDetails.islike){//如果没有点赞
-        this.$message({
-          message: '点赞成功',
-          type: 'success'
-        });
+        this.$message.success('点赞成功');
         this.bookDetails.islike=!this.bookDetails.islike
         this.request.get("/relationship/likebook", {
           params:{
@@ -229,10 +220,7 @@ export default {
           console.log(response);
         })
       }else{  //已经点赞过了
-        this.$message({
-          message: '取消点赞成功',
-          type:'success'
-        });
+        this.$message.success( '取消点赞成功');
         this.bookDetails.islike=!this.bookDetails.islike
         this.request.get("/relationship/likebook", {
           params:{

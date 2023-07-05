@@ -146,17 +146,11 @@ export default {
       const isLt5M = file.size / 1024 / 1024 < 100
       var extension = ['pdf', 'epub'].indexOf(FileExt.toLowerCase()) === -1
       if (extension){
-        this.$message({
-          type: 'warning',
-          message: '只能上传 PDF  EPUB 文件'
-        })
+        this.$message.warning( '只能上传 PDF  EPUB 文件')
         return false
       }
       if (!isLt5M) {
-        this.$message({
-          type: 'warning',
-          message: '附件大小超限，文件不能超过 100M'
-        })
+        this.$message.warning( '附件大小超限，文件不能超过 100M')
         return false
       }
     },
@@ -189,17 +183,11 @@ export default {
       const isLtM = file.size / 1024 / 1024 < 100
       var extension = ['pdf', 'epub'].indexOf(FileExt.toLowerCase()) === -1
       if (extension){
-        this.$message({
-          type: 'warning',
-          message: '只能上传 PDF  EPUB 文件'
-        })
+        this.$message.warning('只能上传 PDF  EPUB 文件')
         return false
       }
       if (!isLtM) {
-        this.$message({
-          type: 'warning',
-          message: '附件大小超限，文件不能超过 100M'
-        })
+        this.$message.warning('附件大小超限，文件不能超过 100M')
         return false
       }
     },

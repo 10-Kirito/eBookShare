@@ -286,6 +286,8 @@ export default {
           let user = {};
           user.username = this.regUser.regUsername
           user.password = this.regUser.regPwd
+          user.password = this.encryptPassword(user.password);
+          // this.$message.success("注册成功！：加密后的密码是："+user.password);
           user.email=this.regUser.regEmail
           user.phone = this.regUser.regPhone
           this.request.post("/users/register",user).then(res=>{

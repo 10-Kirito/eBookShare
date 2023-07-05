@@ -288,7 +288,7 @@ export default {
           user.password = this.regUser.regPwd
           user.email=this.regUser.regEmail
           user.phone = this.regUser.regPhone
-          this.request.post("http://124.71.166.37:9091/users/register",user).then(res=>{
+          this.request.post("/users/register",user).then(res=>{
             if(res.code==="200"){
               this.$message.success("注册成功！")
               this.changeToLogin()

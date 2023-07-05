@@ -4,69 +4,47 @@
       <el-input style="width: 200px" placeholder="请输入用户名" suffix-icon="el-icon-search" v-model="username"></el-input>
       <el-input style="width: 200px" placeholder="请输入电子邮箱" class="ml-5" suffix-icon="el-icon-message" v-model="email"></el-input>
       <el-input style="width: 200px" placeholder="请输入电话号码" class="ml-5" suffix-icon="el-icon-message" v-model="phone"></el-input>
-      <!--      <el-input style="width: 200px" placeholder="请输入出版社" class="ml-5" suffix-icon="el-icon-message" v-model="publisher"></el-input>-->
-      <!--      <el-input style="width: 200px" placeholder="请输入书籍名称" class="ml-5" suffix-icon="el-icon-message" v-model="tnumber"></el-input>-->
-      <!--      <el-input style="width: 200px" placeholder="请输入地址" class="ml-5" suffix-icon="el-icon-position" v-model="lcredit"></el-input>-->
-      <!--      <el-input style="width: 200px" placeholder="请输入开课学院号" class="ml-5" suffix-icon="el-icon-position" v-model="lcollege"></el-input>-->
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
     </div>
 
     <div style="margin: 10px 0">
-
-
-      <!--      <el-button type="primary" class="ml-5" @click="EBookup">导入<i class = "el-icon-bottom"></i></el-button>-->
-<!--      <el-button type="primary" class="ml-5" @click="handleEdit2">新增用户<i class = "el-icon-bottom"></i></el-button>-->
       <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
     </div>
 
     <el-table :data="tableData" border stripe header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
-      <!--          多选框-->
-      <!--      <el-table-column type="selection" width="55" />-->
       <el-table-column prop="username" label="用户名" width="120">
       </el-table-column>
-      <el-table-column prop="password" label="密码" width="150">
+      <el-table-column prop="email" label="电子邮箱" width="600">
       </el-table-column>
-      <el-table-column prop="email" label="电子邮箱">
+      <el-table-column prop="phone" label="电话号码" width="600">
       </el-table-column>
-      <el-table-column prop="phone" label="电话号码">
-      </el-table-column>
-      <!--      <el-table-column prop="category" label="类别">-->
-      <!--      </el-table-column>-->
-      <!--      <el-table-column prop="releasetime" label="上传时间">-->
-      <!--      </el-table-column>-->
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="357">
         <template slot-scope="scope">
-          <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
+          <el-button type="success" @click="handleEdit(scope.row)" style="margin-left: 40px">编辑<i class="el-icon-edit"></i></el-button>
+          <el-button type="danger" @click="handleEdit2(scope.row)">重置密码<i class="el-icon-edit"></i></el-button>
           <el-popconfirm
               class="ml-5"
               confirm-button-text="确认"
               cancel-button-text="取消"
-              :icon="InfoFilled"
+              icon="el-icon-info"
               icon-color="#626AEF"
               title="是否删除?"
               @confirm="del(scope.row.id)"
-              @cancel="cancelEvent"
           >
             <template #reference>
               <el-button type="danger">删除<i class="el-icon-remove-outline"></i></el-button>
             </template>
           </el-popconfirm>
-
         </template>
       </el-table-column>
 
     </el-table>
     <div style="padding: 10px 0" >
       <el-pagination
-          v-model:current-page="currentPage4"
-          v-model:page-size="pageSize"
           :current-page="pageNum"
           :page-sizes="[2, 5, 10, 20]"
           :page-size="pageSize"
-          :small="small"
-          :disabled="disabled"
-          :background="background"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           @size-change="handleSizeChange"
@@ -86,23 +64,12 @@
         <el-form-item label="电话号码">
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
-        <!--        <el-form-item label="类别">-->
-        <!--          <el-input v-model="form.category" autocomplete="off" />-->
-        <!--        </el-form-item>-->
       </el-form>
-
-      <el-form-item label="密码">
-        <el-input v-model="form.password" autocomplete="off" />
-      </el-form-item>
-      <el-row>
-        <el-button type="primary" size="medium"  style="width: 20%" @click="openDialog">修改密码</el-button>
-      </el-row>
-      <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="save">确认</el-button>
+      <span>
+        <el-button style="margin-left: 40%"  @click="dialogFormVisible = false" >取消</el-button>
+        <el-button type="primary"  @click="save">确认</el-button>
       </span>
-      </template>
+
     </el-dialog>
 
     <!--    新增用户  弹出的界面-->
@@ -120,9 +87,6 @@
         <el-form-item label="电话号码">
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
-        <!--        <el-form-item label="类别">-->
-        <!--          <el-input v-model="form.category" autocomplete="off" />-->
-        <!--        </el-form-item>-->
       </el-form>
       <template #footer>
       <span class="dialog-footer">
@@ -132,21 +96,6 @@
         </el-button>
       </span>
       </template>
-    </el-dialog>
-
-<!--    修改密码界面-->
-    <el-dialog title="修改密码" :visible.sync="dialogFormVisible2" width="30%" :close-on-click-modal="false">
-      <el-form label-width="80px" :model="ruleForm" status-icon :rules="rules"  ref="checkForm">
-        <el-form-item label="新密码"  prop="pass">
-          <el-input type="password" v-model="ruleForm.pass" ></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码"  prop="checkPass">
-          <el-input type="password" v-model="ruleForm.checkPass" ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="savePassword">保 存</el-button>
-      </div>
     </el-dialog>
   </div>
 
@@ -216,32 +165,29 @@ export default {
     openDialog(){
       this.dialogFormVisible2=true
     },
+
+    // 前端将密码进行一个加密：
     encryptPassword(password){
+      password = "123456";
       const  enctypotedPassword = MD5(password).toString();
       return enctypotedPassword;
     },
+    // 前端修改密码接口实现：
     savePassword(){
-      this.$refs.checkForm.validate((valid) => {
-        if (valid) {
-          this.form.password=this.ruleForm.pass
-          //md5加密
-          // this.$message.success("加密前的密码"+this.form.password);
-          this.form.password = this.encryptPassword(this.form.password);
-          // this.$message.success("加密后的密码"+this.form.password);
-          // this.$message.success("当前用户id"+this.form.id);
-          this.request.post("/users/changepassword",this.form).then(res=>{
-            if(res){
-              this.$message.success("保存成功")
-              this.dialogFormVisible=false
-            }else {
-              this.$message.error("保存失败")
-            }
-          })
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+        this.form.password=this.ruleForm.pass
+        //md5加密
+        // this.$message.success("加密前的密码"+this.form.password);
+        this.form.password = this.encryptPassword(this.form.password);
+        // this.$message.success("加密后的密码"+this.form.password);
+        // this.$message.success("当前用户id"+this.form.id);
+        this.request.post("http://localhost:9091/users/changepassword",this.form).then(res=>{
+          if(res){
+            this.$message.success("保存成功")
+            this.dialogFormVisible=false
+          }else {
+            this.$message.error("保存失败")
+          }
+        })
     },
     save(){
       //发送数据到后端
@@ -260,33 +206,16 @@ export default {
     handleEdit(row){
       this.form = row //将数据赋予弹窗
       this.dialogFormVisible = true //显示弹窗
-
     },
+    // 重置密码，调用方法savePassword,修改用户密码为123456
     handleEdit2(row){
-      //this.form = row //将数据赋予弹窗
-      this.UserFormVisible = true //显示弹窗
-
+      this.form = row //将数据赋予弹窗
+      this.savePassword();
     },
     handleAdd(){
       this.dialogFormVisible = true
       this.form = {}
     },
-    // handleEdit(row){
-    //   this.form = row //将数据赋予弹窗
-    //   this.dialogFormVisible = true //显示弹窗
-    //
-    // },
-    // del(id){
-    //   this.request.delete("/lesson/" + id)
-    //       .then(res => {
-    //         if(res){
-    //           this.$message.success("删除成功")
-    //           this.load()
-    //         }else {
-    //           this.$message.error("删除失败")
-    //         }
-    //       })
-    // },
     handleSelectionChange(val){
       console.log(val)
       this.multipleSelection = val
@@ -294,17 +223,6 @@ export default {
     EBookup(){
       this.$router.push("/admins/ebookupload")
     },
-    // delBatch(){
-    //   let ids = this.multipleSelection.map(v => v.lnumber)   //把一个对象的数组变成一个纯数组
-    //   this.request.post("/department/del/batch",ids).then(res => {
-    //     if(res){
-    //       this.$message.success("批量删除成功")
-    //       this.load()
-    //     }else {
-    //       this.$message.error("批量删除失败")
-    //     }
-    //   })
-    // },
     reset(){
       this.email = ""
       this.username = ""

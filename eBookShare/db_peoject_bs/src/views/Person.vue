@@ -6,21 +6,6 @@
     <el-card style="width: 500px;margin-top: 150px">
       <!--    根据实际表格情况，进行增删-->
       <el-form label-width="80px" size="small">
-<!--        <el-upload-->
-<!--            style="text-align: center"-->
-<!--            class="avatar-uploader"-->
-<!--            action="http://124.71.166.37:9091/file/adminavartar/upload"-->
-<!--            :show-file-list="false"-->
-<!--            :on-success="handleAvatarSuccess"-->
-<!--            :data="this.form"-->
-<!--        >-->
-<!--          &lt;!&ndash;        暂时没有头像，因为新增头像需要添加数据库里面&ndash;&gt;-->
-<!--          <img v-if="form.avatarurl" :src="form.avatarurl" class="avatar" />-->
-<!--          <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-<!--        </el-upload>-->
-
-
-
         <el-form-item label="账号" style="margin-top: 35px">
           <el-input v-model="form.username" autocomplete="off" disabled/>
         </el-form-item>
@@ -28,6 +13,7 @@
         <el-form-item label="邮箱">
           <el-input v-model="form.email" autocomplete="off" />
         </el-form-item>
+
         <!--        <el-form-item label="电话">-->
         <!--          <el-input v-model="form.phone" autocomplete="off" />-->
         <!--        </el-form-item>-->
@@ -54,7 +40,6 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
 import { MD5 } from 'crypto-js';
 
@@ -136,8 +121,6 @@ export default {
     },
     handleAvatarSuccess(res){
       this.form.avatarurl = res
-
-
       this.$message.success("保存成功")
     }
   }

@@ -180,7 +180,7 @@ export default {
         this.form.password = this.encryptPassword(this.form.password);
         // this.$message.success("加密后的密码"+this.form.password);
         // this.$message.success("当前用户id"+this.form.id);
-        this.request.post("http://localhost:9091/users/changepassword",this.form).then(res=>{
+        this.request.post("/users/changepassword",this.form).then(res=>{
           if(res){
             this.$message.success("保存成功")
             this.dialogFormVisible=false

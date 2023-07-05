@@ -227,6 +227,13 @@ public class UsersController {
         queryWrapper.eq("userid",userid);
         Relationship relationship = relationshipMapper.selectOne(queryWrapper);
 
+        if (relationship != null){
+        //找到了对应的现成数据
+            if (relationship.getIsowned()==1){
+                //用户已购买书籍
+                return Result.success("10","用户已购买书籍");
+            }
+        }
 
         //判断是否有免费下载次数
         if(users.getFreedownload()>0){
@@ -240,8 +247,17 @@ public class UsersController {
                 users.setFreedownload(users.getFreedownload()-1);
                 usersService.saveOrUpdate(users,usersQueryWrapper);
 
-                relationship.setIsowned(1);
-                relationshipService.saveOrUpdate(relationship);
+
+                Relationship relationship1 = relationship;
+                relationship1.setIsowned(1);
+                QueryWrapper<Relationship> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("bookid",bookid);
+                queryWrapper1.eq("userid",userid);
+                relationshipService.remove(queryWrapper1);
+
+                relationshipService.save(relationship1);
+
+//                relationshipService.saveOrUpdate(relationship);
             }
             else {
 //                找不到对应的现成数据,就创建新的表项
@@ -250,6 +266,7 @@ public class UsersController {
                 relationship1.setBookid(bookid);
                 relationship1.setUserid(userid);
                 relationshipService.save(relationship1);
+
 
                 users.setFreedownload(users.getFreedownload()-1);
                 usersService.saveOrUpdate(users,usersQueryWrapper);
@@ -272,8 +289,21 @@ public class UsersController {
                 users.setPoints(users.getPoints()-5);
                 usersService.saveOrUpdate(users,usersQueryWrapper);
 
-                relationship.setIsowned(1);
-                relationshipService.saveOrUpdate(relationship);
+
+
+                Relationship relationship1 = relationship;
+                relationship1.setIsowned(1);
+                QueryWrapper<Relationship> queryWrapper1 = new QueryWrapper<>();
+                queryWrapper1.eq("bookid",bookid);
+                queryWrapper1.eq("userid",userid);
+                relationshipService.remove(queryWrapper1);
+
+                relationshipService.save(relationship1);
+
+
+//                relationship.setIsowned(1);
+                // my-batisplus只支持单主键更新
+//                relationshipService.saveOrUpdate(relationship);
             }
             else {
                 //找不到对应的现成数据,就创建新的表项

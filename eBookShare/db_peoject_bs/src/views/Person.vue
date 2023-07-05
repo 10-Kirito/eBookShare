@@ -24,32 +24,50 @@
         <el-form-item label="账号" style="margin-top: 35px">
           <el-input v-model="form.username" autocomplete="off" disabled/>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="form.password" autocomplete="off" />
-        </el-form-item>
+
         <el-form-item label="邮箱">
           <el-input v-model="form.email" autocomplete="off" />
         </el-form-item>
         <!--        <el-form-item label="电话">-->
         <!--          <el-input v-model="form.phone" autocomplete="off" />-->
         <!--        </el-form-item>-->
-        <el-form-item>
-          <el-button type="primary" style="width: 50%;margin-left: -80px" @click="save">确认</el-button>
-        </el-form-item>
+        <el-row>
+          <el-button type="primary"   style="width: 20%" @click="openDialog">修改密码</el-button>
+          <el-button type="primary" style="width: 20%" @click="save">确认</el-button>
+        </el-row>
       </el-form>
 
     </el-card>
+
+    <el-dialog title="修改密码" :visible.sync="dialogFormVisible" width="30%" :close-on-click-modal="false">
+      <el-form label-width="80px" :model="ruleForm" status-icon :rules="rules"  ref="checkForm">
+        <el-form-item label="新密码"  prop="pass">
+          <el-input type="password" v-model="ruleForm.pass" ></el-input>
+        </el-form-item>
+        <el-form-item label="确认密码"  prop="checkPass">
+          <el-input type="password" v-model="ruleForm.checkPass" ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="savePassword">保 存</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-
+import { MD5 } from 'crypto-js';
 
 export default {
   name: "Person",
   data() {
     return {
+      ruleForm: {
+        pass: '',
+        checkPass: ''
+      },
       form: {},
+      dialogFormVisible:false,
       user: localStorage.getItem("loguserinfo") ? JSON.parse(localStorage.getItem("loguserinfo")) : {}
     }
   },
@@ -64,6 +82,35 @@ export default {
   methods:{
     async getUser(){
       return  (await this.request.get("/admins/getadmins/" + this.user.id)).data
+    },
+    openDialog(){
+      this.dialogFormVisible=true
+    },
+    encryptPassword(password){
+      const  enctypotedPassword = MD5(password).toString();
+      return enctypotedPassword;
+    },
+    savePassword(){
+      this.$refs.checkForm.validate((valid) => {
+        if (valid) {
+          this.form.password=this.ruleForm.pass
+          //md5加密
+          this.form.password = this.encryptPassword(this.form.password);
+          // this.$message.success("加密后的密码"+this.form.password);
+          // this.$message.success("当前用户id"+this.form.id);
+          this.request.post("/users/changepassword",this.form).then(res=>{
+            if(res){
+              this.$message.success("保存成功")
+              this.dialogFormVisible=false
+            }else {
+              this.$message.error("保存失败")
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     save(){
       //发送数据到后端

@@ -86,7 +86,7 @@
           <el-input v-model="form.unit" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="img" label="图片">
-          <el-upload action="http://localhost:9091/file/product/upload"
+          <el-upload action="/file/product/upload"
                      ref="image"
                      :on-success="handleImgUploadSuccess"
                      :limit="1"

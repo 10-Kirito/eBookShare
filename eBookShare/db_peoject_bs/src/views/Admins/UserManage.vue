@@ -13,11 +13,11 @@
     </div>
 
     <el-table :data="tableData" border stripe header-cell-class-name="headerBg" @selection-change="handleSelectionChange">
-      <el-table-column prop="username" label="用户名" width="120">
+      <el-table-column prop="username" label="用户名" >
       </el-table-column>
-      <el-table-column prop="email" label="电子邮箱" width="600">
+      <el-table-column prop="email" label="电子邮箱" >
       </el-table-column>
-      <el-table-column prop="phone" label="电话号码" width="600">
+      <el-table-column prop="phone" label="电话号码" >
       </el-table-column>
       <el-table-column label="操作" width="357">
         <template slot-scope="scope">

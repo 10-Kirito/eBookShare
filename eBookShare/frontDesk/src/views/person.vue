@@ -147,14 +147,13 @@ export default {
           //触发父级更新user的方法
           this.$emit("refreshUser")
           //保存之后，触发manage的父级，通过父级中的功能来实现更新以及右上角头像的更新
-
-
           //更新浏览器存储信息
           this.getUser().then(res =>{
             // res.token  = JSON.parse(localStorage.getItem("loguserinfo")).token
             //localStorage.removeItem("loguserinfo")
             localStorage.setItem("loguserinfo",JSON.stringify(res))
           })
+          this.$router.push("/home") //跳转到学生登录界面
         }else {
           this.$message.error("保存失败")
         }

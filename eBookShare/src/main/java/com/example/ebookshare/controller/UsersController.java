@@ -250,6 +250,10 @@ public class UsersController {
                 relationship1.setBookid(bookid);
                 relationship1.setUserid(userid);
                 relationshipService.save(relationship1);
+
+                users.setFreedownload(users.getFreedownload()-1);
+                usersService.saveOrUpdate(users,usersQueryWrapper);
+
             }
             return Result.success("200","使用免费次数购买成功");
 
@@ -272,16 +276,16 @@ public class UsersController {
                 relationshipService.saveOrUpdate(relationship);
             }
             else {
-//                找不到对应的现成数据,就创建新的表项
-                if (relationship.getIsowned()==1){
-                    //用户已购买书籍
-                    return Result.success("10","用户已购买书籍");
-                }
+                //找不到对应的现成数据,就创建新的表项
                 Relationship relationship1 = new Relationship();
                 relationship1.setIsowned(1);
                 relationship1.setBookid(bookid);
                 relationship1.setUserid(userid);
                 relationshipService.save(relationship1);
+
+                // 扣取积分
+                users.setPoints(users.getPoints()-5);
+                usersService.saveOrUpdate(users,usersQueryWrapper);
             }
             return Result.success("200","使用积分购买成功");
         }

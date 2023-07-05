@@ -1,5 +1,6 @@
 package com.example.ebookshare.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Relationship;
 import com.baomidou.mybatisplus.extension.service.IService;

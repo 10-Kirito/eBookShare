@@ -143,6 +143,20 @@ public class FrontBooksController {
         List<Books> books = booksMapper.selectList(Wrappers.lambdaQuery(Books.class).in(Books::getBookid,booksid));
         return new APIResponse<>(books,APIStatusCode.SUCCESS,"返回个人书架");
     }
+
+    @GetMapping("/userbookself")
+    public APIResponse<Page<Books>> UserBookSelf(@RequestParam(defaultValue = "9") Integer userid,
+                                             @RequestParam(defaultValue = "isowned") String operator,
+                                             @RequestParam(defaultValue = "1") Integer pageNum,
+                                             @RequestParam(defaultValue = "12") Integer pageSize){
+        Page<Books> booksPage = booksService.findPages(new Page<>(pageNum, pageSize), userid, operator);
+        return new APIResponse<>(booksPage,APIStatusCode.SUCCESS,"返回个人书架");
+    }
+
+
+
+
+
     @GetMapping("/score")
     public APIResponse<?> ScoreBook(@RequestParam(defaultValue = "0") Integer userid,
                                     @RequestParam(defaultValue = "0") Integer bookid,

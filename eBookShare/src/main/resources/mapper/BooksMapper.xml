@@ -34,5 +34,11 @@
         ORDER BY (likes + favorites + downloads)
         DESC LIMIT 10
     </select>
+    <select id="findPages" resultType="com.example.ebookshare.entity.Books">
+        select b.*
+        from relationship
+        join books b on relationship.bookid = b.bookid
+        where userid = #{userid} and isowned = 1
+    </select>
 
 </mapper>

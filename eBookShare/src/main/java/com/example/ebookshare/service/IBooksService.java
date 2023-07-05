@@ -1,5 +1,6 @@
 package com.example.ebookshare.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.ebookshare.common.APIResponse;
 import com.example.ebookshare.entity.Books;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public interface IBooksService extends IService<Books> {
 
+
     List<Books> randomBooks(Integer number);
 
     List<Books> getTopTenBooks(Integer userid);
@@ -24,4 +26,6 @@ public interface IBooksService extends IService<Books> {
     List<Books> downloadBooks(Integer userid);
 
     List<Books> randomBooksWithUser(@Param("number") Integer number, @Param("userid") Integer userid);
+
+    Page<Books> findPages(Page<Books> objectPage, Integer userid, String operator);
 }

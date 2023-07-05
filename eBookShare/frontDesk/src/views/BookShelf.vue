@@ -84,7 +84,7 @@ export default {
       this.currentPage = val;
     },
     getAllBooksData(){
-      this.request.get("/FrontBooks/bookself",{
+      this.request.get("/FrontBooks/userbookself",{
           params:{
               userid:this.user.id,
               operator:"isuploader",   //填写需要获取的是收藏还是拥有的还是喜欢的
@@ -92,7 +92,8 @@ export default {
               pageSize:this.rowCount*this.rowCount
           }
       }).then(res => {
-        this.booksData = res.data;
+        console.log(res);
+        this.booksData = res.data.records;
         console.log(this.booksData);
         this.dataload = true;
       })

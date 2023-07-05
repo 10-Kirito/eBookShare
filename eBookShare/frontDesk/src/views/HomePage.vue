@@ -264,7 +264,7 @@ export default {
         });
         this.bookDetails[index].collectBtnClass="el-icon-star-on";
 
-        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
+        this.request.get("http://61.171.68.199:9091/relationship/favourbook", {
           params:{
             bookid: book.bookid,
             userid: this.user.id
@@ -280,7 +280,7 @@ export default {
         });
         this.bookDetails[index].collectBtnClass="el-icon-star-off";
 
-        this.request.get("http://124.71.166.37:9091/relationship/favourbook", {
+        this.request.get("http://61.171.68.199:9091/relationship/favourbook", {
           params:{
             bookid: book.bookid,
             userid: this.user.id

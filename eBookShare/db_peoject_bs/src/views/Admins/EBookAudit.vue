@@ -243,7 +243,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://124.71.166.37:9091/auditbooks/export")
+      window.open("/auditbooks/export")
     },
     cancelbooks(bookid){
       this.cancel = true

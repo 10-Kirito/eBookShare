@@ -89,8 +89,8 @@ public class AuditbooksController {
     public APIResponse<?> moveBook(@PathVariable String bookid){
         Auditbooks originBook = auditbooksService.getById(bookid);
         // 获取书籍和书籍封面的uuid
-        String uuid = originBook.getUrl().replaceFirst("http://124.71.166.37:9091/file/audit/", "");
-        String picuuid = originBook.getCoverimage().replaceFirst("http://124.71.166.37:9091/file/bookpic/audit/", "");
+        String uuid = originBook.getUrl().replaceFirst("http://61.171.68.199:9091/file/audit/", "");
+        String picuuid = originBook.getCoverimage().replaceFirst("http://61.171.68.199:9091/file/bookpic/audit/", "");
 
 
         Path sourcePath = Paths.get(auditbooksPAth + uuid);
@@ -386,7 +386,7 @@ public class AuditbooksController {
             //数据库不存在重复的文件
             //url = "http://124.71.166.37:9091/file/"+fileUUid;
             //url = auditbooksPAth+fileUUid;
-            url = "http://124.71.166.37:9091/file/audit/"+fileUUid;
+            url = "http://61.171.68.199:9091/file/audit/"+fileUUid;
             Auditbooks saveFile = new Auditbooks();
             saveFile.setFilename(orginalFilename);
             saveFile.setType(type);
@@ -428,7 +428,7 @@ public class AuditbooksController {
         //获取书籍封面的md5
         //md5 = SecureUtil.md5(uploadFile);
         //url = auditbookspicPath+fileUUid;
-        url = "http://124.71.166.37:9091/file/bookpic/audit/"+fileUUid;
+        url = "http://61.171.68.199:9091/file/bookpic/audit/"+fileUUid;
         //向数据库添加数据
         QueryWrapper<Auditbooks> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("bookid").last("LIMIT 1");

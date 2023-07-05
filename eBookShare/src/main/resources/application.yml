@@ -28,7 +28,9 @@ mybatis-plus:
 
 files:
   upload:
+    # 远程服务器测试文件上传路径
     path: /root/ebookshare/files/
+    # 本地测试文件上传路径
     # path: D:\Desktop\files\
 books:
   upload:
@@ -58,5 +60,12 @@ lunboimg:
   upload:
     path: /root/ebookshare/files/lunboimg/
     # path: D:/Desktop/files/lunboimg/
+
+
+url_prefix:
+  # 远程测试接口
+  remote: http://61.171.68.199:9091/
+  # 本地测试接口
+  # remote: http://localhost:9091/
 
 

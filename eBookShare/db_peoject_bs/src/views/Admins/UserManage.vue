@@ -238,7 +238,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://124.71.166.37:9091/users/export")
+      window.open("/users/export")
     },
     del(id){
       this.request.delete("/users/" + id).then(res => {

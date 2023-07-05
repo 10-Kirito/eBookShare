@@ -9,7 +9,7 @@
         <el-upload
             style="text-align: center"
             class="avatar-uploader"
-            action="http://124.71.166.37:9091/file/avartar/upload"
+            action="http://61.171.68.199:9091/file/avartar/upload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :data="this.form"

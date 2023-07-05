@@ -279,7 +279,7 @@ export default {
         return;
       }
       else {
-        this.request.get("http://localhost:9091/users/pointbuybook",{
+        this.request.get("/users/pointbuybook",{
           params: {
             bookid:this.bookDetails.bookid,
             userid:this.user.id

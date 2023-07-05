@@ -64,7 +64,7 @@
     <el-dialog title="信息" :visible.sync="dialogFormVisible" width="30%">
       <el-form label-width="80px"  size="small">
         <el-form-item prop="img" label="图片">
-          <el-upload action="/file/lunbo/upload"
+          <el-upload action="http://61.171.68.199:9091/file/lunbo/upload"
                      ref="image"
                      :on-success="handleImgUploadSuccess"
                      :limit="1"

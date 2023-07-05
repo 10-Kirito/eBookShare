@@ -74,6 +74,16 @@ public class UsersController {
         //新增或者更新
         return usersService.saveOrUpdate(users);
     }
+    @PostMapping("/changepassword")
+    public boolean changePassword(@RequestBody Users users){
+        //用户修改密码
+        QueryWrapper<Users> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",users.getUsername());
+        queryWrapper.eq("id",users.getId());
+        Users users1 = usersMapper.selectOne(queryWrapper);
+        users1.setPassword(users.getPassword());
+        return usersService.saveOrUpdate(users1);
+    }
     @PostMapping
     public boolean save(@RequestBody Users users){
         //新增或者更新

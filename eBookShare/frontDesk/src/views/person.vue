@@ -22,18 +22,16 @@
         <el-form-item label="账号">
           <el-input v-model="form.username" autocomplete="off" disabled/>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-button type="primary" size="small" style="margin-left: -298px" @click="openDialog">修改密码</el-button>
-        </el-form-item>
         <el-form-item label="邮箱">
           <el-input v-model="form.email" autocomplete="off" />
         </el-form-item>
         <el-form-item label="电话">
           <el-input v-model="form.phone" autocomplete="off" />
         </el-form-item>
-        <el-form-item>
-          <el-button type="success" size="medium" style="width: 50%;margin-left: -80px" @click="save">确认</el-button>
-        </el-form-item>
+        <el-row>
+          <el-button type="primary" size="medium"  style="width: 20%" @click="openDialog">修改密码</el-button>
+          <el-button type="success" size="medium" style="width: 20%" @click="save">确认</el-button>
+        </el-row>
       </el-form>
     </el-card>
 
@@ -57,7 +55,7 @@
 
 
 <script>
-
+import { MD5 } from 'crypto-js';
 export default {
   name: "Person",
   data() {
@@ -110,11 +108,19 @@ export default {
     openDialog(){
       this.dialogFormVisible=true
     },
+    encryptPassword(password){
+      const  enctypotedPassword = MD5(password).toString();
+      return enctypotedPassword;
+    },
     savePassword(){
       this.$refs.checkForm.validate((valid) => {
         if (valid) {
           this.form.password=this.ruleForm.pass
-          this.request.post("/users/",this.form).then(res=>{
+          //md5加密
+          this.form.password = this.encryptPassword(this.form.password);
+          // this.$message.success("加密后的密码"+this.form.password);
+          // this.$message.success("当前用户id"+this.form.id);
+          this.request.post("/users/changepassword",this.form).then(res=>{
             if(res){
               this.$message.success("保存成功")
               this.dialogFormVisible=false

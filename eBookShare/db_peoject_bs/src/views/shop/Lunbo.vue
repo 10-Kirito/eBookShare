@@ -1,7 +1,5 @@
 <template>
   <div>
-
-
     <div style="margin: 10px 0">
       <el-input suffix-icon="el-icon-search" style="width:200px" placeholder="请输入名称" v-model="name"></el-input>
       <el-button  class="ml-5" type="primary" @click="load">搜索</el-button>
@@ -66,7 +64,7 @@
     <el-dialog title="信息" :visible.sync="dialogFormVisible" width="30%">
       <el-form label-width="80px"  size="small">
         <el-form-item prop="img" label="图片">
-          <el-upload action="http://localhost:9091/file/lunbo/upload"
+          <el-upload action="/file/lunbo/upload"
                      ref="image"
                      :on-success="handleImgUploadSuccess"
                      :limit="1"

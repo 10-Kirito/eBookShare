@@ -217,7 +217,8 @@ export default {
       this.load()
     },
     handleImgUploadSuccess(res){
-      this.form.image=res
+      console.log(res);
+      this.form.image=res;
     }
   }
 

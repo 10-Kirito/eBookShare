@@ -23,7 +23,7 @@
       >
         <el-button type="danger" slot="reference">批量删除<i class = "el-icon-remove-outline"></i></el-button>
       </el-popconfirm>
-        <el-upload action="http://124.71.166.37:9091/department/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
+        <el-upload action="http://61.171.68.199:9091/department/import" :show-file-list="false" accept="xlsx" :on-success="handleExcelImportSuccess" style="display: inline-block">
       <el-button type="primary" class="ml-5">导入<i class = "el-icon-bottom"></i></el-button>
         </el-upload>
           <el-button type="primary" @click="exp" class="ml-5">导出<i class = "el-icon-top"></i></el-button>
@@ -225,7 +225,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://124.71.166.37:9091/department/export")
+      window.open("/department/export")
     },
     handleExcelImportSuccess(){
       this.$message.success("文件上传成功！")

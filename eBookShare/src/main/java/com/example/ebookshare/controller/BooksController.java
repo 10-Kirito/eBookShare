@@ -492,7 +492,7 @@ public class BooksController {
             //数据库不存在重复的文件
             //url = "http://124.71.166.37:9091/file/"+fileUUid;
             //url = auditbooksPAth+fileUUid;
-            url = "http://124.71.166.37:9091/file/"+fileUUid;
+            url = "http://61.171.68.199:9091/file/"+fileUUid;
             Books saveFile = new Books();
             saveFile.setFilename(orginalFilename);
             saveFile.setType(type);
@@ -533,7 +533,7 @@ public class BooksController {
         //获取书籍封面的md5
         //md5 = SecureUtil.md5(uploadFile);
         //url = auditbookspicPath+fileUUid;
-        url = "http://124.71.166.37:9091/file/bookpic/"+fileUUid;
+        url = "http://61.171.68.199:9091/file/bookpic/"+fileUUid;
         //向数据库添加数据
         QueryWrapper<Books> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("bookid").last("LIMIT 1");

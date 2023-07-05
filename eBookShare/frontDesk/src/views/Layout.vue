@@ -45,7 +45,7 @@ export default {
         let username = localStorage.getItem("loguserinfo")?JSON.parse(localStorage.getItem("loguserinfo")).username:""
         if(username!==""){
           console.log("success")
-        this.request.get("http://124.71.166.37:9091/users/" + username).then(res =>{
+        this.request.get("http://61.171.68.199:9091/users/" + username).then(res =>{
           //重新复制后台的最新数据
           this.user = res.data
         })

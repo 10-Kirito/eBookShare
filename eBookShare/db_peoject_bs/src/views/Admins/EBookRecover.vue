@@ -241,7 +241,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://124.71.166.37:9091/books/deletedexport")
+      window.open("/books/deletedexport")
     },
     recover(bookid){
       this.request.delete("/books/recover/" + bookid).then(res => {

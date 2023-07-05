@@ -51,6 +51,9 @@ public class FileController {
     @Value("${files.upload.path}")
     private String avartarPAth;
 
+    @Value("${url_prefix.remote}")
+    private String remote_url_prefix;
+
     @Resource
     private UsersMapper usersMapper;
 
@@ -96,8 +99,7 @@ public class FileController {
         file.transferTo(uploadFile);
 
         //把获取到的文件存储到磁盘目录
-        url = "http://localhost:9091/file/product/"+fileUUid;
-
+        url = remote_url_prefix + "file/product/"+fileUUid;
 
         return url; //文件下载链接
         //上传成功后返回url
@@ -143,7 +145,7 @@ public class FileController {
         file.transferTo(uploadFile);
 
         //把获取到的文件存储到磁盘目录
-        url = "http://localhost:9091/file/lunbo/"+fileUUid;
+        url = remote_url_prefix + "file/lunbo/"+fileUUid;
 
 
         return url; //文件下载链接
@@ -405,8 +407,7 @@ public class FileController {
 //        }else {
         //数据库不存在重复的文件
         //把获取到的文件存储到磁盘目录
-//            url = "http://124.71.166.37:9091/avartar/file/"+fileUUid;
-        url = "http://124.71.166.37:9091/file/avartar/"+fileUUid;
+        url = remote_url_prefix + "file/avartar/" + fileUUid;
 //        }
         //获取文件url
         //把获取到的文件存储到磁盘目录中
@@ -458,8 +459,9 @@ public class FileController {
 //        }else {
         //数据库不存在重复的文件
         //把获取到的文件存储到磁盘目录
-//            url = "http://124.71.166.37:9091/avartar/file/"+fileUUid;
-        url = "http://124.71.166.37:9091/file/avartar/"+fileUUid;
+        //url = "http://124.71.166.37:9091/avartar/file/"+fileUUid;
+        // url = "http://124.71.166.37:9091/file/avartar/"+fileUUid;
+        url = remote_url_prefix + "file/avartar/"+fileUUid;
 //        }
         //获取文件url
         //把获取到的文件存储到磁盘目录中

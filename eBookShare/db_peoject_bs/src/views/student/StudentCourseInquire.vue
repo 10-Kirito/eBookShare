@@ -230,7 +230,7 @@ export default {
       this.load()
     },
     exp(){
-      window.open("http://124.71.166.37:9091/sclass/export")
+      window.open("/sclass/export")
     },
     handleExcelImportSuccess(){
       this.$message.success("文件上传成功！")

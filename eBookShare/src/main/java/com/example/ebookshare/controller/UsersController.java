@@ -14,9 +14,11 @@ import com.example.ebookshare.entity.Books;
 import com.example.ebookshare.entity.Relationship;
 import com.example.ebookshare.entity.Users;
 import com.example.ebookshare.mapper.BooksMapper;
+import com.example.ebookshare.mapper.RelationshipMapper;
 import com.example.ebookshare.mapper.UsersMapper;
 import com.example.ebookshare.service.IUsersService;
 import com.example.ebookshare.service.impl.BooksServiceImpl;
+import com.example.ebookshare.service.impl.RelationshipServiceImpl;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -48,6 +50,12 @@ public class UsersController {
 
     @Resource
     BooksMapper booksMapper;
+
+    @Resource
+    RelationshipMapper relationshipMapper;
+
+    @Resource
+    RelationshipServiceImpl relationshipService;
 
     @GetMapping("/page")  //接口路径,多条件查询
     public IPage<Users> findPage(@RequestParam Integer pageNum,
@@ -213,18 +221,57 @@ public class UsersController {
             return Result.error("500","找不到用户信息");
         }
 
+        //判断是否有重复的表单
+        QueryWrapper<Relationship> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("bookid",bookid);
+        queryWrapper.eq("userid",userid);
+        Relationship relationship = relationshipMapper.selectOne(queryWrapper);
+
+
         //判断是否有免费下载次数
         if(users.getFreedownload()>0){
             users.setFreedownload(users.getFreedownload()-1);
             usersService.saveOrUpdate(users,usersQueryWrapper);
-            return Result.success("200","使用免费次数购买成功");
-        }
 
+            if (relationship != null){
+//                找到了对应的现成数据
+                if (relationship.getIsowned()==1){
+                    //用户已购买书籍
+                    return Result.success("10","用户已购买书籍");
+                }
+                relationship.setIsowned(1);
+                relationshipService.saveOrUpdate(relationship);
+            }
+            else {
+//                找不到对应的现成数据,就创建新的表项
+                Relationship relationship1 = new Relationship();
+                relationship1.setIsowned(1);
+                relationship1.setBookid(bookid);
+                relationship1.setUserid(userid);
+                relationshipService.save(relationship1);
+            }
+            return Result.success("200","使用免费次数购买成功");
+
+        }
         //如果没有免费下载次数,查看积分并扣取
         //默认一次扣取5积分
         if(users.getPoints()>=5){
             users.setPoints(users.getPoints()-5);
             usersService.saveOrUpdate(users,usersQueryWrapper);
+
+            if (relationship != null){
+//                找到了对应的现成数据
+                relationship.setIsowned(1);
+                relationshipService.saveOrUpdate(relationship);
+            }
+            else {
+//                找不到对应的现成数据,就创建新的表项
+                Relationship relationship1 = new Relationship();
+                relationship1.setIsowned(1);
+                relationship1.setBookid(bookid);
+                relationship1.setUserid(userid);
+                relationshipService.save(relationship1);
+            }
             return Result.success("200","使用积分购买成功");
         }
 

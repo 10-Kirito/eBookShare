@@ -279,7 +279,7 @@ export default {
         return;
       }
       else {
-        this.request.get("/users/pointbuybook",{
+        this.request.get("http://localhost:9091/users/pointbuybook",{
           params: {
             bookid:this.bookDetails.bookid,
             userid:this.user.id
@@ -299,6 +299,18 @@ export default {
             //location.reload()
           }else if(res.code==='600'){
             this.$message.error("积分不足，下载失败")
+          }
+          else if (res.code ==='10'){
+            window.open(`/lib/pdfjs-3.5.141-dist/web/viewer.html?file=${this.bookDetails.url}`);
+            // this.$router.push('/pdf');
+            // this.$router.push({
+            //   name:'pdf',
+            //   params:{
+            //     url:this.bookDetails.url
+            //   }
+            // });
+            // window.open(this.bookDetails.url);
+            this.$message.success("下载成功")
           }
         })
       }

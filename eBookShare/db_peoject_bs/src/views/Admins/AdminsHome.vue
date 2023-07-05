@@ -14,10 +14,12 @@
         <div>
           <div className="text item "><i className="el-icon-s-home" style="margin:10px"></i>项目名：E-book后端管理系统
           </div>
-          <div className="text item"><i className="el-icon-user-solid" style="margin:10px"></i>小组成员：周鹏飞，李洪辰，王唯翰，易津锐
+          <div className="text item"><i className="el-icon-user-solid" style="margin:10px"></i>小组成员：周鹏飞，李洪辰，王唯翰，易津锐, 张有临
           </div>
           <div className="text item"><i className="el-icon-location" style="margin:10px"></i>上海大学</div>
-          <div className="text item"><i className="el-icon-error" style="margin:10px"></i>仅供学习，禁止抄袭</div>
+          <!-- 换行-->
+          <br>
+          <div className="text item"><i className="el-icon-error" style="margin:10px"></i>---仅供学习，禁止抄袭---</div>
         </div>
       </el-card>
     </div>
